@@ -8,9 +8,10 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,7 +19,7 @@ import java.util.regex.Pattern;
 /*
 Pulls all puzzle variations from the Blue Prince wiki.
 Takes the contents of the page https://blueprince.wiki.gg/wiki/Parlor_Game/List_of_Parlor_Games,
-parsing each listed puzzle into a ParlorGame object and exporting the list to puzzles.json.
+parsing each listed puzzle into a PuzzleVariation object and exporting the list to puzzles.json.
  */
 public class ScrapePuzzles {
     static Path wikiPagePath = Paths.get("puzzles-wiki-page.txt");
@@ -37,7 +38,7 @@ public class ScrapePuzzles {
         page = page.replaceAll("\\[\\[(.*?)]]", "$1");
         page = page.replaceAll("\\{\\{UpgradeSpoiler\\|[^|]+?\\|(.*?)}}", " $1");
 
-        List<PuzzleGame> puzzles = new ArrayList<>();
+        List<PuzzleVariation> puzzles = new ArrayList<>();
 
         // Go through ParlorTableRow objects in order
         Pattern pattern = Pattern.compile("^.*?(\\{\\{ParlorTableRow.*?}})(.*)$");
@@ -61,7 +62,7 @@ public class ScrapePuzzles {
         Files.writeString(outputPath, json);
     }
 
-    static PuzzleGame parseRow(String row) throws Exception {
+    static PuzzleVariation parseRow(String row) throws Exception {
         Pattern pattern = Pattern.compile(
             "^\\{\\{ParlorTableRow"
             + "\\|ID=(.*?)"
@@ -83,16 +84,28 @@ public class ScrapePuzzles {
         List<String> white = parseStatements(matcher.group(3));
         List<String> black = parseStatements(matcher.group(4));
         BoxColor prize = parseColor(matcher.group(5));
-        String solution = matcher.group(6);
+        String explanation = matcher.group(6);
 
-        return new PuzzleGame(id, blue, white, black, prize, solution);
+        return new PuzzleVariation(id,
+            new PuzzleInput(blue, white, black),
+            new PuzzleSolution(prize, explanation)
+        );
     }
 
     static List<String> parseStatements(String statements) {
         if (statements.isEmpty()) {
             return List.of();
         }
-        return Arrays.stream(statements.split("<hr>")).toList();
+
+        List<String> result = new ArrayList<>();
+        for (String statement : statements.split("<hr>")) {
+            // Normalize quoted words
+            statement = statement.replaceAll("'(\\w+)'", "\"$1\"");
+
+            result.add(statement);
+        }
+
+        return result;
     }
 
     static BoxColor parseColor(String color) throws Exception {

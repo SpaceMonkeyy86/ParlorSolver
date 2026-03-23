@@ -1,1515 +1,1923 @@
 [
   {
     "id": 1,
-    "blue": [
-      "THIS BOX IS THE WHITE BOX."
-    ],
-    "white": [
-      "THIS BOX IS THE BLACK BOX."
-    ],
-    "black": [
-      "THE BLUE BOX CONTAINS THE GEMS."
-    ],
-    "prize": "Blue",
-    "solution": "The blue and white boxes both have trivially false statements. The remaining statement, which places the gems in the blue box, is therefore true."
+    "input": {
+      "blue": [
+        "THIS BOX IS THE WHITE BOX."
+      ],
+      "white": [
+        "THIS BOX IS THE BLACK BOX."
+      ],
+      "black": [
+        "THE BLUE BOX CONTAINS THE GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The blue and white boxes both have trivially false statements. The remaining statement, which places the gems in the blue box, is therefore true."
+    }
   },
   {
     "id": 2,
-    "blue": [
-      "YOU ARE IN THE PARLOR."
-    ],
-    "white": [
-      "THIS BOX IS EMPTY."
-    ],
-    "black": [
-      "THE BLUE BOX IS TRUE."
-    ],
-    "prize": "White",
-    "solution": "The blue and black boxes both have trivially true statements. The remaining statement, that the white box is empty, is therefore false; thus it has the gems."
+    "input": {
+      "blue": [
+        "YOU ARE IN THE PARLOR."
+      ],
+      "white": [
+        "THIS BOX IS EMPTY."
+      ],
+      "black": [
+        "THE BLUE BOX IS TRUE."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The blue and black boxes both have trivially true statements. The remaining statement, that the white box is empty, is therefore false; thus it has the gems."
+    }
   },
   {
     "id": 3,
-    "blue": [
-      "THIS BOX IS THE MIDDLE BOX."
-    ],
-    "white": [
-      "THE GEMS ARE IN THE MIDDLE BOX."
-    ],
-    "black": [
-      "THIS BOX IS THE MIDDLE BOX."
-    ],
-    "prize": "White",
-    "solution": "The middle box is the white box. Thus, the blue and black boxes both have false statements. The remaining statement, which places the gems in the middle box, is therefore true."
+    "input": {
+      "blue": [
+        "THIS BOX IS THE MIDDLE BOX."
+      ],
+      "white": [
+        "THE GEMS ARE IN THE MIDDLE BOX."
+      ],
+      "black": [
+        "THIS BOX IS THE MIDDLE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The middle box is the white box. Thus, the blue and black boxes both have false statements. The remaining statement, which places the gems in the middle box, is therefore true."
+    }
   },
   {
     "id": 4,
-    "blue": [
-      "THIS BOX IS THE BLACK BOX."
-    ],
-    "white": [
-      "THIS BOX IS THE BLUE BOX."
-    ],
-    "black": [
-      "THE BOX THAT CLAIMS TO BE BLACK HAS THE GEMS."
-    ],
-    "prize": "Blue",
-    "solution": "The box that claims to be black is the blue box. The blue and white boxes both have trivially false statements. The remaining statement, which places the gems in the blue box, is therefore true."
+    "input": {
+      "blue": [
+        "THIS BOX IS THE BLACK BOX."
+      ],
+      "white": [
+        "THIS BOX IS THE BLUE BOX."
+      ],
+      "black": [
+        "THE BOX THAT CLAIMS TO BE BLACK HAS THE GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The box that claims to be black is the blue box. The blue and white boxes both have trivially false statements. The remaining statement, which places the gems in the blue box, is therefore true."
+    }
   },
   {
     "id": 5,
-    "blue": [
-      "THE STATEMENT ON THE WHITE BOX IS TRUE."
-    ],
-    "white": [
-      "THERE IS A SECOND WIND-UP KEY IN THIS ROOM."
-    ],
-    "black": [
-      "THIS BOX AND THE WHITE BOX ARE BOTH EMPTY."
-    ],
-    "prize": "Blue",
-    "solution": "The statement on the white box is false (there is only one Wind-up Key in the room). Thus, the blue box is also false, so the black box is true. This places the gems in the blue box. If the upgrade to have two wind-up keys is selected, the white box changes to \"THERE IS A THIRD WIND-UP KEY IN THIS ROOM\". The solution logic is unaffected."
+    "input": {
+      "blue": [
+        "THE STATEMENT ON THE WHITE BOX IS TRUE."
+      ],
+      "white": [
+        "THERE IS A SECOND WIND-UP KEY IN THIS ROOM."
+      ],
+      "black": [
+        "THIS BOX AND THE WHITE BOX ARE BOTH EMPTY."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The statement on the white box is false (there is only one Wind-up Key in the room). Thus, the blue box is also false, so the black box is true. This places the gems in the blue box. If the upgrade to have two wind-up keys is selected, the white box changes to \"THERE IS A THIRD WIND-UP KEY IN THIS ROOM\". The solution logic is unaffected."
+    }
   },
   {
     "id": 6,
-    "blue": [
-      "THE BLACK BOX CONTAINS GEMS."
-    ],
-    "white": [
-      "THIS BOX AND THE BLUE BOX ARE EMPTY"
-    ],
-    "black": [
-      "ALL THREE BOXES ARE EMPTY."
-    ],
-    "prize": "Black",
-    "solution": "The statement on the black box is trivially false by the global rules of the Parlor Game. The statements on the blue and white boxes say the same thing, and so have the same truth value. If false, all three statements would be false; thus they are true, placing the gems in the black box."
+    "input": {
+      "blue": [
+        "THE BLACK BOX CONTAINS GEMS."
+      ],
+      "white": [
+        "THIS BOX AND THE BLUE BOX ARE EMPTY"
+      ],
+      "black": [
+        "ALL THREE BOXES ARE EMPTY."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The statement on the black box is trivially false by the global rules of the Parlor Game. The statements on the blue and white boxes say the same thing, and so have the same truth value. If false, all three statements would be false; thus they are true, placing the gems in the black box."
+    }
   },
   {
     "id": 7,
-    "blue": [
-      "ALL THREE BOXES CONTAIN GEMS."
-    ],
-    "white": [
-      "THE OTHER TWO BOXES CONTAIN GEMS."
-    ],
-    "black": [
-      "THIS BOX CONTAINS GEMS."
-    ],
-    "prize": "Black",
-    "solution": "The blue and white boxes both have trivially false statements, as only one box contains the gems. As such, the black box\u0027s statement is true, which means it contains the gems."
+    "input": {
+      "blue": [
+        "ALL THREE BOXES CONTAIN GEMS."
+      ],
+      "white": [
+        "THE OTHER TWO BOXES CONTAIN GEMS."
+      ],
+      "black": [
+        "THIS BOX CONTAINS GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The blue and white boxes both have trivially false statements, as only one box contains the gems. As such, the black box\u0027s statement is true, which means it contains the gems."
+    }
   },
   {
     "id": 8,
-    "blue": [
-      "THE GEMS ARE NOT IN THE WHITE BOX."
-    ],
-    "white": [
-      "THE GEMS ARE NOT IN THIS BOX."
-    ],
-    "black": [
-      "THE GEMS ARE IN THIS BOX."
-    ],
-    "prize": "Blue",
-    "solution": "If the gems are in the white box, all three statements are false. If the gems are in the black box, all three statements are true. As such, the gems must be in the blue box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE NOT IN THE WHITE BOX."
+      ],
+      "white": [
+        "THE GEMS ARE NOT IN THIS BOX."
+      ],
+      "black": [
+        "THE GEMS ARE IN THIS BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "If the gems are in the white box, all three statements are false. If the gems are in the black box, all three statements are true. As such, the gems must be in the blue box."
+    }
   },
   {
     "id": 9,
-    "blue": [
-      "THERE ARE THREE BOXES IN THIS ROOM."
-    ],
-    "white": [
-      "TWO BOXES IN THIS ROOM ARE EMPTY."
-    ],
-    "black": [
-      "THIS BOX IS ONE OF THE TWO EMPTY BOXES."
-    ],
-    "prize": "Black",
-    "solution": "The blue box statement is obviously true, and the white box statement must also be true due to the basic rules of the game. There must be a box with false statements, so the black box is false by elimination. Hence the black box is not one of the two empty boxes, i.e. the black box contains the prize. "
+    "input": {
+      "blue": [
+        "THERE ARE THREE BOXES IN THIS ROOM."
+      ],
+      "white": [
+        "TWO BOXES IN THIS ROOM ARE EMPTY."
+      ],
+      "black": [
+        "THIS BOX IS ONE OF THE TWO EMPTY BOXES."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The blue box statement is obviously true, and the white box statement must also be true due to the basic rules of the game. There must be a box with false statements, so the black box is false by elimination. Hence the black box is not one of the two empty boxes, i.e. the black box contains the prize. "
+    }
   },
   {
     "id": 10,
-    "blue": [
-      "THIS STATEMENT APPEARS ON ANOTHER BOX."
-    ],
-    "white": [
-      "THE BLUE BOX IS EMPTY."
-    ],
-    "black": [
-      "THIS STATEMENT APPEARS ON ANOTHER BOX."
-    ],
-    "prize": "Blue",
-    "solution": "The blue and black boxes both have trivially true statements (the statement also appearing on the other box), so the white box must be false. This places the gems in the blue box."
+    "input": {
+      "blue": [
+        "THIS STATEMENT APPEARS ON ANOTHER BOX."
+      ],
+      "white": [
+        "THE BLUE BOX IS EMPTY."
+      ],
+      "black": [
+        "THIS STATEMENT APPEARS ON ANOTHER BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The blue and black boxes both have trivially true statements (the statement also appearing on the other box), so the white box must be false. This places the gems in the blue box."
+    }
   },
   {
     "id": 11,
-    "blue": [
-      "THIS IS THE BLUE BOX."
-    ],
-    "white": [
-      "THE BLUE BOX IS TRUE."
-    ],
-    "black": [
-      "THE BLUE BOX IS EMPTY."
-    ],
-    "prize": "Blue",
-    "solution": "The blue box is trivially true, and thus the white box is also true. As one box must be false, the black box’s message is false, meaning the gems must be in the blue box."
+    "input": {
+      "blue": [
+        "THIS IS THE BLUE BOX."
+      ],
+      "white": [
+        "THE BLUE BOX IS TRUE."
+      ],
+      "black": [
+        "THE BLUE BOX IS EMPTY."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The blue box is trivially true, and thus the white box is also true. As one box must be false, the black box’s message is false, meaning the gems must be in the blue box."
+    }
   },
   {
     "id": 12,
-    "blue": [
-      "TWO OF THESE STATEMENTS ARE TRUE."
-    ],
-    "white": [
-      "THE STATEMENT ON THE BLUE BOX IS TRUE."
-    ],
-    "black": [
-      " THE GEMS ARE IN A BOX WITH A TRUE STATEMENT."
-    ],
-    "prize": "Black",
-    "solution": "Assuming the blue box is true, the white box is also true, meaning the black box must be false. Assuming the blue box is false, the white box is also false, meaning the black box must be true. In either case, the black box’s statement points toward itself containing the gems."
+    "input": {
+      "blue": [
+        "TWO OF THESE STATEMENTS ARE TRUE."
+      ],
+      "white": [
+        "THE STATEMENT ON THE BLUE BOX IS TRUE."
+      ],
+      "black": [
+        " THE GEMS ARE IN A BOX WITH A TRUE STATEMENT."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "Assuming the blue box is true, the white box is also true, meaning the black box must be false. Assuming the blue box is false, the white box is also false, meaning the black box must be true. In either case, the black box’s statement points toward itself containing the gems."
+    }
   },
   {
     "id": 13,
-    "blue": [
-      "THERE ARE FOUR BOXES IN THIS ROOM."
-    ],
-    "white": [
-      "THERE IS ONLY ONE BOX IN THIS ROOM."
-    ],
-    "black": [
-      "THE GEMS ARE IN THE TRUE BOX."
-    ],
-    "prize": "Black",
-    "solution": "The blue box and white boxes can be proven false through simple observation. Therefore, the black box is true, and it contains the gems."
+    "input": {
+      "blue": [
+        "THERE ARE FOUR BOXES IN THIS ROOM."
+      ],
+      "white": [
+        "THERE IS ONLY ONE BOX IN THIS ROOM."
+      ],
+      "black": [
+        "THE GEMS ARE IN THE TRUE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The blue box and white boxes can be proven false through simple observation. Therefore, the black box is true, and it contains the gems."
+    }
   },
   {
     "id": 14,
-    "blue": [
-      "THIS IS THE BLACK BOX."
-    ],
-    "white": [
-      "THIS IS THE BLACK BOX."
-    ],
-    "black": [
-      "THE BLACK BOX IS NOT EMPTY"
-    ],
-    "prize": "Black",
-    "solution": "The blue and white boxes’ statements are both evidently false. The black box therefore must be true, and the double negative of “not empty” means that it contains the gems."
+    "input": {
+      "blue": [
+        "THIS IS THE BLACK BOX."
+      ],
+      "white": [
+        "THIS IS THE BLACK BOX."
+      ],
+      "black": [
+        "THE BLACK BOX IS NOT EMPTY"
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The blue and white boxes’ statements are both evidently false. The black box therefore must be true, and the double negative of “not empty” means that it contains the gems."
+    }
   },
   {
     "id": 15,
-    "blue": [
-      "A BOX NEXT TO THIS BOX CONTAINS GEMS."
-    ],
-    "white": [
-      "BOTH BOXES NEXT TO THIS BOX CONTAIN GEMS."
-    ],
-    "black": [
-      "A BOX NEXT TO THIS BOX IS TRUE."
-    ],
-    "prize": "White",
-    "solution": "The white box is trivially false due to the rules of the Parlor Game. As the white box is the only box next to the black box, the black box must also be false. Therefore, only the blue box depicts a true statement. As the only box next to the blue box, the white box contains the gems."
+    "input": {
+      "blue": [
+        "A BOX NEXT TO THIS BOX CONTAINS GEMS."
+      ],
+      "white": [
+        "BOTH BOXES NEXT TO THIS BOX CONTAIN GEMS."
+      ],
+      "black": [
+        "A BOX NEXT TO THIS BOX IS TRUE."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The white box is trivially false due to the rules of the Parlor Game. As the white box is the only box next to the black box, the black box must also be false. Therefore, only the blue box depicts a true statement. As the only box next to the blue box, the white box contains the gems."
+    }
   },
   {
     "id": 16,
-    "blue": [
-      "ALL THREE STATEMENTS ARE FALSE."
-    ],
-    "white": [
-      "TWO STATEMENTS ARE FALSE."
-    ],
-    "black": [
-      "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT."
-    ],
-    "prize": "White",
-    "solution": "The blue box is trivially false due to the rules of the Parlor Game. If the white box was false, it would lead to a paradox, as the blue box would have to be true due to the Game’s rules, leaving two false statements. Therefore, the white box is true, and the black box contains the other false statement. Said false statement points towards the only true box: The white box."
+    "input": {
+      "blue": [
+        "ALL THREE STATEMENTS ARE FALSE."
+      ],
+      "white": [
+        "TWO STATEMENTS ARE FALSE."
+      ],
+      "black": [
+        "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The blue box is trivially false due to the rules of the Parlor Game. If the white box was false, it would lead to a paradox, as the blue box would have to be true due to the Game’s rules, leaving two false statements. Therefore, the white box is true, and the black box contains the other false statement. Said false statement points towards the only true box: The white box."
+    }
   },
   {
     "id": 19,
-    "blue": [
-      "THE GEMS ARE ON THE DESK."
-    ],
-    "white": [
-      "THE GEMS ARE IN THIS BOX."
-    ],
-    "black": [
-      "THE GEMS ARE ON THE FLOOR."
-    ],
-    "prize": "White",
-    "solution": "The blue box and white box can be proven trivially false through observation. Therefore, the white box must be true, and it contains the gems."
+    "input": {
+      "blue": [
+        "THE GEMS ARE ON THE DESK."
+      ],
+      "white": [
+        "THE GEMS ARE IN THIS BOX."
+      ],
+      "black": [
+        "THE GEMS ARE ON THE FLOOR."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The blue box and white box can be proven trivially false through observation. Therefore, the white box must be true, and it contains the gems."
+    }
   },
   {
     "id": 20,
-    "blue": [
-      "THE OTHER TWO BOXES ARE TRUE."
-    ],
-    "white": [
-      "THE OTHER TWO BOXES ARE BLUE."
-    ],
-    "black": [
-      "THE OTHER TWO BOXES ARE EMPTY."
-    ],
-    "prize": "Black",
-    "solution": "The white box can be proven false through simple observation. If the blue box was true, it would make every box true, contradicting the rules of the Parlor Game. Therefore, it is false, and the only true box is the black box, which points towards itself containing the gems."
+    "input": {
+      "blue": [
+        "THE OTHER TWO BOXES ARE TRUE."
+      ],
+      "white": [
+        "THE OTHER TWO BOXES ARE BLUE."
+      ],
+      "black": [
+        "THE OTHER TWO BOXES ARE EMPTY."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The white box can be proven false through simple observation. If the blue box was true, it would make every box true, contradicting the rules of the Parlor Game. Therefore, it is false, and the only true box is the black box, which points towards itself containing the gems."
+    }
   },
   {
     "id": 21,
-    "blue": [
-      "THE GEMS ARE NOT IN THIS BOX."
-    ],
-    "white": [
-      "THE BLUE BOX IS TRUE."
-    ],
-    "black": [
-      "THE GEMS ARE IN THIS BOX."
-    ],
-    "prize": "White",
-    "solution": "If the black box is true, then there must be no gems in the blue box. This makes every box true, contradicting the rules of the Parlor Game. Therefore, the black box is false. If the other two statements were false, every box would be false, again contradicting the rules. Therefore, the blue and white statements are true. As the gems are in neither the blue or black boxes, they must be in the white box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE NOT IN THIS BOX."
+      ],
+      "white": [
+        "THE BLUE BOX IS TRUE."
+      ],
+      "black": [
+        "THE GEMS ARE IN THIS BOX."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "If the black box is true, then there must be no gems in the blue box. This makes every box true, contradicting the rules of the Parlor Game. Therefore, the black box is false. If the other two statements were false, every box would be false, again contradicting the rules. Therefore, the blue and white statements are true. As the gems are in neither the blue or black boxes, they must be in the white box."
+    }
   },
   {
     "id": 22,
-    "blue": [
-      "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT."
-    ],
-    "white": [
-      "THE BLUE BOX IS FALSE."
-    ],
-    "black": [
-      "THE WHITE BOX IS FALSE."
-    ],
-    "prize": "White",
-    "solution": "If the black box is true, the white box must be false, making the blue box true. This leaves the white box as the only false box. If the black box is false, the white box must be true, making the blue box false. This leaves the white box as the only true statement. In either scenario, the blue box points towards the white box containing the gems."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT."
+      ],
+      "white": [
+        "THE BLUE BOX IS FALSE."
+      ],
+      "black": [
+        "THE WHITE BOX IS FALSE."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "If the black box is true, the white box must be false, making the blue box true. This leaves the white box as the only false box. If the black box is false, the white box must be true, making the blue box false. This leaves the white box as the only true statement. In either scenario, the blue box points towards the white box containing the gems."
+    }
   },
   {
     "id": 23,
-    "blue": [
-      "THIS BOX CONTAINS THE GEMS."
-    ],
-    "white": [
-      "THIS BOX DOES NOT CONTAIN THE GEMS."
-    ],
-    "black": [
-      "THE OTHER TWO BOXES ARE TRUE."
-    ],
-    "prize": "Black",
-    "solution": "If the black box’s statement was true, every box would be true, contradicting the rules of the Parlor Game. Therefore, the black box is false, and as per its statement, one of the other two boxes must be false. If the white box was false, two boxes would contain the gems, which is impossible. Therefore, the blue box’s statement must be false. The white box then becomes the only true box, and as the gems are in neither the blue box nor the white box, they must be in the black box."
+    "input": {
+      "blue": [
+        "THIS BOX CONTAINS THE GEMS."
+      ],
+      "white": [
+        "THIS BOX DOES NOT CONTAIN THE GEMS."
+      ],
+      "black": [
+        "THE OTHER TWO BOXES ARE TRUE."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the black box’s statement was true, every box would be true, contradicting the rules of the Parlor Game. Therefore, the black box is false, and as per its statement, one of the other two boxes must be false. If the white box was false, two boxes would contain the gems, which is impossible. Therefore, the blue box’s statement must be false. The white box then becomes the only true box, and as the gems are in neither the blue box nor the white box, they must be in the black box."
+    }
   },
   {
     "id": 24,
-    "blue": [
-      "A BOX WITH A FALSE STATEMENT CONTAINS THE GEMS."
-    ],
-    "white": [
-      "THE STATEMENT ON THE BLUE BOX IS TRUE."
-    ],
-    "black": [
-      "THE BLUE BOX CONTAINS THE GEMS."
-    ],
-    "prize": "Black",
-    "solution": "If the black box’s statement was true, then the blue box would be self-referential. This creates a paradox, as if the blue box contains the gems, it must be false. If it is false, however, then a true box must contain the gems, which it is not. Therefore, the black box’s statement is false. If the blue box was also false, every box would be false, contradicting the rules of the Parlor Game. Therefore, both the blue and white boxes are true, and the one false box, the black box, contains the gems."
+    "input": {
+      "blue": [
+        "A BOX WITH A FALSE STATEMENT CONTAINS THE GEMS."
+      ],
+      "white": [
+        "THE STATEMENT ON THE BLUE BOX IS TRUE."
+      ],
+      "black": [
+        "THE BLUE BOX CONTAINS THE GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the black box’s statement was true, then the blue box would be self-referential. This creates a paradox, as if the blue box contains the gems, it must be false. If it is false, however, then a true box must contain the gems, which it is not. Therefore, the black box’s statement is false. If the blue box was also false, every box would be false, contradicting the rules of the Parlor Game. Therefore, both the blue and white boxes are true, and the one false box, the black box, contains the gems."
+    }
   },
   {
     "id": 25,
-    "blue": [
-      "THE BLACK BOX IS NOT EMPTY."
-    ],
-    "white": [
-      "THE STATEMENT ON THE BLACK BOX IS TRUE."
-    ],
-    "black": [
-      "A BOX WITH A FALSE STATEMENT CONTAINS THE GEMS."
-    ],
-    "prize": "Blue",
-    "solution": "If the blue box’s statement was true, then the black box would be self-referential. This creates a paradox, as if the black box contains the gems, it must be false. If it is false, however, then a true box must contain the gems, which it is not. Therefore, the blue box’s statement is false. If the black box was also false, every box would be false, contradicting the rules of the Parlor Game. Therefore, both the black and white boxes are true, and the one false box, the blue box, contains the gems."
+    "input": {
+      "blue": [
+        "THE BLACK BOX IS NOT EMPTY."
+      ],
+      "white": [
+        "THE STATEMENT ON THE BLACK BOX IS TRUE."
+      ],
+      "black": [
+        "A BOX WITH A FALSE STATEMENT CONTAINS THE GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "If the blue box’s statement was true, then the black box would be self-referential. This creates a paradox, as if the black box contains the gems, it must be false. If it is false, however, then a true box must contain the gems, which it is not. Therefore, the blue box’s statement is false. If the black box was also false, every box would be false, contradicting the rules of the Parlor Game. Therefore, both the black and white boxes are true, and the one false box, the blue box, contains the gems."
+    }
   },
   {
     "id": 26,
-    "blue": [
-      "THE GEMS ARE NOT IN THIS BOX."
-    ],
-    "white": [
-      "THE GEMS ARE IN THIS BOX."
-    ],
-    "black": [
-      "THE WHITE BOX IS TRUE."
-    ],
-    "prize": "Black",
-    "solution": "If the black box was true, then the white box would also be true. This would make the one false statement present on the blue box. However, this would cause the gems to be present in both the blue and white boxes, which contradicts the rules of the Parlor Game. Therefore, the black and white boxes are both false, leaving the blue box the only true box. As the gems are in neither the blue nor the white box, the black box must contain the gems."
+    "input": {
+      "blue": [
+        "THE GEMS ARE NOT IN THIS BOX."
+      ],
+      "white": [
+        "THE GEMS ARE IN THIS BOX."
+      ],
+      "black": [
+        "THE WHITE BOX IS TRUE."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the black box was true, then the white box would also be true. This would make the one false statement present on the blue box. However, this would cause the gems to be present in both the blue and white boxes, which contradicts the rules of the Parlor Game. Therefore, the black and white boxes are both false, leaving the blue box the only true box. As the gems are in neither the blue nor the white box, the black box must contain the gems."
+    }
   },
   {
     "id": 27,
-    "blue": [
-      "THERE ARE TWO FALSE STATEMENTS."
-    ],
-    "white": [
-      "THIS IS THE ONLY TRUE STATEMENT."
-    ],
-    "black": [
-      "THE WHITE BOX IS EMPTY."
-    ],
-    "prize": "White",
-    "solution": "If the blue box’s statement is false, then it must be the only false statement, as the notion of three false statements is incompatible with the rules of the Parlor Game. However, the white and black boxes would then both be true, even as the white box claims it is the only true statement. Therefore, the blue box’s statement is true, and the white and black boxes must be false. The black box’s false statement then points towards the gems in the white box."
+    "input": {
+      "blue": [
+        "THERE ARE TWO FALSE STATEMENTS."
+      ],
+      "white": [
+        "THIS IS THE ONLY TRUE STATEMENT."
+      ],
+      "black": [
+        "THE WHITE BOX IS EMPTY."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "If the blue box’s statement is false, then it must be the only false statement, as the notion of three false statements is incompatible with the rules of the Parlor Game. However, the white and black boxes would then both be true, even as the white box claims it is the only true statement. Therefore, the blue box’s statement is true, and the white and black boxes must be false. The black box’s false statement then points towards the gems in the white box."
+    }
   },
   {
     "id": 28,
-    "blue": [
-      "THIS BOX IS EMPTY."
-    ],
-    "white": [
-      "A BOX WITH A FALSE STATEMENT IS EMPTY."
-    ],
-    "black": [
-      "THERE ARE TWO FALSE STATEMENTS."
-    ],
-    "prize": "White",
-    "solution": "If the black box’s statement is true, it must refer to the blue and white boxes, lest it become paradoxical. The blue box would contain the gems, leaving the white box empty. However, this would make a box with a false statement empty, leaving the white box’s falsity paradoxical. Therefore, the black box’s statement is false, and as not to contradict the rules of the Parlor Game, it must be the only false statement. Therefore, as the blue box rules itself out and the white box causes the only false box, black, to be empty, the white box must contain the gems."
+    "input": {
+      "blue": [
+        "THIS BOX IS EMPTY."
+      ],
+      "white": [
+        "A BOX WITH A FALSE STATEMENT IS EMPTY."
+      ],
+      "black": [
+        "THERE ARE TWO FALSE STATEMENTS."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "If the black box’s statement is true, it must refer to the blue and white boxes, lest it become paradoxical. The blue box would contain the gems, leaving the white box empty. However, this would make a box with a false statement empty, leaving the white box’s falsity paradoxical. Therefore, the black box’s statement is false, and as not to contradict the rules of the Parlor Game, it must be the only false statement. Therefore, as the blue box rules itself out and the white box causes the only false box, black, to be empty, the white box must contain the gems."
+    }
   },
   {
     "id": 29,
-    "blue": [
-      "THE EMPTY BOXES BOTH HAVE TRUE STATEMENTS."
-    ],
-    "white": [
-      "THE BLUE BOX HAS A TRUE STATEMENT."
-    ],
-    "black": [
-      "THIS BOX CONTAINS THE GEMS."
-    ],
-    "prize": "Black",
-    "solution": "If the blue box is true, the white box must also be true, and the box with gems must be false due to the rules of the Parlor Game. However, as the blue and white boxes would be empty, the black box would have to contain the gems, which would be impossible if it was false. Therefore, the blue box is false, and by extension the white box is as well. Therefore, the black box is the only true box, and it contains the gems."
+    "input": {
+      "blue": [
+        "THE EMPTY BOXES BOTH HAVE TRUE STATEMENTS."
+      ],
+      "white": [
+        "THE BLUE BOX HAS A TRUE STATEMENT."
+      ],
+      "black": [
+        "THIS BOX CONTAINS THE GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the blue box is true, the white box must also be true, and the box with gems must be false due to the rules of the Parlor Game. However, as the blue and white boxes would be empty, the black box would have to contain the gems, which would be impossible if it was false. Therefore, the blue box is false, and by extension the white box is as well. Therefore, the black box is the only true box, and it contains the gems."
+    }
   },
   {
     "id": 30,
-    "blue": [
-      "ONE OF THE OTHER BOXES IS FALSE."
-    ],
-    "white": [
-      "YOU WILL OPEN THIS BOX AND FIND IT EMPTY."
-    ],
-    "black": [
-      "THE BLUE BOX IS TRUE."
-    ],
-    "prize": "White",
-    "solution": "If the blue box is false, then none of the other boxes must be false. However, the black box would then truthfully declare that the blue box is true, a clear contradiction. Therefore, the blue box is true, and by extension, the black box as well. Therefore, the only other box that could be false according to the blue box and the rules of the Parlor Game is the white box. Therefore, “YOU WILL OPEN THIS BOX AND FIND IT [NOT] EMPTY,” as it contains the gems."
+    "input": {
+      "blue": [
+        "ONE OF THE OTHER BOXES IS FALSE."
+      ],
+      "white": [
+        "YOU WILL OPEN THIS BOX AND FIND IT EMPTY."
+      ],
+      "black": [
+        "THE BLUE BOX IS TRUE."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "If the blue box is false, then none of the other boxes must be false. However, the black box would then truthfully declare that the blue box is true, a clear contradiction. Therefore, the blue box is true, and by extension, the black box as well. Therefore, the only other box that could be false according to the blue box and the rules of the Parlor Game is the white box. Therefore, “YOU WILL OPEN THIS BOX AND FIND IT [NOT] EMPTY,” as it contains the gems."
+    }
   },
   {
     "id": 31,
-    "blue": [
-      "THE GEMS ARE IN THE BLACK BOX."
-    ],
-    "white": [
-      "THE GEMS ARE NOT IN THIS BOX."
-    ],
-    "black": [
-      "THE STATEMENTS ON THE OTHER TWO BOXES ARE TRUE."
-    ],
-    "prize": "Blue",
-    "solution": "If the black box was true, then every box would be true, contradicting the rules of the Parlor Game. Therefore, the black box must be false. If both other statements were false, the rules would again be contradicted, so either the blue or the white box must be false. If the white box was false and the blue box was true, the gems would be in both the white and black boxes, which is impossible. Therefore, the blue box is false and the white box is true. As the gems can be in neither the white box nor the black box, they must be in the blue box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THE BLACK BOX."
+      ],
+      "white": [
+        "THE GEMS ARE NOT IN THIS BOX."
+      ],
+      "black": [
+        "THE STATEMENTS ON THE OTHER TWO BOXES ARE TRUE."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "If the black box was true, then every box would be true, contradicting the rules of the Parlor Game. Therefore, the black box must be false. If both other statements were false, the rules would again be contradicted, so either the blue or the white box must be false. If the white box was false and the blue box was true, the gems would be in both the white and black boxes, which is impossible. Therefore, the blue box is false and the white box is true. As the gems can be in neither the white box nor the black box, they must be in the blue box."
+    }
   },
   {
     "id": 32,
-    "blue": [
-      "THE GEMS ARE IN THE WHITE BOX."
-    ],
-    "white": [
-      "THE OTHER TWO STATEMENTS ARE BOTH TRUE."
-    ],
-    "black": [
-      "THE GEMS ARE NOT IN THE BLUE BOX."
-    ],
-    "prize": "Black",
-    "solution": "If the white box was true, every statement would be true, which contradicts the rules of the Parlor Game. Therefore, the white box must be false. If both other statements were false, the rules would again be broken, so either the blue or the black box must be false. If the black box was false and the blue box was true, the gems would be present in both the blue and white boxes, which is impossible. Therefore, the blue box must be false and the white box must be true. As the gems can be in neither the blue box nor the white box, they must be in the black box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THE WHITE BOX."
+      ],
+      "white": [
+        "THE OTHER TWO STATEMENTS ARE BOTH TRUE."
+      ],
+      "black": [
+        "THE GEMS ARE NOT IN THE BLUE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the white box was true, every statement would be true, which contradicts the rules of the Parlor Game. Therefore, the white box must be false. If both other statements were false, the rules would again be broken, so either the blue or the black box must be false. If the black box was false and the blue box was true, the gems would be present in both the blue and white boxes, which is impossible. Therefore, the blue box must be false and the white box must be true. As the gems can be in neither the blue box nor the white box, they must be in the black box."
+    }
   },
   {
     "id": 33,
-    "blue": [
-      "THE GEMS ARE NOT IN A BOX WITH A TRUE STATEMENT."
-    ],
-    "white": [
-      "THE STATEMENT ON THE BLUE BOX IS AS TRUE AS THIS STATEMENT."
-    ],
-    "black": [
-      "THE GEMS ARE NOT IN A BOX WITH A TRUE STATEMENT."
-    ],
-    "prize": "White",
-    "solution": "If the white box was true, then every statement would be true, which contradicts the rules of the Parlor Game. Therefore, the white box is false, meaning the statement on the blue box does not have the same truth value as the false white box’s statement. The blue box’s statement is therefore true, and by extension, the identical black box. This means the gems are in neither of these true boxes, meaning they can only be in the white box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE NOT IN A BOX WITH A TRUE STATEMENT."
+      ],
+      "white": [
+        "THE STATEMENT ON THE BLUE BOX IS AS TRUE AS THIS STATEMENT."
+      ],
+      "black": [
+        "THE GEMS ARE NOT IN A BOX WITH A TRUE STATEMENT."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "If the white box was true, then every statement would be true, which contradicts the rules of the Parlor Game. Therefore, the white box is false, meaning the statement on the blue box does not have the same truth value as the false white box’s statement. The blue box’s statement is therefore true, and by extension, the identical black box. This means the gems are in neither of these true boxes, meaning they can only be in the white box."
+    }
   },
   {
     "id": 34,
-    "blue": [
-      "THERE IS ONLY ONE TRUE STATEMENT."
-    ],
-    "white": [
-      "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT."
-    ],
-    "black": [
-      "THERE ARE TWO TRUE STATEMENTS."
-    ],
-    "prize": "Blue",
-    "solution": "If the blue box was false, then there must be two true statements, as three would violate the rules of the Parlor Game. Therefore, there would be two true statements on the white and black boxes. If the blue box was true, then there would be two false statements on the white and black boxes. In both cases, the white box’s truth value is opposite to that of the blue box and the same as that of the black box. This means that regardless of whether the blue box’s statement is true, the white box’s statement means the blue box contains the gems."
+    "input": {
+      "blue": [
+        "THERE IS ONLY ONE TRUE STATEMENT."
+      ],
+      "white": [
+        "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT."
+      ],
+      "black": [
+        "THERE ARE TWO TRUE STATEMENTS."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "If the blue box was false, then there must be two true statements, as three would violate the rules of the Parlor Game. Therefore, there would be two true statements on the white and black boxes. If the blue box was true, then there would be two false statements on the white and black boxes. In both cases, the white box’s truth value is opposite to that of the blue box and the same as that of the black box. This means that regardless of whether the blue box’s statement is true, the white box’s statement means the blue box contains the gems."
+    }
   },
   {
     "id": 35,
-    "blue": [
-      "THIS IS THE ONLY TRUE BOX."
-    ],
-    "white": [
-      "THE GEMS ARE IN THE OTHER BOX WITH A TRUE STATEMENT."
-    ],
-    "black": [
-      "ONE OF THE OTHER BOXES IS TRUE."
-    ],
-    "prize": "Black",
-    "solution": "If the black box was false, then every statement would be false, contradicting the rules of the Parlor Game. Therefore, the black box is true, and either the blue or the white box must be true. The blue box cannot be true, as it states that no other box is true while the veracity of the black box has already been proven. Therefore, the white box’s statement is true, and the true box other than the white box is the black box, which would contain the gems."
+    "input": {
+      "blue": [
+        "THIS IS THE ONLY TRUE BOX."
+      ],
+      "white": [
+        "THE GEMS ARE IN THE OTHER BOX WITH A TRUE STATEMENT."
+      ],
+      "black": [
+        "ONE OF THE OTHER BOXES IS TRUE."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the black box was false, then every statement would be false, contradicting the rules of the Parlor Game. Therefore, the black box is true, and either the blue or the white box must be true. The blue box cannot be true, as it states that no other box is true while the veracity of the black box has already been proven. Therefore, the white box’s statement is true, and the true box other than the white box is the black box, which would contain the gems."
+    }
   },
   {
     "id": 36,
-    "blue": [
-      "THE GEMS ARE IN THE ONLY BOX WITH A TRUE STATEMENT."
-    ],
-    "white": [
-      "ONE OF THE OTHER BOXES IS TRUE."
-    ],
-    "black": [
-      "THE GEMS ARE IN THE ONLY BOX WITH A FALSE STATEMENT."
-    ],
-    "prize": "Blue",
-    "solution": "If the white box is false, every statement must be false, which contradicts the rules of the Parlor Game. Therefore, the white box is true, and either the blue or the black box must be true. The blue box implies that only one box is true. This means that it cannot be true, as the veracity of the white box has already been proven. Therefore, the black box must be true, and the blue box is the only false box, meaning according to the black box’s true statement, the blue box contains the gems."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THE ONLY BOX WITH A TRUE STATEMENT."
+      ],
+      "white": [
+        "ONE OF THE OTHER BOXES IS TRUE."
+      ],
+      "black": [
+        "THE GEMS ARE IN THE ONLY BOX WITH A FALSE STATEMENT."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "If the white box is false, every statement must be false, which contradicts the rules of the Parlor Game. Therefore, the white box is true, and either the blue or the black box must be true. The blue box implies that only one box is true. This means that it cannot be true, as the veracity of the white box has already been proven. Therefore, the black box must be true, and the blue box is the only false box, meaning according to the black box’s true statement, the blue box contains the gems."
+    }
   },
   {
     "id": 37,
-    "blue": [
-      "ONLY ONE STATEMENT IS FALSE."
-    ],
-    "white": [
-      "ONLY ONE STATEMENT IS TRUE."
-    ],
-    "black": [
-      "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT."
-    ],
-    "prize": "White",
-    "solution": "If the white box is true, it must contain the only true statement. Therefore, the blue and black boxes are both false. If the white box is false, the other two statements must be true. In either case, the black box’s truth value is opposite that of the white box and the same as that of the blue box. Therefore, the black box always places the gems in the white box."
+    "input": {
+      "blue": [
+        "ONLY ONE STATEMENT IS FALSE."
+      ],
+      "white": [
+        "ONLY ONE STATEMENT IS TRUE."
+      ],
+      "black": [
+        "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "If the white box is true, it must contain the only true statement. Therefore, the blue and black boxes are both false. If the white box is false, the other two statements must be true. In either case, the black box’s truth value is opposite that of the white box and the same as that of the blue box. Therefore, the black box always places the gems in the white box."
+    }
   },
   {
     "id": 38,
-    "blue": [
-      "THE GEMS ARE IN THE ONLY TRUE BOX."
-    ],
-    "white": [
-      "ONLY ONE STATEMENT IS TRUE."
-    ],
-    "black": [
-      "THE GEMS ARE IN THE BLUE BOX."
-    ],
-    "prize": "Black",
-    "solution": "If the white box is false, the other two statements must be true. However, the blue box implies that only one statement is true, which is incompatible with the additional truth of the black box’s statement. Therefore, the white box is true, and it is the only true statement. This makes both the blue and black boxes false, meaning that the gems are in neither the blue box or the only true box, white. The only box the gems can be is therefore the black box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THE ONLY TRUE BOX."
+      ],
+      "white": [
+        "ONLY ONE STATEMENT IS TRUE."
+      ],
+      "black": [
+        "THE GEMS ARE IN THE BLUE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the white box is false, the other two statements must be true. However, the blue box implies that only one statement is true, which is incompatible with the additional truth of the black box’s statement. Therefore, the white box is true, and it is the only true statement. This makes both the blue and black boxes false, meaning that the gems are in neither the blue box or the only true box, white. The only box the gems can be is therefore the black box."
+    }
   },
   {
     "id": 40,
-    "blue": [
-      "THE GEMS ARE IN THIS BOX."
-    ],
-    "white": [
-      "THIS STATEMENT IS OF NO HELP AT ALL."
-    ],
-    "black": [
-      "THE GEMS ARE IN THE BLUE BOX."
-    ],
-    "prize": "Blue",
-    "solution": "The black box and the blue box are functionally saying the exact same thing, so they share a truth value and the white box must have the opposite truth value. Thus, knowing the white box\u0027s truth value solves the puzzle. If it were true, we would know the truth value of every box, despite the white statement asserting that it is of no help: a contradiction. So the white statement must be false, which is helpful indeed as it makes the other two statements true and puts the gems in the blue box. "
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THIS BOX."
+      ],
+      "white": [
+        "THIS STATEMENT IS OF NO HELP AT ALL."
+      ],
+      "black": [
+        "THE GEMS ARE IN THE BLUE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The black box and the blue box are functionally saying the exact same thing, so they share a truth value and the white box must have the opposite truth value. Thus, knowing the white box\u0027s truth value solves the puzzle. If it were true, we would know the truth value of every box, despite the white statement asserting that it is of no help: a contradiction. So the white statement must be false, which is helpful indeed as it makes the other two statements true and puts the gems in the blue box. "
+    }
   },
   {
     "id": 41,
-    "blue": [
-      "THE TRUE BOXES ARE BOTH EMPTY."
-    ],
-    "white": [
-      "THE FALSE BOXES ARE BOTH TRUE."
-    ],
-    "black": [
-      "THE GEMS ARE IN THE BLUE BOX."
-    ],
-    "prize": "Blue",
-    "solution": "The white box is trivially false. Additionally, the blue box implies the existence of two true boxes with the word “both.” However, the only other box that could be true is the black box. The black box places the gems in the blue box, but this would be impossible if the blue box was true, as it claims that true boxes are empty. Therefore, the blue box is false, and the only true box is the black box, which places the gems in the blue box."
+    "input": {
+      "blue": [
+        "THE TRUE BOXES ARE BOTH EMPTY."
+      ],
+      "white": [
+        "THE FALSE BOXES ARE BOTH TRUE."
+      ],
+      "black": [
+        "THE GEMS ARE IN THE BLUE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The white box is trivially false. Additionally, the blue box implies the existence of two true boxes with the word “both.” However, the only other box that could be true is the black box. The black box places the gems in the blue box, but this would be impossible if the blue box was true, as it claims that true boxes are empty. Therefore, the blue box is false, and the only true box is the black box, which places the gems in the blue box."
+    }
   },
   {
     "id": 42,
-    "blue": [
-      "BOXES NEXT TO THIS BOX CONTAIN GEMS."
-    ],
-    "white": [
-      "BOXES NEXT TO THIS BOX CONTAIN GEMS."
-    ],
-    "black": [
-      "BOXES NEXT TO THIS BOX CONTAIN GEMS."
-    ],
-    "prize": "White",
-    "solution": "The white box is trivially false, as there are two boxes next to it. If they both had gems within, it would violate the rules of the Parlor Game. The blue box and the black box share a sole neighbor in the white box, so their statements can be simplified as “THE WHITE BOX CONTAINS GEMS.”  If they too were false, it would again violate the rules of the Parlor Game, so they must both be true, and the white box contains the gems."
+    "input": {
+      "blue": [
+        "BOXES NEXT TO THIS BOX CONTAIN GEMS."
+      ],
+      "white": [
+        "BOXES NEXT TO THIS BOX CONTAIN GEMS."
+      ],
+      "black": [
+        "BOXES NEXT TO THIS BOX CONTAIN GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The white box is trivially false, as there are two boxes next to it. If they both had gems within, it would violate the rules of the Parlor Game. The blue box and the black box share a sole neighbor in the white box, so their statements can be simplified as “THE WHITE BOX CONTAINS GEMS.”  If they too were false, it would again violate the rules of the Parlor Game, so they must both be true, and the white box contains the gems."
+    }
   },
   {
     "id": 43,
-    "blue": [
-      "THERE ARE TWO TRUE BOXES."
-    ],
-    "white": [
-      "THERE ARE TWO EMPTY BOXES."
-    ],
-    "black": [
-      "THIS BOX IS EMPTY."
-    ],
-    "prize": "Black",
-    "solution": "The white box is trivially true based on the rules of the Parlor Game. This leaves the only two boxes in dispute as the blue box and the black box. If the blue box is true, then it and the white box are the only two true boxes, leaving the black box false. If the blue box is false, there must not be two true boxes. If the black box was true, there would be two true boxes, so it must be false. In either scenario, the black box is false, and its statement points towards itself containing the gems."
+    "input": {
+      "blue": [
+        "THERE ARE TWO TRUE BOXES."
+      ],
+      "white": [
+        "THERE ARE TWO EMPTY BOXES."
+      ],
+      "black": [
+        "THIS BOX IS EMPTY."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The white box is trivially true based on the rules of the Parlor Game. This leaves the only two boxes in dispute as the blue box and the black box. If the blue box is true, then it and the white box are the only two true boxes, leaving the black box false. If the blue box is false, there must not be two true boxes. If the black box was true, there would be two true boxes, so it must be false. In either scenario, the black box is false, and its statement points towards itself containing the gems."
+    }
   },
   {
     "id": 44,
-    "blue": [
-      "THE GEMS ARE IN THE BLACK BOX."
-    ],
-    "white": [
-      "THIS STATEMENT IS OF NO HELP AT ALL."
-    ],
-    "black": [
-      "THIS BOX AND THE BLUE BOX ARE FALSE."
-    ],
-    "prize": "Black",
-    "solution": "If the black box was true, it would truthfully attempt to refer to its own falsity, creating a paradox. Therefore, the black box is false, and according to its false statement, the blue box must be true. The blue box would then truthfully place the gems in the black box. Superfluously, the white box’s statement is true."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THE BLACK BOX."
+      ],
+      "white": [
+        "THIS STATEMENT IS OF NO HELP AT ALL."
+      ],
+      "black": [
+        "THIS BOX AND THE BLUE BOX ARE FALSE."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the black box was true, it would truthfully attempt to refer to its own falsity, creating a paradox. Therefore, the black box is false, and according to its false statement, the blue box must be true. The blue box would then truthfully place the gems in the black box. Superfluously, the white box’s statement is true."
+    }
   },
   {
     "id": 45,
-    "blue": [
-      "THE GEMS ARE IN THE BLACK BOX."
-    ],
-    "white": [
-      "EVERY STATEMENT WITH THE WORD BLACK IS FALSE."
-    ],
-    "black": [
-      "THE GEMS ARE IN THE BLUE BOX."
-    ],
-    "prize": "Black",
-    "solution": "If the white box was true, it would truthfully attempt to refer to its own falsity, creating a paradox. Therefore, the white box must be false, and according to its false statement, a box with the word black must be true. The only other box with the word black in its statement is the blue box. Therefore, the blue box must be true, and its statement shows the gems’ location in the black box. The black box itself is false."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THE BLACK BOX."
+      ],
+      "white": [
+        "EVERY STATEMENT WITH THE WORD BLACK IS FALSE."
+      ],
+      "black": [
+        "THE GEMS ARE IN THE BLUE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the white box was true, it would truthfully attempt to refer to its own falsity, creating a paradox. Therefore, the white box must be false, and according to its false statement, a box with the word black must be true. The only other box with the word black in its statement is the blue box. Therefore, the blue box must be true, and its statement shows the gems’ location in the black box. The black box itself is false."
+    }
   },
   {
     "id": 46,
-    "blue": [
-      "THIS BOX IS NOT BLUE."
-    ],
-    "white": [
-      "EVERY STATEMENT WITH THE WORD BLUE IS FALSE."
-    ],
-    "black": [
-      "THE BLACK BOX AND THE BLUE BOX ARE EMPTY."
-    ],
-    "prize": "White",
-    "solution": "The blue box is trivially false due to simple observation. If the white box were true, it would imply that every box is false, including itself, which is clearly contradictory. Therefore the white box is also false, and the only remaining box which could be true is the black box. By process of elimination using the black box’s statement, the white box must contain the gems."
+    "input": {
+      "blue": [
+        "THIS BOX IS NOT BLUE."
+      ],
+      "white": [
+        "EVERY STATEMENT WITH THE WORD BLUE IS FALSE."
+      ],
+      "black": [
+        "THE BLACK BOX AND THE BLUE BOX ARE EMPTY."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The blue box is trivially false due to simple observation. If the white box were true, it would imply that every box is false, including itself, which is clearly contradictory. Therefore the white box is also false, and the only remaining box which could be true is the black box. By process of elimination using the black box’s statement, the white box must contain the gems."
+    }
   },
   {
     "id": 47,
-    "blue": [
-      "THE EMPTY BOXES ARE BOTH TRUE."
-    ],
-    "white": [
-      "THE GEMS ARE IN THE BLACK BOX."
-    ],
-    "black": [
-      "THIS IS NOT AN EMPTY BOX."
-    ],
-    "prize": "Black",
-    "solution": "If the blue box is true, then the other empty box must be true, and the full box false. However, this is impossible. If the gems were in the black box, both statements would be true. If the gems were in the white box, both statements would be false. Therefore, the blue box is false. As the white and black boxes have functionally the same statement, they share a truth value. If they were both false, the rules of the Parlor Game would be violated, so both boxes contain true statements, and the gems are in the black box."
+    "input": {
+      "blue": [
+        "THE EMPTY BOXES ARE BOTH TRUE."
+      ],
+      "white": [
+        "THE GEMS ARE IN THE BLACK BOX."
+      ],
+      "black": [
+        "THIS IS NOT AN EMPTY BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the blue box is true, then the other empty box must be true, and the full box false. However, this is impossible. If the gems were in the black box, both statements would be true. If the gems were in the white box, both statements would be false. Therefore, the blue box is false. As the white and black boxes have functionally the same statement, they share a truth value. If they were both false, the rules of the Parlor Game would be violated, so both boxes contain true statements, and the gems are in the black box."
+    }
   },
   {
     "id": 49,
-    "blue": [
-      "THE GEMS ARE ON THE TABLE BEHIND YOU."
-    ],
-    "white": [
-      "THE GEMS ARE IN THIS BOX."
-    ],
-    "black": [
-      "EVERY STATEMENT CLAIMING WHERE THE GEMS ARE IS FALSE.",
-      "THE GEMS ARE IN THE BLUE BOX."
-    ],
-    "prize": "White",
-    "solution": "The blue box is trivially false through simple observation. On the black box, either the top statement is false, or it is true and implies that the bottom statement is false. In either case, the black box must have a false statement. By the rules of the Parlor Game, one box must have only true statements; the only box left that could hold this title is the white box, and therefore the gems lie within it."
+    "input": {
+      "blue": [
+        "THE GEMS ARE ON THE TABLE BEHIND YOU."
+      ],
+      "white": [
+        "THE GEMS ARE IN THIS BOX."
+      ],
+      "black": [
+        "EVERY STATEMENT CLAIMING WHERE THE GEMS ARE IS FALSE.",
+        "THE GEMS ARE IN THE BLUE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The blue box is trivially false through simple observation. On the black box, either the top statement is false, or it is true and implies that the bottom statement is false. In either case, the black box must have a false statement. By the rules of the Parlor Game, one box must have only true statements; the only box left that could hold this title is the white box, and therefore the gems lie within it."
+    }
   },
   {
     "id": 50,
-    "blue": [
-      "THIS BOX IS EMPTY."
-    ],
-    "white": [
-      "THIS BOX IS EMPTY."
-    ],
-    "black": [
-      "THIS PUZZLE IS HARDER THAN IT SEEMS."
-    ],
-    "prize": "Black",
-    "solution": "If the blue or white boxes were both false, the rules of the Parlor Game would be violated. Therefore, either one or the other is false or both are true. However, there is no reason that one box would be false while the other would be true. As they both contain the same statement, any distinction on which of the two if any is lying is completely arbitrary. Therefore, since the puzzle must have a solution that does not involve guesswork, both statements must be true. This leaves the black box as the only box that could be false, and the only box that could contain the gems."
+    "input": {
+      "blue": [
+        "THIS BOX IS EMPTY."
+      ],
+      "white": [
+        "THIS BOX IS EMPTY."
+      ],
+      "black": [
+        "THIS PUZZLE IS HARDER THAN IT SEEMS."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the blue or white boxes were both false, the rules of the Parlor Game would be violated. Therefore, either one or the other is false or both are true. However, there is no reason that one box would be false while the other would be true. As they both contain the same statement, any distinction on which of the two if any is lying is completely arbitrary. Therefore, since the puzzle must have a solution that does not involve guesswork, both statements must be true. This leaves the black box as the only box that could be false, and the only box that could contain the gems."
+    }
   },
   {
     "id": 51,
-    "blue": [
-      "YOU WILL OPEN THIS BOX AND FIND IT EMPTY."
-    ],
-    "white": [
-      "A TRUE BOX CONTAINS THE GEMS."
-    ],
-    "black": [
-      "THIS BOX AND THE WHITE BOX ARE BOTH FALSE."
-    ],
-    "prize": "White",
-    "solution": "The black box cannot be true, as it refers to itself as false. Its statement then indicates that either it, the white box, or both are true, and as we already know the black box is false, the white box must be true. The white box indicates that a true box contains the gems, so whether the blue box is true or false, it is always empty. As the black box is definitively false, the only certainly true box is the white box, and it contains the gems."
+    "input": {
+      "blue": [
+        "YOU WILL OPEN THIS BOX AND FIND IT EMPTY."
+      ],
+      "white": [
+        "A TRUE BOX CONTAINS THE GEMS."
+      ],
+      "black": [
+        "THIS BOX AND THE WHITE BOX ARE BOTH FALSE."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The black box cannot be true, as it refers to itself as false. Its statement then indicates that either it, the white box, or both are true, and as we already know the black box is false, the white box must be true. The white box indicates that a true box contains the gems, so whether the blue box is true or false, it is always empty. As the black box is definitively false, the only certainly true box is the white box, and it contains the gems."
+    }
   },
   {
     "id": 52,
-    "blue": [
-      "THE WHITE BOX IS EMPTY."
-    ],
-    "white": [
-      "THE BLUE BOX IS FALSE."
-    ],
-    "black": [
-      "THE EMPTY BOXES BOTH HAVE FALSE STATEMENTS."
-    ],
-    "prize": "Black",
-    "solution": "If the black box was true, to avoid referring to itself as false, it must imply that the blue and white boxes are both false and empty. However, if the blue box was false, the white box would contain the gems. Therefore, the black box is false. If the white box is true, then the blue and black boxes must have false statements and be empty. This, however, means the black box’s statement would be made true. Therefore, the white box is false, and the white box is empty. As there must be an true and empty box, the blue box is empty, meaning the black box is the only box that could contain the gems."
+    "input": {
+      "blue": [
+        "THE WHITE BOX IS EMPTY."
+      ],
+      "white": [
+        "THE BLUE BOX IS FALSE."
+      ],
+      "black": [
+        "THE EMPTY BOXES BOTH HAVE FALSE STATEMENTS."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the black box was true, to avoid referring to itself as false, it must imply that the blue and white boxes are both false and empty. However, if the blue box was false, the white box would contain the gems. Therefore, the black box is false. If the white box is true, then the blue and black boxes must have false statements and be empty. This, however, means the black box’s statement would be made true. Therefore, the white box is false, and the white box is empty. As there must be an true and empty box, the blue box is empty, meaning the black box is the only box that could contain the gems."
+    }
   },
   {
     "id": 55,
-    "blue": [
-      "THE EMPTY BOXES ARE BOTH TRUE."
-    ],
-    "white": [
-      "THE EMPTY BOXES ARE BOTH FALSE."
-    ],
-    "black": [
-      "THIS IS NOT AN EMPTY BOX."
-    ],
-    "prize": "White",
-    "solution": "If the blue box is true, so as to not violate the rules of the Parlor Game, it would indicate that it and another empty box are true, and the false box contains the gems. However, the white box cannot be said true empty box, as it states the opposite of the blue box’s statement. Likewise, the black box cannot be both true and empty, as it claims to be full. This means the blue box must be false, and at least one empty box is false. If the black box is true, then the white box’s statement becomes paradoxical, as it can either “truthfully” or “falsely” claim it and the blue box are false, being wrong in either scenario. This means the black box must also be false, and the white box contains the only true statement. As per said statement, the white box contains the gems."
+    "input": {
+      "blue": [
+        "THE EMPTY BOXES ARE BOTH TRUE."
+      ],
+      "white": [
+        "THE EMPTY BOXES ARE BOTH FALSE."
+      ],
+      "black": [
+        "THIS IS NOT AN EMPTY BOX."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "If the blue box is true, so as to not violate the rules of the Parlor Game, it would indicate that it and another empty box are true, and the false box contains the gems. However, the white box cannot be said true empty box, as it states the opposite of the blue box’s statement. Likewise, the black box cannot be both true and empty, as it claims to be full. This means the blue box must be false, and at least one empty box is false. If the black box is true, then the white box’s statement becomes paradoxical, as it can either “truthfully” or “falsely” claim it and the blue box are false, being wrong in either scenario. This means the black box must also be false, and the white box contains the only true statement. As per said statement, the white box contains the gems."
+    }
   },
   {
     "id": 56,
-    "blue": [
-      "THIS BOX\u0027S STATEMENT IS BOTH TRUE AND FALSE."
-    ],
-    "white": [
-      "THE BLUE BOX CONTAINS THE GEMS IF ITS STATEMENT IS FALSE."
-    ],
-    "black": [
-      "THIS STATEMENT IS AS TRUE AS THE WHITE BOX\u0027S STATEMENT."
-    ],
-    "prize": "Blue",
-    "solution": "The blue box’s statement is trivially false. If the white box was false, then the black box’s statement becomes paradoxical: It can either be false and claim to not have the same truth value as the false white box or be true and claim to have the same truth value as the false white box. Therefore, the white box must be true, and the gems are in the false blue box. Incidentally, the truth value of the black box cannot be determined."
+    "input": {
+      "blue": [
+        "THIS BOX\u0027S STATEMENT IS BOTH TRUE AND FALSE."
+      ],
+      "white": [
+        "THE BLUE BOX CONTAINS THE GEMS IF ITS STATEMENT IS FALSE."
+      ],
+      "black": [
+        "THIS STATEMENT IS AS TRUE AS THE WHITE BOX\u0027S STATEMENT."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The blue box’s statement is trivially false. If the white box was false, then the black box’s statement becomes paradoxical: It can either be false and claim to not have the same truth value as the false white box or be true and claim to have the same truth value as the false white box. Therefore, the white box must be true, and the gems are in the false blue box. Incidentally, the truth value of the black box cannot be determined."
+    }
   },
   {
     "id": 57,
-    "blue": [
-      "STATEMENTS CONTAINING THE WORD \u0027STATEMENTS\u0027 ARE ALWAYS TRUE."
-    ],
-    "white": [
-      "BOTH STATEMENTS ON THE BLACK BOX ARE FALSE."
-    ],
-    "black": [
-      "THE GEMS ARE IN A BOX WITH A TRUE STATEMENT",
-      "THIS IS THE SECOND STATEMENT ON THIS BOX."
-    ],
-    "prize": "Black",
-    "solution": "The black box’s bottom statement is trivially true. This makes the white box trivially false, and since the white box’s statement contains the word ‘STATEMENTS’, the blue box is also false. This means the box that only displays the truth must be the black box, and its top statement implicates itself as containing the gems."
+    "input": {
+      "blue": [
+        "STATEMENTS CONTAINING THE WORD \"STATEMENTS\" ARE ALWAYS TRUE."
+      ],
+      "white": [
+        "BOTH STATEMENTS ON THE BLACK BOX ARE FALSE."
+      ],
+      "black": [
+        "THE GEMS ARE IN A BOX WITH A TRUE STATEMENT",
+        "THIS IS THE SECOND STATEMENT ON THIS BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The black box’s bottom statement is trivially true. This makes the white box trivially false, and since the white box’s statement contains the word ‘STATEMENTS’, the blue box is also false. This means the box that only displays the truth must be the black box, and its top statement implicates itself as containing the gems."
+    }
   },
   {
     "id": 58,
-    "blue": [
-      "THE GEMS ARE NOT IN THE BLACK BOX."
-    ],
-    "white": [
-      "THE GEMS ARE IN THE BLUE BOX."
-    ],
-    "black": [
-      "BOTH OF THESE STATEMENTS ARE FALSE.",
-      "THE STATEMENT ON THE WHITE BOX IS FALSE."
-    ],
-    "prize": "White",
-    "solution": "The black box’s top statement must be false, lest it become paradoxical. This means that one of the two statements on the black box must be true, and as one has been proven false, the bottom statement on the black box is true. This means the white box is false, and the blue box must be the box that only displays true statements. With the information that the gems are in neither the blue nor the black boxes, it can be determined that they must be in the white box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE NOT IN THE BLACK BOX."
+      ],
+      "white": [
+        "THE GEMS ARE IN THE BLUE BOX."
+      ],
+      "black": [
+        "BOTH OF THESE STATEMENTS ARE FALSE.",
+        "THE STATEMENT ON THE WHITE BOX IS FALSE."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The black box’s top statement must be false, lest it become paradoxical. This means that one of the two statements on the black box must be true, and as one has been proven false, the bottom statement on the black box is true. This means the white box is false, and the blue box must be the box that only displays true statements. With the information that the gems are in neither the blue nor the black boxes, it can be determined that they must be in the white box."
+    }
   },
   {
     "id": 59,
-    "blue": [
-      "THE GEMS ARE NOT IN THE BLACK BOX."
-    ],
-    "white": [
-      "THIS STATEMENT IS AS TRUE AS THE STATEMENT ON THE BLACK BOX."
-    ],
-    "black": [
-      "THE GEMS ARE IN THE WHITE BOX."
-    ],
-    "prize": "White",
-    "solution": "If the statement on the black box was false, the white box’s statement would become paradoxical: It can either be false and claim to not have the same truth value as the false black box or be true and claim to have the same truth value as the false black box. Therefore, the black box must be true, and the gems are in the white box. Incidentally, the blue box’s statement is true, and the white box’s statement is false."
+    "input": {
+      "blue": [
+        "THE GEMS ARE NOT IN THE BLACK BOX."
+      ],
+      "white": [
+        "THIS STATEMENT IS AS TRUE AS THE STATEMENT ON THE BLACK BOX."
+      ],
+      "black": [
+        "THE GEMS ARE IN THE WHITE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "If the statement on the black box was false, the white box’s statement would become paradoxical: It can either be false and claim to not have the same truth value as the false black box or be true and claim to have the same truth value as the false black box. Therefore, the black box must be true, and the gems are in the white box. Incidentally, the blue box’s statement is true, and the white box’s statement is false."
+    }
   },
   {
     "id": 60,
-    "blue": [
-      "THERE ARE TWO STATEMENTS ON THIS BOX.",
-      "THEY ARE BOTH FALSE."
-    ],
-    "white": [
-      "THERE ARE TWO STATEMENTS ON THIS BOX.",
-      "THE GEMS ARE IN A BOX NO TRUE STATEMENTS."
-    ],
-    "black": [
-      "THERE ARE TWO STATEMENTS ON THIS BOX."
-    ],
-    "prize": "Black",
-    "solution": "The blue box’s top statement is trivially true, and its bottom statement is hence trivially false. The black box’s statement is also trivially false. The white box is therefore the box that contains only true statements. The only box without true statements is the black box, and as per the bottom statement on the white box, said black box must contain the gems."
+    "input": {
+      "blue": [
+        "THERE ARE TWO STATEMENTS ON THIS BOX.",
+        "THEY ARE BOTH FALSE."
+      ],
+      "white": [
+        "THERE ARE TWO STATEMENTS ON THIS BOX.",
+        "THE GEMS ARE IN A BOX NO TRUE STATEMENTS."
+      ],
+      "black": [
+        "THERE ARE TWO STATEMENTS ON THIS BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The blue box’s top statement is trivially true, and its bottom statement is hence trivially false. The black box’s statement is also trivially false. The white box is therefore the box that contains only true statements. The only box without true statements is the black box, and as per the bottom statement on the white box, said black box must contain the gems."
+    }
   },
   {
     "id": 62,
-    "blue": [
-      "THE GEMS ARE IN THIS BOX.",
-      "THE ABOVE STATEMENT IS TRUE."
-    ],
-    "white": [
-      "THE GEMS ARE NOT IN THIS BOX.",
-      "THE ABOVE STATEMENT IS FALSE."
-    ],
-    "black": [
-      "THE TOP STATEMENT OF EACH BOX IS TRUE.",
-      "THE ABOVE STATEMENT IS TRUE."
-    ],
-    "prize": "Blue",
-    "solution": "The black box’s top statement, if true, contradicts the rules of the Parlor Game, making its bottom statement false as well. The white box cannot be the box that displays only true statements, as it claims itself to be false. Therefore, the only box that could display only true statements is the blue box, which claims to contain the gems. Incidentally, the white box’s top statement is true, and its bottom statement is false."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THIS BOX.",
+        "THE ABOVE STATEMENT IS TRUE."
+      ],
+      "white": [
+        "THE GEMS ARE NOT IN THIS BOX.",
+        "THE ABOVE STATEMENT IS FALSE."
+      ],
+      "black": [
+        "THE TOP STATEMENT OF EACH BOX IS TRUE.",
+        "THE ABOVE STATEMENT IS TRUE."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The black box’s top statement, if true, contradicts the rules of the Parlor Game, making its bottom statement false as well. The white box cannot be the box that displays only true statements, as it claims itself to be false. Therefore, the only box that could display only true statements is the blue box, which claims to contain the gems. Incidentally, the white box’s top statement is true, and its bottom statement is false."
+    }
   },
   {
     "id": 63,
-    "blue": [
-      "BOTH OF THESE STATEMENTS ARE TRUE.",
-      "THE GEMS ARE IN THIS BOX."
-    ],
-    "white": [
-      "THE GEMS ARE NOT IN THE BLUE BOX.",
-      "THE GEMS ARE NOT IN THE BLACK BOX."
-    ],
-    "black": [
-      "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT.",
-      "BOTH STATEMENTS ON THE BLUE BOX ARE TRUE."
-    ],
-    "prize": "White",
-    "solution": "If the white box’s top statement was false, the gems would be in the blue box. The blue and black boxes’ bottom statement agree with this finding, meaning that there would be no box that displays only false statements, violating the rules of the Parlor Game. If the white box’s bottom statement was false, then the blue box’s bottom statement would also be false. The blue and black boxes’ bottom statements disagree with this finding, meaning that there would be no box that displays only true statements, violating the rules of the Parlor Game. Therefore, neither statement on the white box is true, and by process of elimination, the white box contains the gems. Incidentally, every statement not on the white box is false."
+    "input": {
+      "blue": [
+        "BOTH OF THESE STATEMENTS ARE TRUE.",
+        "THE GEMS ARE IN THIS BOX."
+      ],
+      "white": [
+        "THE GEMS ARE NOT IN THE BLUE BOX.",
+        "THE GEMS ARE NOT IN THE BLACK BOX."
+      ],
+      "black": [
+        "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT.",
+        "BOTH STATEMENTS ON THE BLUE BOX ARE TRUE."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "If the white box’s top statement was false, the gems would be in the blue box. The blue and black boxes’ bottom statement agree with this finding, meaning that there would be no box that displays only false statements, violating the rules of the Parlor Game. If the white box’s bottom statement was false, then the blue box’s bottom statement would also be false. The blue and black boxes’ bottom statements disagree with this finding, meaning that there would be no box that displays only true statements, violating the rules of the Parlor Game. Therefore, neither statement on the white box is true, and by process of elimination, the white box contains the gems. Incidentally, every statement not on the white box is false."
+    }
   },
   {
     "id": 64,
-    "blue": [
-      "THE GEMS ARE NOT IN THIS BOX.",
-      "THE GEMS ARE NOT IN THE WHITE BOX."
-    ],
-    "white": [
-      "THE GEMS ARE NOT IN THIS BOX.",
-      "THE GEMS ARE IN THE BLUE BOX."
-    ],
-    "black": [
-      "THE GEMS ARE NOT IN THIS BOX.",
-      "THE GEMS ARE IN THE BLUE BOX."
-    ],
-    "prize": "Black",
-    "solution": "The blue box cannot be the box that contains only false statements, as the gems can only be in one box. This means that either the white or black boxes must contain only false statements. If the white box was said box, then it would contain the gems, and the blue box’s bottom statement would be false. This means that the only box that could contain only true statements would be the black box—but its bottom statement indicates the presence of the gems in the blue box instead. This means that the white box is not the box that contains only false statements either, and that title must belong to the black box, which according to its own statement, contains the gems. Incidentally, except for the white box’s bottom statement, every statement not on the black box is true."
+    "input": {
+      "blue": [
+        "THE GEMS ARE NOT IN THIS BOX.",
+        "THE GEMS ARE NOT IN THE WHITE BOX."
+      ],
+      "white": [
+        "THE GEMS ARE NOT IN THIS BOX.",
+        "THE GEMS ARE IN THE BLUE BOX."
+      ],
+      "black": [
+        "THE GEMS ARE NOT IN THIS BOX.",
+        "THE GEMS ARE IN THE BLUE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The blue box cannot be the box that contains only false statements, as the gems can only be in one box. This means that either the white or black boxes must contain only false statements. If the white box was said box, then it would contain the gems, and the blue box’s bottom statement would be false. This means that the only box that could contain only true statements would be the black box—but its bottom statement indicates the presence of the gems in the blue box instead. This means that the white box is not the box that contains only false statements either, and that title must belong to the black box, which according to its own statement, contains the gems. Incidentally, except for the white box’s bottom statement, every statement not on the black box is true."
+    }
   },
   {
     "id": 65,
-    "blue": [
-      "THE STATEMENTS ON THIS BOX ARE EITHER BOTH TRUE OR BOTH FALSE.",
-      "THIS BOX IS EMPTY."
-    ],
-    "white": [
-      "THIS BOX IS WHITE."
-    ],
-    "black": [
-      "ALL THE STATEMENTS ON THE BLUE BOX ARE TRUE.",
-      "THE BOX WITH NO FALSE STATEMENTS HAS THE GEMS."
-    ],
-    "prize": "Black",
-    "solution": "The white box is trivially true. If the blue box’s top statement is true, its bottom statement must also be true. This would make the black box’s top statement true as well. However, this would mean no box would display only false statements, violating the rules of the Parlor Game. Therefore, the blue box’s top statement is false, meaning the statements on the blue box do not share a truth value, making the bottom statement true. This means the box with only false statements must be the black box, and the box that displays only true statements, the white box, does not have the gems. Since the blue box is also empty, the black box must contain the gems."
+    "input": {
+      "blue": [
+        "THE STATEMENTS ON THIS BOX ARE EITHER BOTH TRUE OR BOTH FALSE.",
+        "THIS BOX IS EMPTY."
+      ],
+      "white": [
+        "THIS BOX IS WHITE."
+      ],
+      "black": [
+        "ALL THE STATEMENTS ON THE BLUE BOX ARE TRUE.",
+        "THE BOX WITH NO FALSE STATEMENTS HAS THE GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The white box is trivially true. If the blue box’s top statement is true, its bottom statement must also be true. This would make the black box’s top statement true as well. However, this would mean no box would display only false statements, violating the rules of the Parlor Game. Therefore, the blue box’s top statement is false, meaning the statements on the blue box do not share a truth value, making the bottom statement true. This means the box with only false statements must be the black box, and the box that displays only true statements, the white box, does not have the gems. Since the blue box is also empty, the black box must contain the gems."
+    }
   },
   {
     "id": 66,
-    "blue": [
-      "THE WHITE BOX HAS EXACTLY ONE TRUE STATEMENT.",
-      "THE BLACK BOX HAS NO TRUE STATEMENTS."
-    ],
-    "white": [
-      "THE GEMS ARE NOT IN THE BLACK BOX.",
-      "THE ABOVE STATEMENT IS TRUE."
-    ],
-    "black": [
-      "THE BLUE BOX HAS EXACTLY ONE TRUE STATEMENT.",
-      "THE GEMS ARE IN THE BLUE BOX."
-    ],
-    "prize": "Blue",
-    "solution": "The white box’s statements trivially must either both be true or both be false. This means the blue box’s top statement is false. If the blue box’s bottom statement is true, then the black box’s top statement must be false. However, its claim that the blue box has exactly one true statement would be true in that scenario. Therefore, the blue box’s bottom statement is false, meaning the black box has at least one true statement. As the black box’s top statement is false as proven above, its bottom statement must be true, meaning the gems are in the blue box. Incidentally, both statements on the white box are true."
+    "input": {
+      "blue": [
+        "THE WHITE BOX HAS EXACTLY ONE TRUE STATEMENT.",
+        "THE BLACK BOX HAS NO TRUE STATEMENTS."
+      ],
+      "white": [
+        "THE GEMS ARE NOT IN THE BLACK BOX.",
+        "THE ABOVE STATEMENT IS TRUE."
+      ],
+      "black": [
+        "THE BLUE BOX HAS EXACTLY ONE TRUE STATEMENT.",
+        "THE GEMS ARE IN THE BLUE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The white box’s statements trivially must either both be true or both be false. This means the blue box’s top statement is false. If the blue box’s bottom statement is true, then the black box’s top statement must be false. However, its claim that the blue box has exactly one true statement would be true in that scenario. Therefore, the blue box’s bottom statement is false, meaning the black box has at least one true statement. As the black box’s top statement is false as proven above, its bottom statement must be true, meaning the gems are in the blue box. Incidentally, both statements on the white box are true."
+    }
   },
   {
     "id": 67,
-    "blue": [
-      "THIS BOX IS EMPTY."
-    ],
-    "white": [
-      "THIS BOX IS EMPTY.",
-      "THE BLUE BOX IS EMPTY."
-    ],
-    "black": [
-      "THIS BOX IS EMPTY.",
-      "EVERY BOX WITH THE WORD EMPTY IS FALSE."
-    ],
-    "prize": "Black",
-    "solution": "The black box’s bottom statement, if true, would both be paradoxical and violate the rules of the Parlor Game. Therefore, it must be false. The only way two other statements could be false would be if the statements referring to the blue box as empty were both false, making no box have only true statements and violating the rules of the Parlor Game. This means that only one other statement can be false, as two different boxes cannot both be not empty. As there must be a box with only false statements, the other false statement can only be on the blue or black boxes. If the blue box was false, the white box’s true bottom statement would be contradicted. Therefore, the black box’s top statement is false, and said box contains the gems."
+    "input": {
+      "blue": [
+        "THIS BOX IS EMPTY."
+      ],
+      "white": [
+        "THIS BOX IS EMPTY.",
+        "THE BLUE BOX IS EMPTY."
+      ],
+      "black": [
+        "THIS BOX IS EMPTY.",
+        "EVERY BOX WITH THE WORD EMPTY IS FALSE."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The black box’s bottom statement, if true, would both be paradoxical and violate the rules of the Parlor Game. Therefore, it must be false. The only way two other statements could be false would be if the statements referring to the blue box as empty were both false, making no box have only true statements and violating the rules of the Parlor Game. This means that only one other statement can be false, as two different boxes cannot both be not empty. As there must be a box with only false statements, the other false statement can only be on the blue or black boxes. If the blue box was false, the white box’s true bottom statement would be contradicted. Therefore, the black box’s top statement is false, and said box contains the gems."
+    }
   },
   {
     "id": 68,
-    "blue": [
-      "THE GEMS ARE IN A BOX WITH THE LONGEST WORD.",
-      "”LONGEST” IS THE LONGEST WORD ON A BOX."
-    ],
-    "white": [
-      "THE GEMS ARE IN A BOX WITH THE SHORTEST WORD.",
-      "”A” IS THE SHORTEST WORD ON A BOX."
-    ],
-    "black": [
-      "THERE ARE WORDS ON THE BOX WITH THE GEMS.",
-      "THIS BOX DOES NOT CONTAIN THE GEMS."
-    ],
-    "prize": "Blue",
-    "solution": "The black box’s top statement is trivially true, as all the boxes in the room contain words. The white box’s bottom statement is also proven true through simple observation. While the blue box’s statements may seem confusing, they essentially read together as “The gems are in a box that displays the longest word on any box, which is the word ‘LONGEST’.” Even disregarding that the longest word on any box is the word ‘SHORTEST’, the only box that could contain only false statements is the blue box. Therefore, the box with the longest word, the white box, does not contain the gems. Between the white and black boxes, at least one must contain only true statements. If the black box’s bottom statement was false, the white box’s top statement must also be false, and vice versa. This means that they must both be true, and thus, the white and blue boxes both display only true statements. As the gems are in a box with the word ‘A’ and without the word ‘SHORTEST’, they must be in the blue box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN A BOX WITH THE LONGEST WORD.",
+        "”LONGEST” IS THE LONGEST WORD ON A BOX."
+      ],
+      "white": [
+        "THE GEMS ARE IN A BOX WITH THE SHORTEST WORD.",
+        "”A” IS THE SHORTEST WORD ON A BOX."
+      ],
+      "black": [
+        "THERE ARE WORDS ON THE BOX WITH THE GEMS.",
+        "THIS BOX DOES NOT CONTAIN THE GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The black box’s top statement is trivially true, as all the boxes in the room contain words. The white box’s bottom statement is also proven true through simple observation. While the blue box’s statements may seem confusing, they essentially read together as “The gems are in a box that displays the longest word on any box, which is the word ‘LONGEST’.” Even disregarding that the longest word on any box is the word ‘SHORTEST’, the only box that could contain only false statements is the blue box. Therefore, the box with the longest word, the white box, does not contain the gems. Between the white and black boxes, at least one must contain only true statements. If the black box’s bottom statement was false, the white box’s top statement must also be false, and vice versa. This means that they must both be true, and thus, the white and blue boxes both display only true statements. As the gems are in a box with the word ‘A’ and without the word ‘SHORTEST’, they must be in the blue box."
+    }
   },
   {
     "id": 69,
-    "blue": [
-      "A STATEMENT WITH AN ODD NUMBER OF WORDS IS ALWAYS TRUE.",
-      "THE GEMS ARE IN A BOX WITH THE MOST WORDS."
-    ],
-    "white": [
-      "FALSE STATEMENTS HAVE LESS THAN SIX WORDS.",
-      "THAT\u0027S NOT TRUE."
-    ],
-    "black": [
-      "THIS BOX HAS GEMS."
-    ],
-    "prize": "Black",
-    "solution": "The white box’s statements both have an odd number of words, but opposite truth values. This means the blue box’s top statement is false. As said statement does not have less than six words, the white box’s top statement is false, and its bottom statement is true. Since the blue and white boxes both contain false statements, the black box must be the box that displays only true statements, and it thus contains the gems. Incidentally, the blue box’s bottom statement is false."
+    "input": {
+      "blue": [
+        "A STATEMENT WITH AN ODD NUMBER OF WORDS IS ALWAYS TRUE.",
+        "THE GEMS ARE IN A BOX WITH THE MOST WORDS."
+      ],
+      "white": [
+        "FALSE STATEMENTS HAVE LESS THAN SIX WORDS.",
+        "THAT\u0027S NOT TRUE."
+      ],
+      "black": [
+        "THIS BOX HAS GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The white box’s statements both have an odd number of words, but opposite truth values. This means the blue box’s top statement is false. As said statement does not have less than six words, the white box’s top statement is false, and its bottom statement is true. Since the blue and white boxes both contain false statements, the black box must be the box that displays only true statements, and it thus contains the gems. Incidentally, the blue box’s bottom statement is false."
+    }
   },
   {
     "id": 70,
-    "blue": [
-      "THE WHITE BOX HAS A TRUE STATEMENT.",
-      "THE BLACK BOX HAS A TRUE STATEMENT."
-    ],
-    "white": [
-      "THE BLACK BOX HAS A FALSE STATEMENT.",
-      "THE GEMS ARE NOT IN THE BOX WITH TWO FALSE STATEMENTS."
-    ],
-    "black": [
-      "THE BLUE BOX HAS TWO FALSE STATEMENTS.",
-      "THE BOX WITH TWO TRUE STATEMENTS HAS THE GEMS."
-    ],
-    "prize": "Blue",
-    "solution": "If the black box’s top statement is true, then the blue box’s bottom statement would be false, meaning that the black box does not have a true statement—a clear contradiction. Therefore, the black box’s top statement is false, so there must be one true statement on the blue box (if both were true, no box would contain only false statements). The white box’s top statement is true based on what has been proved above, meaning the blue box’s top statement is true, and its bottom statement is false. This indicates that the box with two true statements does not contain the gems, and said box, by process of elimination, must be the white box. The white box additionally states that the box with two false statements, the black box, does not contain the gems either. Therefore, the gems can only be in the blue box."
+    "input": {
+      "blue": [
+        "THE WHITE BOX HAS A TRUE STATEMENT.",
+        "THE BLACK BOX HAS A TRUE STATEMENT."
+      ],
+      "white": [
+        "THE BLACK BOX HAS A FALSE STATEMENT.",
+        "THE GEMS ARE NOT IN THE BOX WITH TWO FALSE STATEMENTS."
+      ],
+      "black": [
+        "THE BLUE BOX HAS TWO FALSE STATEMENTS.",
+        "THE BOX WITH TWO TRUE STATEMENTS HAS THE GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "If the black box’s top statement is true, then the blue box’s bottom statement would be false, meaning that the black box does not have a true statement—a clear contradiction. Therefore, the black box’s top statement is false, so there must be one true statement on the blue box (if both were true, no box would contain only false statements). The white box’s top statement is true based on what has been proved above, meaning the blue box’s top statement is true, and its bottom statement is false. This indicates that the box with two true statements does not contain the gems, and said box, by process of elimination, must be the white box. The white box additionally states that the box with two false statements, the black box, does not contain the gems either. Therefore, the gems can only be in the blue box."
+    }
   },
   {
     "id": 71,
-    "blue": [
-      "THIS IS NOT AN EMPTY BOX.",
-      "THE GEMS ARE NOT IN THE BLACK BOX."
-    ],
-    "white": [
-      "THIS STATEMENT IS TRUE.",
-      "THE ABOVE STATEMENT IS FALSE."
-    ],
-    "black": [
-      "THE GEMS ARE IN THE BLACK BOX.",
-      "THE GEMS ARE IN THE WHITE BOX."
-    ],
-    "prize": "Blue",
-    "solution": "Both the white and black boxes’ two statements contradict each other. Hence, the only box that could display only true statements is the blue box, which indicates truthfully that it contains the gems. Incidentally, the black box is the box that displays only false statements, and while the truth value of the white box’s statements cannot be determined, one must be true and the other must be false."
+    "input": {
+      "blue": [
+        "THIS IS NOT AN EMPTY BOX.",
+        "THE GEMS ARE NOT IN THE BLACK BOX."
+      ],
+      "white": [
+        "THIS STATEMENT IS TRUE.",
+        "THE ABOVE STATEMENT IS FALSE."
+      ],
+      "black": [
+        "THE GEMS ARE IN THE BLACK BOX.",
+        "THE GEMS ARE IN THE WHITE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "Both the white and black boxes’ two statements contradict each other. Hence, the only box that could display only true statements is the blue box, which indicates truthfully that it contains the gems. Incidentally, the black box is the box that displays only false statements, and while the truth value of the white box’s statements cannot be determined, one must be true and the other must be false."
+    }
   },
   {
     "id": 72,
-    "blue": [
-      "YOU WILL NOT SOLVE THIS PUZZLE."
-    ],
-    "white": [
-      "FOUR STATEMENTS ON BOXES IN THIS ROOM ARE TRUE.",
-      "A BOX WITH ONE FALSE STATEMENT CONTAINS GEMS."
-    ],
-    "black": [
-      "A BOX WITH A TRUE STATEMENT CONTAINS THE GEMS.",
-      "THIS BOX DOES NOT CONTAIN THE GEMS."
-    ],
-    "prize": "White",
-    "solution": "It is an unspoken rule of the Parlor Game that all puzzles can be solved through logical deduction. If one sets out with the objective of solving this puzzle and the belief it can be solved, the blue box is made trivially false. If the white box’s top statement is true, every statement on the white and blue boxes must be true. This is impossible, as no box would contain both true and false statements, meaning the white box’s bottom statement and the black box’s top statement would be contradictory. Therefore, the white box’s top statement must be false, and the only box that could display only true statements is the black box. The two statements on the black box show that there must be another box with a true statement, and such a box can only be the white box, which contains the gems."
+    "input": {
+      "blue": [
+        "YOU WILL NOT SOLVE THIS PUZZLE."
+      ],
+      "white": [
+        "FOUR STATEMENTS ON BOXES IN THIS ROOM ARE TRUE.",
+        "A BOX WITH ONE FALSE STATEMENT CONTAINS GEMS."
+      ],
+      "black": [
+        "A BOX WITH A TRUE STATEMENT CONTAINS THE GEMS.",
+        "THIS BOX DOES NOT CONTAIN THE GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "It is an unspoken rule of the Parlor Game that all puzzles can be solved through logical deduction. If one sets out with the objective of solving this puzzle and the belief it can be solved, the blue box is made trivially false. If the white box’s top statement is true, every statement on the white and blue boxes must be true. This is impossible, as no box would contain both true and false statements, meaning the white box’s bottom statement and the black box’s top statement would be contradictory. Therefore, the white box’s top statement must be false, and the only box that could display only true statements is the black box. The two statements on the black box show that there must be another box with a true statement, and such a box can only be the white box, which contains the gems."
+    }
   },
   {
     "id": 73,
-    "blue": [
-      "TWO OF THE TOP STATEMENTS ARE FALSE",
-      "ONLY ONE BOTTOM STATEMENT IS FALSE"
-    ],
-    "white": [
-      "THE GEMS ARE IN A BOX WITH A TRUE TOP STATEMENT",
-      "THE GEMS ARE IN A BOX WITH A FALSE BOTTOM STATEMENT"
-    ],
-    "black": [
-      "TWO OF THE TOP STATEMENTS ARE TRUE",
-      "ONLY ONE BOTTOM STATEMENT IS TRUE"
-    ],
-    "prize": "Black",
-    "solution": "The bottom statement on the black box, if false, would mean that the bottom statements on the blue and white boxes would be true, and the gems would be in the one box with the false bottom statement, the black box. The bottom statement on the bottom box, if true, would mean that the bottom statements on the blue and white boxes would be false, and the gems would be in the one box with the true bottom statement, the black box. In either scenario, the black box contains the gems. Incidentally, the blue box’s top statement is false, while the white and black boxes’ top statements are true."
+    "input": {
+      "blue": [
+        "TWO OF THE TOP STATEMENTS ARE FALSE",
+        "ONLY ONE BOTTOM STATEMENT IS FALSE"
+      ],
+      "white": [
+        "THE GEMS ARE IN A BOX WITH A TRUE TOP STATEMENT",
+        "THE GEMS ARE IN A BOX WITH A FALSE BOTTOM STATEMENT"
+      ],
+      "black": [
+        "TWO OF THE TOP STATEMENTS ARE TRUE",
+        "ONLY ONE BOTTOM STATEMENT IS TRUE"
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The bottom statement on the black box, if false, would mean that the bottom statements on the blue and white boxes would be true, and the gems would be in the one box with the false bottom statement, the black box. The bottom statement on the bottom box, if true, would mean that the bottom statements on the blue and white boxes would be false, and the gems would be in the one box with the true bottom statement, the black box. In either scenario, the black box contains the gems. Incidentally, the blue box’s top statement is false, while the white and black boxes’ top statements are true."
+    }
   },
   {
     "id": 75,
-    "blue": [
-      "THE GEMS ARE IN A BOX WITH TWO STATEMENTS.",
-      "THAT IS TRUE."
-    ],
-    "white": [
-      "THE GEMS ARE IN THE BLUE BOX."
-    ],
-    "black": [
-      "THE BLUE BOX HAS AT LEAST ONE TRUE STATEMENT.",
-      "THE WHITE BOX HAS AT LEAST ONE TRUE STATEMENT."
-    ],
-    "prize": "Black",
-    "solution": "If both statements on the black box were true, no box would display only false statements, contradicting the rules of the Parlor Game. Hence, exactly one statement on the black box must be false, as there must be at least one box that displays only true statements. If the white box is true, then the top statement on the blue box must also be true, as the blue box contains two statements. However, this would mean that no box could contain only false statements, which again violates the rules of the Parlor Game. The white box must then be false, and every statement on the blue box is true. As the only box other than the blue box with two statements, the black box must contain the gems."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN A BOX WITH TWO STATEMENTS.",
+        "THAT IS TRUE."
+      ],
+      "white": [
+        "THE GEMS ARE IN THE BLUE BOX."
+      ],
+      "black": [
+        "THE BLUE BOX HAS AT LEAST ONE TRUE STATEMENT.",
+        "THE WHITE BOX HAS AT LEAST ONE TRUE STATEMENT."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If both statements on the black box were true, no box would display only false statements, contradicting the rules of the Parlor Game. Hence, exactly one statement on the black box must be false, as there must be at least one box that displays only true statements. If the white box is true, then the top statement on the blue box must also be true, as the blue box contains two statements. However, this would mean that no box could contain only false statements, which again violates the rules of the Parlor Game. The white box must then be false, and every statement on the blue box is true. As the only box other than the blue box with two statements, the black box must contain the gems."
+    }
   },
   {
     "id": 76,
-    "blue": [
-      "THE BLACK BOX IS TRUE AND IT CONTAINS THE GEMS."
-    ],
-    "white": [
-      "THE BLACK BOX IS FALSE.",
-      "THE ABOVE STATEMENT IS FALSE."
-    ],
-    "black": [
-      "THE BLUE BOX IS EMPTY IF IT IS FALSE."
-    ],
-    "prize": "White",
-    "solution": "As the white box’s two statements contradict each other, either the blue box is true and the black box is true or vice versa. Since the blue box claims the black box shares its truth value, the former is false, and the latter must be true. Since the blue box is lying, the black box must be either false or empty, and as it has been proven true, it must be empty. The black box’s true statement also indicates the lack of gems in the false blue box. By process of elimination, the gems must be in the white box."
+    "input": {
+      "blue": [
+        "THE BLACK BOX IS TRUE AND IT CONTAINS THE GEMS."
+      ],
+      "white": [
+        "THE BLACK BOX IS FALSE.",
+        "THE ABOVE STATEMENT IS FALSE."
+      ],
+      "black": [
+        "THE BLUE BOX IS EMPTY IF IT IS FALSE."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "As the white box’s two statements contradict each other, either the blue box is true and the black box is true or vice versa. Since the blue box claims the black box shares its truth value, the former is false, and the latter must be true. Since the blue box is lying, the black box must be either false or empty, and as it has been proven true, it must be empty. The black box’s true statement also indicates the lack of gems in the false blue box. By process of elimination, the gems must be in the white box."
+    }
   },
   {
     "id": 77,
-    "blue": [
-      "THERE IS ONLY ONE TRUE BOX."
-    ],
-    "white": [
-      "BOTH STATEMENTS WRITTEN ON THE OTHER BOXES ARE FALSE."
-    ],
-    "black": [
-      "THE BOX WITH THE MOST WORDS DOES NOT HAVE GEMS."
-    ],
-    "prize": "Black",
-    "solution": "If the white box’s statement was true, it would be the only true box. However, in that scenario, the blue box’s statement would be made false by the white box but true in reality. Therefore, the white box’s statement must be false. If the blue box was false, then the only remaining box that could be true would be the black box, which would mean the blue box’s statement is inadvertently true. Therefore, the blue box’s statement must be true, and as it is the only true box, the black box must be false. As the black box is the box with the most words, it then must contain the gems."
+    "input": {
+      "blue": [
+        "THERE IS ONLY ONE TRUE BOX."
+      ],
+      "white": [
+        "BOTH STATEMENTS WRITTEN ON THE OTHER BOXES ARE FALSE."
+      ],
+      "black": [
+        "THE BOX WITH THE MOST WORDS DOES NOT HAVE GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the white box’s statement was true, it would be the only true box. However, in that scenario, the blue box’s statement would be made false by the white box but true in reality. Therefore, the white box’s statement must be false. If the blue box was false, then the only remaining box that could be true would be the black box, which would mean the blue box’s statement is inadvertently true. Therefore, the blue box’s statement must be true, and as it is the only true box, the black box must be false. As the black box is the box with the most words, it then must contain the gems."
+    }
   },
   {
     "id": 78,
-    "blue": [
-      "ONLY ONE BOX NEXT TO THIS BOX IS FALSE AND IT CONTAINS GEMS."
-    ],
-    "white": [
-      "ONLY ONE BOX NEXT TO THIS BOX IS FALSE AND IT CONTAINS GEMS."
-    ],
-    "black": [
-      "ONLY ONE BOX NEXT TO THIS BOX IS FALSE AND IT CONTAINS GEMS."
-    ],
-    "prize": "White",
-    "solution": "The blue and black boxes are both only neighbored by the white box, and thus their statements are functionally the same and share a truth value. The white box indicates that one but not the other is false, and as the two boxes must either be both true or both false, this is impossible. It follows that the white box is false, proving the blue and black boxes’ statements true, and indicating that the white box contains the gems."
+    "input": {
+      "blue": [
+        "ONLY ONE BOX NEXT TO THIS BOX IS FALSE AND IT CONTAINS GEMS."
+      ],
+      "white": [
+        "ONLY ONE BOX NEXT TO THIS BOX IS FALSE AND IT CONTAINS GEMS."
+      ],
+      "black": [
+        "ONLY ONE BOX NEXT TO THIS BOX IS FALSE AND IT CONTAINS GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The blue and black boxes are both only neighbored by the white box, and thus their statements are functionally the same and share a truth value. The white box indicates that one but not the other is false, and as the two boxes must either be both true or both false, this is impossible. It follows that the white box is false, proving the blue and black boxes’ statements true, and indicating that the white box contains the gems."
+    }
   },
   {
     "id": 79,
-    "blue": [
-      "ONLY ONE STATEMENT IS TRUE."
-    ],
-    "white": [
-      "A BOX NEXT TO THIS BOX IS TRUE."
-    ],
-    "black": [
-      "A BOX NEXT TO THIS BOX CONTAINS GEMS."
-    ],
-    "prize": "White",
-    "solution": "The white box is next to both other boxes in the room. If it was false, it would mean that no box in the room would be true, which contradicts the rules of the Parlor Game. Therefore, the white box must be true, and either the blue or the black box must be true. The blue box states that only one statement is true, so it cannot be the box made true by the white box. Therefore, the black box is true, and as its only neighboring box is the white box, the white box contains the gems."
+    "input": {
+      "blue": [
+        "ONLY ONE STATEMENT IS TRUE."
+      ],
+      "white": [
+        "A BOX NEXT TO THIS BOX IS TRUE."
+      ],
+      "black": [
+        "A BOX NEXT TO THIS BOX CONTAINS GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The white box is next to both other boxes in the room. If it was false, it would mean that no box in the room would be true, which contradicts the rules of the Parlor Game. Therefore, the white box must be true, and either the blue or the black box must be true. The blue box states that only one statement is true, so it cannot be the box made true by the white box. Therefore, the black box is true, and as its only neighboring box is the white box, the white box contains the gems."
+    }
   },
   {
     "id": 80,
-    "blue": [
-      "ONLY ONE OF THE STATEMENTS ON THIS BOX ARE FALSE.",
-      "THE GEMS ARE IN THE WHITE BOX."
-    ],
-    "white": [
-      "ONLY ONE OF THE STATEMENTS ON THIS BOX ARE TRUE.",
-      "THE GEMS ARE IN A BOX WITH A TRUE STATEMENT."
-    ],
-    "black": [
-      "THERE ARE THREE FALSE STATEMENTS ON BOXES IN THIS ROOM."
-    ],
-    "prize": "Blue",
-    "solution": "The blue box cannot be the box that displays only true statements, as it claims one of its statements is false. Likewise, the white box cannot be the box that displays only true statements, as it claims only one of its statements is true. Therefore, the black box must be true, and there are three false statements and one true statement on the other boxes. Assuming the white box is the box that contains only false statements, the blue box’s bottom statement must be the sole remaining false statement according to the blue box’s top statement. Assuming the blue box is the box that contains only false statements, the white box’s bottom statement must be the sole remaining false statement according to the white box’s top statement. In either scenario, the gems must be in a box with a false statement that is not the white box, and the only such box is the blue box."
+    "input": {
+      "blue": [
+        "ONLY ONE OF THE STATEMENTS ON THIS BOX ARE FALSE.",
+        "THE GEMS ARE IN THE WHITE BOX."
+      ],
+      "white": [
+        "ONLY ONE OF THE STATEMENTS ON THIS BOX ARE TRUE.",
+        "THE GEMS ARE IN A BOX WITH A TRUE STATEMENT."
+      ],
+      "black": [
+        "THERE ARE THREE FALSE STATEMENTS ON BOXES IN THIS ROOM."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The blue box cannot be the box that displays only true statements, as it claims one of its statements is false. Likewise, the white box cannot be the box that displays only true statements, as it claims only one of its statements is true. Therefore, the black box must be true, and there are three false statements and one true statement on the other boxes. Assuming the white box is the box that contains only false statements, the blue box’s bottom statement must be the sole remaining false statement according to the blue box’s top statement. Assuming the blue box is the box that contains only false statements, the white box’s bottom statement must be the sole remaining false statement according to the white box’s top statement. In either scenario, the gems must be in a box with a false statement that is not the white box, and the only such box is the blue box."
+    }
   },
   {
     "id": 81,
-    "blue": [
-      "THIS BOX HAS AT LEAST TWO TRUE STATEMENTS.",
-      "THE BLACK BOX HAS AT LEAST TWO TRUE STATEMENTS.",
-      "THE GEMS ARE IN THIS BOX."
-    ],
-    "white": [
-      "EVERY STATEMENT ON THE BLUE BOX IS FALSE.",
-      "EVERY STATEMENT ON THE BLACK BOX IS TRUE.",
-      "THE GEMS ARE IN THIS BOX."
-    ],
-    "black": [
-      "THIS IS A TRUE STATEMENT",
-      "THIS IS A TRUE STATEMENT.",
-      "THE GEMS ARE IN THIS BOX."
-    ],
-    "prize": "Blue",
-    "solution": "The white box cannot be the box that contains only true statements, as it claims both to contain the gems and that the black box’s statement that it contains the gems is true. If the black box was the box that contains only true statements, the blue and white boxes’ middle statements would both be true. This would mean that no box would contain only false statements, violating the rules of the Parlor Game. Hence, the blue box must be the box that contains only true statements, and thus contains the gems. Incidentally, the white box contains only false statements, and the only false statement on the black box is the bottom statement."
+    "input": {
+      "blue": [
+        "THIS BOX HAS AT LEAST TWO TRUE STATEMENTS.",
+        "THE BLACK BOX HAS AT LEAST TWO TRUE STATEMENTS.",
+        "THE GEMS ARE IN THIS BOX."
+      ],
+      "white": [
+        "EVERY STATEMENT ON THE BLUE BOX IS FALSE.",
+        "EVERY STATEMENT ON THE BLACK BOX IS TRUE.",
+        "THE GEMS ARE IN THIS BOX."
+      ],
+      "black": [
+        "THIS IS A TRUE STATEMENT",
+        "THIS IS A TRUE STATEMENT.",
+        "THE GEMS ARE IN THIS BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The white box cannot be the box that contains only true statements, as it claims both to contain the gems and that the black box’s statement that it contains the gems is true. If the black box was the box that contains only true statements, the blue and white boxes’ middle statements would both be true. This would mean that no box would contain only false statements, violating the rules of the Parlor Game. Hence, the blue box must be the box that contains only true statements, and thus contains the gems. Incidentally, the white box contains only false statements, and the only false statement on the black box is the bottom statement."
+    }
   },
   {
     "id": 82,
-    "blue": [
-      "ALL BOXES DISPLAYING THE WORD \"EMPTY\" ARE EMPTY.",
-      "ALL STATEMENTS DISPLAYING THE WORD \"TRUE\" ARE TRUE."
-    ],
-    "white": [
-      "ALL BOXES DISPLAYING THE WORD \"GEMS\" CONTAIN GEMS.",
-      "ALL STATEMENTS DISPLAYING THE WORD \"WORD\" CONTAIN WORDS."
-    ],
-    "black": [
-      "ALL STATEMENTS DISPLAYING THE WORD \"BOXES\" ARE FALSE.",
-      "ALL STATEMENTS DISPLAYING THE WORD \"STATEMENTS\" ARE TRUE."
-    ],
-    "prize": "White",
-    "solution": "The black box’s bottom statement must be false, as there is a statement with the word “STATEMENTS” on every box, and one box must display only false statements. As the black box’s false bottom statement contains the word “TRUE,” the blue box’s bottom statement must also be false. The only box that could display only true statements is the white box, which must contain the gems as per its first statement. Incidentally, the blue box’s first statement is true, and the black box displays only false statements."
+    "input": {
+      "blue": [
+        "ALL BOXES DISPLAYING THE WORD \"EMPTY\" ARE EMPTY.",
+        "ALL STATEMENTS DISPLAYING THE WORD \"TRUE\" ARE TRUE."
+      ],
+      "white": [
+        "ALL BOXES DISPLAYING THE WORD \"GEMS\" CONTAIN GEMS.",
+        "ALL STATEMENTS DISPLAYING THE WORD \"WORD\" CONTAIN WORDS."
+      ],
+      "black": [
+        "ALL STATEMENTS DISPLAYING THE WORD \"BOXES\" ARE FALSE.",
+        "ALL STATEMENTS DISPLAYING THE WORD \"STATEMENTS\" ARE TRUE."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The black box’s bottom statement must be false, as there is a statement with the word “STATEMENTS” on every box, and one box must display only false statements. As the black box’s false bottom statement contains the word “TRUE,” the blue box’s bottom statement must also be false. The only box that could display only true statements is the white box, which must contain the gems as per its first statement. Incidentally, the blue box’s first statement is true, and the black box displays only false statements."
+    }
   },
   {
     "id": 83,
-    "blue": [
-      "ONLY ONE OF THIS BOX\u0027S STATEMENTS IS TRUE.",
-      "THE GEMS ARE IN A BOX WITH A TRUE STATEMENT.",
-      "THE GEMS ARE IN A BOX WITH TWO STATEMENTS."
-    ],
-    "white": [
-      "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT.",
-      "THE GEMS ARE IN A BOX NEXT TO THIS BOX."
-    ],
-    "black": [
-      "ONLY ONE OF THIS BOX\u0027S STATEMENTS ARE FALSE.",
-      "THE GEMS ARE IN A BOX WITH THREE STATEMENTS.",
-      "THERE ARE THE SAME NUMBER OF TRUE AND FALSE STATEMENTS ON BOXES."
-    ],
-    "prize": "Blue",
-    "solution": "The top statement of the blue and black boxes both imply that each of those boxes must have a false statement. In both cases, either the top statement is false, or it is true and another statement on the box is false. Either way, the blue box and the black box must both have at least one false statement. That means, by the rules of the Parlor Game, that the white box must be all true statements. Unfortunately, all that says currently is that the gems are either in the black box or the blue box.Continuing, the black box\u0027s middle statement is true: the gems are in the blue box or the black box, both of which have three statements. So both the white box and the black box have a true statement, meaning that the blue box must be entirely false according to Rule 2. The blue box says that the gems are in a box with a true statement: as this is false, the gems must be in a box without a true statement. The only box without a true statement is the blue box, so the gems are there."
+    "input": {
+      "blue": [
+        "ONLY ONE OF THIS BOX\u0027S STATEMENTS IS TRUE.",
+        "THE GEMS ARE IN A BOX WITH A TRUE STATEMENT.",
+        "THE GEMS ARE IN A BOX WITH TWO STATEMENTS."
+      ],
+      "white": [
+        "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT.",
+        "THE GEMS ARE IN A BOX NEXT TO THIS BOX."
+      ],
+      "black": [
+        "ONLY ONE OF THIS BOX\u0027S STATEMENTS ARE FALSE.",
+        "THE GEMS ARE IN A BOX WITH THREE STATEMENTS.",
+        "THERE ARE THE SAME NUMBER OF TRUE AND FALSE STATEMENTS ON BOXES."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The top statement of the blue and black boxes both imply that each of those boxes must have a false statement. In both cases, either the top statement is false, or it is true and another statement on the box is false. Either way, the blue box and the black box must both have at least one false statement. That means, by the rules of the Parlor Game, that the white box must be all true statements. Unfortunately, all that says currently is that the gems are either in the black box or the blue box.Continuing, the black box\u0027s middle statement is true: the gems are in the blue box or the black box, both of which have three statements. So both the white box and the black box have a true statement, meaning that the blue box must be entirely false according to Rule 2. The blue box says that the gems are in a box with a true statement: as this is false, the gems must be in a box without a true statement. The only box without a true statement is the blue box, so the gems are there."
+    }
   },
   {
     "id": 84,
-    "blue": [
-      "THE STATEMENT MATCHING THIS STATEMENT IS TRUE.",
-      "THE STATEMENT MATCHING THIS STATEMENT IS ON A COMPLETELY TRUE BOX."
-    ],
-    "white": [
-      "THE STATEMENT MATCHING THIS STATEMENT IS TRUE.",
-      "THE STATEMENT MATCHING THIS STATEMENT IS ON A BOX CONTAINING GEMS."
-    ],
-    "black": [
-      "THE STATEMENT MATCHING THIS STATEMENT IS ON A BOX CONTAINING GEMS.",
-      "THE STATEMENT MATCHING THIS STATEMENT IS ON A COMPLETELY TRUE BOX."
-    ],
-    "prize": "Black",
-    "solution": "If the blue box’s bottom statement is true, by extension, so is the entirety of the blue box and the entirety of the black box. This would mean that the blue box’s top statement is true, making the white box’s top statement true. However, one box must display only false statements, so the blue box’s bottom statement and by extension the black box’s bottom statement are both false. The only box left that could contain only true statements is the white box, which points to the gems being in the black box. Incidentally, the blue box’s top statement is true and the black box’s top statement is false."
+    "input": {
+      "blue": [
+        "THE STATEMENT MATCHING THIS STATEMENT IS TRUE.",
+        "THE STATEMENT MATCHING THIS STATEMENT IS ON A COMPLETELY TRUE BOX."
+      ],
+      "white": [
+        "THE STATEMENT MATCHING THIS STATEMENT IS TRUE.",
+        "THE STATEMENT MATCHING THIS STATEMENT IS ON A BOX CONTAINING GEMS."
+      ],
+      "black": [
+        "THE STATEMENT MATCHING THIS STATEMENT IS ON A BOX CONTAINING GEMS.",
+        "THE STATEMENT MATCHING THIS STATEMENT IS ON A COMPLETELY TRUE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the blue box’s bottom statement is true, by extension, so is the entirety of the blue box and the entirety of the black box. This would mean that the blue box’s top statement is true, making the white box’s top statement true. However, one box must display only false statements, so the blue box’s bottom statement and by extension the black box’s bottom statement are both false. The only box left that could contain only true statements is the white box, which points to the gems being in the black box. Incidentally, the blue box’s top statement is true and the black box’s top statement is false."
+    }
   },
   {
     "id": 85,
-    "blue": [
-      "THE STATEMENT MATCHING THIS STATEMENT IS ON AN EMPTY BOX.",
-      "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT.",
-      "THERE IS AT LEAST ONE TRUE STATEMENT ON THIS BOX."
-    ],
-    "white": [
-      "THE GEMS ARE IN A BOX WITH A TRUE STATEMENT.",
-      "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT."
-    ],
-    "black": [
-      "THE STATEMENT MATCHING THIS STATEMENT IS ON AN EMPTY BOX.",
-      "THE GEMS ARE IN A BOX WITH THREE STATEMENTS.",
-      "THERE ARE AN EQUAL NUMBER OF TRUE AND FALSE STATEMENTS."
-    ],
-    "prize": "Black",
-    "solution": "The white box, through the fact that statements must either be true or false, must contain at least one true statement. Additionally, it cannot contain the gems: If both statements were true, the gems would have to be in a box with a false statement, and if one or the other was true, the falsehood of one of the statements would prevent the box from containing the gems. Therefore, either the blue or the black box contains the gems. This means the black box’s middle statement must be true. As both the white and black boxes contain a true statement, the box that displays only false statements must be the blue box. As the blue box falsely that the black box is empty, said black box contains the gems. Incidentally, the white box’s bottom statement is false, and the black box displays only true statements."
+    "input": {
+      "blue": [
+        "THE STATEMENT MATCHING THIS STATEMENT IS ON AN EMPTY BOX.",
+        "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT.",
+        "THERE IS AT LEAST ONE TRUE STATEMENT ON THIS BOX."
+      ],
+      "white": [
+        "THE GEMS ARE IN A BOX WITH A TRUE STATEMENT.",
+        "THE GEMS ARE IN A BOX WITH A FALSE STATEMENT."
+      ],
+      "black": [
+        "THE STATEMENT MATCHING THIS STATEMENT IS ON AN EMPTY BOX.",
+        "THE GEMS ARE IN A BOX WITH THREE STATEMENTS.",
+        "THERE ARE AN EQUAL NUMBER OF TRUE AND FALSE STATEMENTS."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The white box, through the fact that statements must either be true or false, must contain at least one true statement. Additionally, it cannot contain the gems: If both statements were true, the gems would have to be in a box with a false statement, and if one or the other was true, the falsehood of one of the statements would prevent the box from containing the gems. Therefore, either the blue or the black box contains the gems. This means the black box’s middle statement must be true. As both the white and black boxes contain a true statement, the box that displays only false statements must be the blue box. As the blue box falsely that the black box is empty, said black box contains the gems. Incidentally, the white box’s bottom statement is false, and the black box displays only true statements."
+    }
   },
   {
     "id": 86,
-    "blue": [
-      "THIS BOX HAS NO FALSE STATEMENTS.",
-      "THE GEMS ARE IN A BOX WITH A SIX WORD STATEMENT.",
-      "THIS STATEMENT CONTAINS SIX WORDS."
-    ],
-    "white": [
-      "THE GEMS ARE IN A BOX WITH A STATEMENT CONTAINING THE WORD \u0027SIX\u0027.",
-      "THERE IS A BOX THAT CONTAINS A MIX OF TRUE AND FALSE STATEMENTS.",
-      "THIS STATEMENT CONTAINS FIVE WORDS."
-    ],
-    "black": [
-      "THE BLUE BOX CONTAINS EXACTLY ONE FALSE STATEMENT.",
-      "THE GEMS ARE IN A BOX WITH A FIVE WORD STATEMENT.",
-      "THIS BOX HAS NO TRUE STATEMENTS."
-    ],
-    "prize": "White",
-    "solution": "The blue box’s bottom statement is trivially false, and thus, so is its top statement. This makes the black box’s top statement also false. The only box left that could display only true statements is the white box, and its top statement narrows down the gems to either the blue or white boxes. The black box’s bottom statement is paradoxical if true, meaning it must be false, and the black box’s middle statement is true. The only box left that could display only false statements is the blue box, meaning the gems are not in a box with a six word statement. As the blue box’s top statement contains six words, the gems must be in the white box."
+    "input": {
+      "blue": [
+        "THIS BOX HAS NO FALSE STATEMENTS.",
+        "THE GEMS ARE IN A BOX WITH A SIX WORD STATEMENT.",
+        "THIS STATEMENT CONTAINS SIX WORDS."
+      ],
+      "white": [
+        "THE GEMS ARE IN A BOX WITH A STATEMENT CONTAINING THE WORD \"SIX\".",
+        "THERE IS A BOX THAT CONTAINS A MIX OF TRUE AND FALSE STATEMENTS.",
+        "THIS STATEMENT CONTAINS FIVE WORDS."
+      ],
+      "black": [
+        "THE BLUE BOX CONTAINS EXACTLY ONE FALSE STATEMENT.",
+        "THE GEMS ARE IN A BOX WITH A FIVE WORD STATEMENT.",
+        "THIS BOX HAS NO TRUE STATEMENTS."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The blue box’s bottom statement is trivially false, and thus, so is its top statement. This makes the black box’s top statement also false. The only box left that could display only true statements is the white box, and its top statement narrows down the gems to either the blue or white boxes. The black box’s bottom statement is paradoxical if true, meaning it must be false, and the black box’s middle statement is true. The only box left that could display only false statements is the blue box, meaning the gems are not in a box with a six word statement. As the blue box’s top statement contains six words, the gems must be in the white box."
+    }
   },
   {
     "id": 87,
-    "blue": [
-      "THERE IS NO BOX THAT CONTAINS A MIX OF TRUE AND FALSE STATEMENTS.",
-      "THERE IS NO BOX THAT DISPLAYS 3 FALSE STATEMENTS.",
-      "THERE IS NO BOX THAT DISPLAYS A NUMBER THAT ALSO APPEARS ON ANOTHER BOX."
-    ],
-    "white": [
-      "THERE IS NO BOX THAT MENTIONS A SPECIFIC COLOR.",
-      "THERE IS NO BOX THAT DISPLAYS 3 TRUE STATEMENTS."
-    ],
-    "black": [
-      "THERE IS NO BOX THAT IS BETWEEN 2 EMPTY BOXES.",
-      "THERE IS NO BOX THAT CONTAINS A STATEMENT WITH LESS THAN 8 WORDS.",
-      "THERE IS NO BOX THAT DISPLAYS EXACTLY 1 TRUE STATEMENT."
-    ],
-    "prize": "White",
-    "solution": "The white box’s top statement and the black box’s middle statement can be proven true through simple observation. Thus, the blue box must be the box that displays only false statements. If the white box’s bottom statement was false, the black box would have to display three true statements. However, this would leave the white box with exactly one true statement, contradicting the black box’s bottom statement. This means the white box’s bottom statement must be true. Per the blue box’s false top statement, the black box must now have a mix of true and false statements. If the black box’s top statement is true, it would mean that no box would have exactly one true statement. If the black box’s top statement was true, then no box would display exactly one true statement. This would mean that the black box’s bottom statement would also be true. However, this results in the black box displaying only true statements, which violates the blue box’s top statement’s condition. Hence, the black box’s top statement is false. The only box surrounded by 2 boxes at all is the white box, and by process of elimination, it contains the gems. Incidentally, the truth value of the black box’s bottom statement cannot be determined."
+    "input": {
+      "blue": [
+        "THERE IS NO BOX THAT CONTAINS A MIX OF TRUE AND FALSE STATEMENTS.",
+        "THERE IS NO BOX THAT DISPLAYS 3 FALSE STATEMENTS.",
+        "THERE IS NO BOX THAT DISPLAYS A NUMBER THAT ALSO APPEARS ON ANOTHER BOX."
+      ],
+      "white": [
+        "THERE IS NO BOX THAT MENTIONS A SPECIFIC COLOR.",
+        "THERE IS NO BOX THAT DISPLAYS 3 TRUE STATEMENTS."
+      ],
+      "black": [
+        "THERE IS NO BOX THAT IS BETWEEN 2 EMPTY BOXES.",
+        "THERE IS NO BOX THAT CONTAINS A STATEMENT WITH LESS THAN 8 WORDS.",
+        "THERE IS NO BOX THAT DISPLAYS EXACTLY 1 TRUE STATEMENT."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The white box’s top statement and the black box’s middle statement can be proven true through simple observation. Thus, the blue box must be the box that displays only false statements. If the white box’s bottom statement was false, the black box would have to display three true statements. However, this would leave the white box with exactly one true statement, contradicting the black box’s bottom statement. This means the white box’s bottom statement must be true. Per the blue box’s false top statement, the black box must now have a mix of true and false statements. If the black box’s top statement is true, it would mean that no box would have exactly one true statement. If the black box’s top statement was true, then no box would display exactly one true statement. This would mean that the black box’s bottom statement would also be true. However, this results in the black box displaying only true statements, which violates the blue box’s top statement’s condition. Hence, the black box’s top statement is false. The only box surrounded by 2 boxes at all is the white box, and by process of elimination, it contains the gems. Incidentally, the truth value of the black box’s bottom statement cannot be determined."
+    }
   },
   {
     "id": 88,
-    "blue": [
-      "ONLY ONE OF WHITE BOX\u0027S STATEMENTS IS TRUE.",
-      "THE BLACK BOX CONTAINS THE GEMS.",
-      "THE BLUE BOX IS EMPTY."
-    ],
-    "white": [
-      "ONLY ONE OF THE BLUE BOX\u0027S STATEMENTS IS TRUE.",
-      "THE BLACK BOX IS EMPTY.",
-      "THE GEMS ARE IN A BOX WITH A TRUE STATEMENT."
-    ],
-    "black": [
-      "ONLY ONE OF THIS BOX\u0027S STATEMENTS IS TRUE.",
-      "THE BLUE BOX CONTAINS THE GEMS.",
-      "THE WHITE BOX IS EMPTY."
-    ],
-    "prize": "White",
-    "solution": "The black box’s top statement shows that it cannot be the box that displays only true statements. If the blue box was the box that displays only true statements, the black box would contain the gems, and the white box contains a true statement. The only statement on the white box that does not contradict these assumptions is the bottom statement, meaning the black box must have at least one true statement. The only statement on the black box that does not contradict these assumptions is the bottom statement, and the middle statement must be false. However, the top statement thus becomes paradoxical. If it’s true, the box has two true statements, and if not, it has one true statement, making it true. Thus, the blue box cannot be the box that displays only true statements.This means that the white box must be the box that displays only true statements, and it indicates both that the black box is empty and that one of the blue box’s statements is true. Since the blue box’s top and middle statements have been proven false, the true statement on the blue box must be the bottom statement. As the gems are in neither the blue nor the black box, they must be in the white box. Incidentally, the black box is the box that displays only false statements."
+    "input": {
+      "blue": [
+        "ONLY ONE OF WHITE BOX\u0027S STATEMENTS IS TRUE.",
+        "THE BLACK BOX CONTAINS THE GEMS.",
+        "THE BLUE BOX IS EMPTY."
+      ],
+      "white": [
+        "ONLY ONE OF THE BLUE BOX\u0027S STATEMENTS IS TRUE.",
+        "THE BLACK BOX IS EMPTY.",
+        "THE GEMS ARE IN A BOX WITH A TRUE STATEMENT."
+      ],
+      "black": [
+        "ONLY ONE OF THIS BOX\u0027S STATEMENTS IS TRUE.",
+        "THE BLUE BOX CONTAINS THE GEMS.",
+        "THE WHITE BOX IS EMPTY."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The black box’s top statement shows that it cannot be the box that displays only true statements. If the blue box was the box that displays only true statements, the black box would contain the gems, and the white box contains a true statement. The only statement on the white box that does not contradict these assumptions is the bottom statement, meaning the black box must have at least one true statement. The only statement on the black box that does not contradict these assumptions is the bottom statement, and the middle statement must be false. However, the top statement thus becomes paradoxical. If it’s true, the box has two true statements, and if not, it has one true statement, making it true. Thus, the blue box cannot be the box that displays only true statements.This means that the white box must be the box that displays only true statements, and it indicates both that the black box is empty and that one of the blue box’s statements is true. Since the blue box’s top and middle statements have been proven false, the true statement on the blue box must be the bottom statement. As the gems are in neither the blue nor the black box, they must be in the white box. Incidentally, the black box is the box that displays only false statements."
+    }
   },
   {
     "id": 89,
-    "blue": [
-      "A BOX WITH A TRUE STATEMENT CONTAINS THE GEMS.",
-      "A BOX WITH A FALSE STATEMENT CONTAINS THE GEMS.",
-      "A BOX MENTIONING THE WORD \"TRUE\" CONTAINS THE GEMS."
-    ],
-    "white": [
-      "A BOX WITH ONLY TRUE STATEMENTS CONTAINS THE GEMS.",
-      "THE BLUE BOX CONTAINS THE GEMS.",
-      "A BOX WITH A STATEMENT THAT IS ALSO ON ANOTHER BOX CONTAINS THE GEMS."
-    ],
-    "black": [
-      "A BOX WITH A FALSE STATEMENT CONTAINS THE GEMS.",
-      "THE WHITE BOX CONTAINS THE GEMS.",
-      "A BOX MENTIONING A SPECIFIC COLOR CONTAINS THE GEMS."
-    ],
-    "prize": "White",
-    "solution": "The blue box’s top and middle statements show that it cannot be the box that displays only false statements. If the black box was the box that displays only false statements, no box mentioning a specific color could contain the gems. This means that the gems would be in the blue box. However, the truth value of the blue boxes’ statements contradicts that finding. The only way that the blue box’s top and middle statements do not become paradoxical is if they are both true. However, this means that to satisfy the blue box’s middle statement, its bottom statement must be made false, even though the gems are in fact in a box mentioning the word “TRUE.”Hence, the black box cannot be the box that displays only false statements. Thus, the white box must be the box that displays only false statements, and as per its false bottom statement, a box with a statement that is also on another box does not contain the gems. The blue and black boxes share a statement, so by process of elimination, the white box contains the gems. Incidentally, every statement on the blue and black boxes except for the blue box’s top statement is true."
+    "input": {
+      "blue": [
+        "A BOX WITH A TRUE STATEMENT CONTAINS THE GEMS.",
+        "A BOX WITH A FALSE STATEMENT CONTAINS THE GEMS.",
+        "A BOX MENTIONING THE WORD \"TRUE\" CONTAINS THE GEMS."
+      ],
+      "white": [
+        "A BOX WITH ONLY TRUE STATEMENTS CONTAINS THE GEMS.",
+        "THE BLUE BOX CONTAINS THE GEMS.",
+        "A BOX WITH A STATEMENT THAT IS ALSO ON ANOTHER BOX CONTAINS THE GEMS."
+      ],
+      "black": [
+        "A BOX WITH A FALSE STATEMENT CONTAINS THE GEMS.",
+        "THE WHITE BOX CONTAINS THE GEMS.",
+        "A BOX MENTIONING A SPECIFIC COLOR CONTAINS THE GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The blue box’s top and middle statements show that it cannot be the box that displays only false statements. If the black box was the box that displays only false statements, no box mentioning a specific color could contain the gems. This means that the gems would be in the blue box. However, the truth value of the blue boxes’ statements contradicts that finding. The only way that the blue box’s top and middle statements do not become paradoxical is if they are both true. However, this means that to satisfy the blue box’s middle statement, its bottom statement must be made false, even though the gems are in fact in a box mentioning the word “TRUE.”Hence, the black box cannot be the box that displays only false statements. Thus, the white box must be the box that displays only false statements, and as per its false bottom statement, a box with a statement that is also on another box does not contain the gems. The blue and black boxes share a statement, so by process of elimination, the white box contains the gems. Incidentally, every statement on the blue and black boxes except for the blue box’s top statement is true."
+    }
   },
   {
     "id": 90,
-    "blue": [
-      "A BOX WITH A TRUE STATEMENT IS EMPTY.",
-      "A BOX WITH A FALSE STATEMENT IS EMPTY.",
-      "THE WHITE BOX IS EMPTY."
-    ],
-    "white": [
-      "A BOX WITH ONLY TRUE STATEMENTS IS EMPTY.",
-      "THE BLACK BOX IS EMPTY.",
-      "A BOX WITH A STATEMENT THAT IS ALSO ON ANOTHER BOX IS EMPTY."
-    ],
-    "black": [
-      "A BOX WITH MORE THAN ONE FALSE STATEMENT IS EMPTY.",
-      "THE BLACK BOX IS EMPTY.",
-      "A BOX WITH NO TRUE STATEMENTS IS EMPTY."
-    ],
-    "prize": "Black",
-    "solution": "The blue box’s top and middle statements show it cannot be the box that displays only false statements. If the white box was the box that displays only false statements, the gems would have to be in the completely true black box. However, the black box’s middle statement would then falsely claim it to be empty, despite it purportedly being completely true. Hence, the black box must be the box with only false statements, and it contains the gems. Incidentally, the blue box displays only true statements, and only the middle statement on the white box is false."
+    "input": {
+      "blue": [
+        "A BOX WITH A TRUE STATEMENT IS EMPTY.",
+        "A BOX WITH A FALSE STATEMENT IS EMPTY.",
+        "THE WHITE BOX IS EMPTY."
+      ],
+      "white": [
+        "A BOX WITH ONLY TRUE STATEMENTS IS EMPTY.",
+        "THE BLACK BOX IS EMPTY.",
+        "A BOX WITH A STATEMENT THAT IS ALSO ON ANOTHER BOX IS EMPTY."
+      ],
+      "black": [
+        "A BOX WITH MORE THAN ONE FALSE STATEMENT IS EMPTY.",
+        "THE BLACK BOX IS EMPTY.",
+        "A BOX WITH NO TRUE STATEMENTS IS EMPTY."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The blue box’s top and middle statements show it cannot be the box that displays only false statements. If the white box was the box that displays only false statements, the gems would have to be in the completely true black box. However, the black box’s middle statement would then falsely claim it to be empty, despite it purportedly being completely true. Hence, the black box must be the box with only false statements, and it contains the gems. Incidentally, the blue box displays only true statements, and only the middle statement on the white box is false."
+    }
   },
   {
     "id": 101,
-    "blue": [
-      "THE WHITE BOX IS TRUE."
-    ],
-    "white": [
-      "THE OTHER TWO BOXES ARE FALSE."
-    ],
-    "black": [
-      "THE OTHER TWO BOXES ARE EMPTY."
-    ],
-    "prize": "Black",
-    "solution": "The blue box implies that the white box is true, but the white box implies that the blue box is false. This means the blue box must be false, and thus so is the white box. By the rules of the Parlor Game, the black box must be the box that displays only true statements, meaning the blue and white boxes are empty and the black box contains the gems."
+    "input": {
+      "blue": [
+        "THE WHITE BOX IS TRUE."
+      ],
+      "white": [
+        "THE OTHER TWO BOXES ARE FALSE."
+      ],
+      "black": [
+        "THE OTHER TWO BOXES ARE EMPTY."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The blue box implies that the white box is true, but the white box implies that the blue box is false. This means the blue box must be false, and thus so is the white box. By the rules of the Parlor Game, the black box must be the box that displays only true statements, meaning the blue and white boxes are empty and the black box contains the gems."
+    }
   },
   {
     "id": 102,
-    "blue": [
-      "THE GEMS ARE IN A BOX WITH A STATEMENT CONTAINING THE LETTER \"B\"."
-    ],
-    "white": [
-      "THE BLUE BOX IS TRUE."
-    ],
-    "black": [
-      "THE GEMS ARE IN A BOX WITH A STATEMENT CONTAINING THE LETTER \"U\"."
-    ],
-    "prize": "Blue",
-    "solution": "The blue box must be true, as every box contains the letter “B”. This means that the white box is also true. By the rules of the Parlor Game, the black box must then be false. This means the gems are not in a box containing the letter “U”. Thus, they are not in the white or the black box, and must be in the blue box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN A BOX WITH A STATEMENT CONTAINING THE LETTER \"B\"."
+      ],
+      "white": [
+        "THE BLUE BOX IS TRUE."
+      ],
+      "black": [
+        "THE GEMS ARE IN A BOX WITH A STATEMENT CONTAINING THE LETTER \"U\"."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The blue box must be true, as every box contains the letter “B”. This means that the white box is also true. By the rules of the Parlor Game, the black box must then be false. This means the gems are not in a box containing the letter “U”. Thus, they are not in the white or the black box, and must be in the blue box."
+    }
   },
   {
     "id": 103,
-    "blue": [
-      "THE GEMS ARE IN A BOX WITH A STATEMENT."
-    ],
-    "white": [],
-    "black": [
-      "THE WHITE BOX DOES NOT HAVE A STATEMENT."
-    ],
-    "prize": "White",
-    "solution": "The black box can be proven true through simple observation. As one box displays only false statements, the blue box must be false. The only box without a statement is the white box, so it must contain the gems."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN A BOX WITH A STATEMENT."
+      ],
+      "white": [],
+      "black": [
+        "THE WHITE BOX DOES NOT HAVE A STATEMENT."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The black box can be proven true through simple observation. As one box displays only false statements, the blue box must be false. The only box without a statement is the white box, so it must contain the gems."
+    }
   },
   {
     "id": 104,
-    "blue": [
-      "THE GEMS ARE IN THE BLACK BOX."
-    ],
-    "white": [],
-    "black": [
-      "THE GEMS ARE IN A BOX WITH A STATEMENT."
-    ],
-    "prize": "Blue",
-    "solution": "If the blue box is true, the black box would also be true. This would mean no box would display only false statements, violating the rules of the Parlor Game. Thus, the blue box is false, and as one box must contain only true statements, the black box is true. The only box with a statement that is not the black box is the blue box, and as such, the blue box contains the gems. "
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THE BLACK BOX."
+      ],
+      "white": [],
+      "black": [
+        "THE GEMS ARE IN A BOX WITH A STATEMENT."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "If the blue box is true, the black box would also be true. This would mean no box would display only false statements, violating the rules of the Parlor Game. Thus, the blue box is false, and as one box must contain only true statements, the black box is true. The only box with a statement that is not the black box is the blue box, and as such, the blue box contains the gems. "
+    }
   },
   {
     "id": 105,
-    "blue": [
-      "THE GEMS ARE IN THE BLACK BOX."
-    ],
-    "white": [
-      "THE GEMS ARE IN THE WHITE BOX."
-    ],
-    "black": [
-      "ONLY ONE BOX DISPLAYS A TRUE STATEMENT."
-    ],
-    "prize": "Blue",
-    "solution": "If the black box is false, then at least two boxes must display true statements. However, the blue and white boxes, the only two remaining boxes, directly contradict each other, and cannot both be true based on the rules of the Parlor Game. This means the black box must be true, and thus the blue and white boxes are both false. By process of elimination, the gems hence must be in the blue box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THE BLACK BOX."
+      ],
+      "white": [
+        "THE GEMS ARE IN THE WHITE BOX."
+      ],
+      "black": [
+        "ONLY ONE BOX DISPLAYS A TRUE STATEMENT."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "If the black box is false, then at least two boxes must display true statements. However, the blue and white boxes, the only two remaining boxes, directly contradict each other, and cannot both be true based on the rules of the Parlor Game. This means the black box must be true, and thus the blue and white boxes are both false. By process of elimination, the gems hence must be in the blue box."
+    }
   },
   {
     "id": 106,
-    "blue": [
-      "ONLY ONE BOX IS TRUE."
-    ],
-    "white": [
-      "ONLY ONE BOX CONTAINS GEMS."
-    ],
-    "black": [
-      "THE GEMS ARE IN THE WHITE BOX."
-    ],
-    "prize": "White",
-    "solution": "The white box is trivially true based on the rules of the Parlor Game. If the blue box was true, there would be two true boxes, so it must be false, and another box must be true. The only such box left that could be true is the black box, and per its statement, the white box contains the gems."
+    "input": {
+      "blue": [
+        "ONLY ONE BOX IS TRUE."
+      ],
+      "white": [
+        "ONLY ONE BOX CONTAINS GEMS."
+      ],
+      "black": [
+        "THE GEMS ARE IN THE WHITE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The white box is trivially true based on the rules of the Parlor Game. If the blue box was true, there would be two true boxes, so it must be false, and another box must be true. The only such box left that could be true is the black box, and per its statement, the white box contains the gems."
+    }
   },
   {
     "id": 107,
-    "blue": [
-      "ONLY ONE BOX IS TRUE."
-    ],
-    "white": [
-      "THE BLACK BOX CONTAINS THE GEMS."
-    ],
-    "black": [
-      "THE BLUE BOX CONTAINS THE GEMS."
-    ],
-    "prize": "White",
-    "solution": "If the blue box is false, then at least two boxes must display true statements. However, the white and black boxes, the only two remaining boxes, directly contradict each other, and cannot both be true based on the rules of the Parlor Game. This means the blue box must be true, and thus the white and black boxes are both false. By process of elimination, the gems hence must be in the white box."
+    "input": {
+      "blue": [
+        "ONLY ONE BOX IS TRUE."
+      ],
+      "white": [
+        "THE BLACK BOX CONTAINS THE GEMS."
+      ],
+      "black": [
+        "THE BLUE BOX CONTAINS THE GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "If the blue box is false, then at least two boxes must display true statements. However, the white and black boxes, the only two remaining boxes, directly contradict each other, and cannot both be true based on the rules of the Parlor Game. This means the blue box must be true, and thus the white and black boxes are both false. By process of elimination, the gems hence must be in the white box."
+    }
   },
   {
     "id": 108,
-    "blue": [
-      "THE BOX NEXT TO THIS BOX IS FALSE."
-    ],
-    "white": [
-      "A BOX NEXT TO THIS BOX IS TRUE."
-    ],
-    "black": [
-      "THE BOX NEXT TO THIS BOX CONTAINS GEMS."
-    ],
-    "prize": "White",
-    "solution": "If the white box is false, neither the blue nor the black boxes could be true. This violates the rules of the Parlor Game, as at least one box must display only true statements. Thus, the white box must be true, and either the blue or the black box must also be true. The blue box claims the white box is false, so the blue box must be false. The black box must hence be true, and as the only box next to it is the white box, the white box contains the gems."
+    "input": {
+      "blue": [
+        "THE BOX NEXT TO THIS BOX IS FALSE."
+      ],
+      "white": [
+        "A BOX NEXT TO THIS BOX IS TRUE."
+      ],
+      "black": [
+        "THE BOX NEXT TO THIS BOX CONTAINS GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "If the white box is false, neither the blue nor the black boxes could be true. This violates the rules of the Parlor Game, as at least one box must display only true statements. Thus, the white box must be true, and either the blue or the black box must also be true. The blue box claims the white box is false, so the blue box must be false. The black box must hence be true, and as the only box next to it is the white box, the white box contains the gems."
+    }
   },
   {
     "id": 109,
-    "blue": [
-      "THE BLACK BOX IS TRUE."
-    ],
-    "white": [
-      "THE GEMS ARE IN THE TRUE BOX."
-    ],
-    "black": [
-      "THE BLUE BOX IS TRUE."
-    ],
-    "prize": "White",
-    "solution": "The blue and the black boxes affirm each other, so they must be either both true or both false. In addition, as to not violate the rules of the Parlor Game, the white box’s truth value must be opposite to the truth value of the blue and black boxes. If the blue and black boxes are both true, the white box must be the only false box, and its statement would mean the gems are in the false box. If the blue and black boxes are both false, the white box must be the only true box, and its statement would mean the gems are in the true box. In either scenario, the gems are in the white box."
+    "input": {
+      "blue": [
+        "THE BLACK BOX IS TRUE."
+      ],
+      "white": [
+        "THE GEMS ARE IN THE TRUE BOX."
+      ],
+      "black": [
+        "THE BLUE BOX IS TRUE."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The blue and the black boxes affirm each other, so they must be either both true or both false. In addition, as to not violate the rules of the Parlor Game, the white box’s truth value must be opposite to the truth value of the blue and black boxes. If the blue and black boxes are both true, the white box must be the only false box, and its statement would mean the gems are in the false box. If the blue and black boxes are both false, the white box must be the only true box, and its statement would mean the gems are in the true box. In either scenario, the gems are in the white box."
+    }
   },
   {
     "id": 110,
-    "blue": [
-      "THE GEMS ARE IN THE FALSE BOX."
-    ],
-    "white": [
-      "THE GEMS ARE IN THE FALSE BOX."
-    ],
-    "black": [
-      "ONLY ONE OF THE OTHER BOXES IS FALSE."
-    ],
-    "prize": "Black",
-    "solution": "As the blue and white boxes affirm each other, they must either both be true or both be false. This means that the black box’s statement must be false. If the blue and white boxes were both false, then every box would be false, violating the rules of the Parlor Game. Therefore, they must both be true, and the gems are in the false box, the black box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THE FALSE BOX."
+      ],
+      "white": [
+        "THE GEMS ARE IN THE FALSE BOX."
+      ],
+      "black": [
+        "ONLY ONE OF THE OTHER BOXES IS FALSE."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "As the blue and white boxes affirm each other, they must either both be true or both be false. This means that the black box’s statement must be false. If the blue and white boxes were both false, then every box would be false, violating the rules of the Parlor Game. Therefore, they must both be true, and the gems are in the false box, the black box."
+    }
   },
   {
     "id": 111,
-    "blue": [
-      "THE GEMS ARE IN THE WHITE BOX."
-    ],
-    "white": [
-      "STATEMENTS WITH THE WORD \"WHITE\" ARE ALWAYS TRUE."
-    ],
-    "black": [
-      "THE STATEMENT ON THE WHITE BOX IS TRUE."
-    ],
-    "prize": "White",
-    "solution": "The white box’s statement must be false, as every statement contains the word white, and if every statement was true, the rules of the Parlor Game would be violated. As the white box’s statement is false, the black box’s claim that it is true must also be false. Thus, the blue box must be the only true box, placing the gems in the white box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THE WHITE BOX."
+      ],
+      "white": [
+        "STATEMENTS WITH THE WORD \"WHITE\" ARE ALWAYS TRUE."
+      ],
+      "black": [
+        "THE STATEMENT ON THE WHITE BOX IS TRUE."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The white box’s statement must be false, as every statement contains the word white, and if every statement was true, the rules of the Parlor Game would be violated. As the white box’s statement is false, the black box’s claim that it is true must also be false. Thus, the blue box must be the only true box, placing the gems in the white box."
+    }
   },
   {
     "id": 112,
-    "blue": [
-      "THE GEMS ARE IN THE WHITE BOX."
-    ],
-    "white": [
-      "A BOX WITH A FALSE STATEMENT CONTAINS THE GEMS."
-    ],
-    "black": [
-      "THE STATEMENT ON THE WHITE BOX IS TRUE."
-    ],
-    "prize": "Blue",
-    "solution": "If the white box’s statement is false, a box with a true statement must contain the gems. By extension, the black box would also be false, and the blue box would have to be the only true box. However, the blue box places the gems in the white box, which means that the gems would not be in a true box, violating the white box’s false statement. This means that the white box must be true, and by extension the black box must also be true. Thus the blue box must be the only false box, and as per the white box’s true statement, it contains the gems."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THE WHITE BOX."
+      ],
+      "white": [
+        "A BOX WITH A FALSE STATEMENT CONTAINS THE GEMS."
+      ],
+      "black": [
+        "THE STATEMENT ON THE WHITE BOX IS TRUE."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "If the white box’s statement is false, a box with a true statement must contain the gems. By extension, the black box would also be false, and the blue box would have to be the only true box. However, the blue box places the gems in the white box, which means that the gems would not be in a true box, violating the white box’s false statement. This means that the white box must be true, and by extension the black box must also be true. Thus the blue box must be the only false box, and as per the white box’s true statement, it contains the gems."
+    }
   },
   {
     "id": 113,
-    "blue": [
-      "A BOX NEXT TO THIS BOX CONTAINS THE GEMS."
-    ],
-    "white": [],
-    "black": [
-      "A BOX NEXT TO THIS BOX DISPLAYS A FALSE STATEMENT."
-    ],
-    "prize": "White",
-    "solution": "The black box is evidently false, as the only box next to it displays no statement at all. Thus, the blue box’s statement must be the only true statement, and it places the gems in the white box."
+    "input": {
+      "blue": [
+        "A BOX NEXT TO THIS BOX CONTAINS THE GEMS."
+      ],
+      "white": [],
+      "black": [
+        "A BOX NEXT TO THIS BOX DISPLAYS A FALSE STATEMENT."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The black box is evidently false, as the only box next to it displays no statement at all. Thus, the blue box’s statement must be the only true statement, and it places the gems in the white box."
+    }
   },
   {
     "id": 114,
-    "blue": [
-      "THE GEMS ARE IN THIS BOX."
-    ],
-    "white": [
-      "THE GEMS ARE IN A BOX NEXT TO THIS BOX."
-    ],
-    "black": [
-      "THE GEMS ARE IN THE BLUE BOX."
-    ],
-    "prize": "Black",
-    "solution": "If the blue box’s statement is true, then the white and black boxes’ statement must also be true. This would make every box true, violating the rules of the Parlor Game. Thus, the blue box’s statement is false, and by extension, the black box’s statement is also false. The only true box hence must be the white box, and as the gems have been proven not to be in the blue box, they must be in the black box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN THIS BOX."
+      ],
+      "white": [
+        "THE GEMS ARE IN A BOX NEXT TO THIS BOX."
+      ],
+      "black": [
+        "THE GEMS ARE IN THE BLUE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the blue box’s statement is true, then the white and black boxes’ statement must also be true. This would make every box true, violating the rules of the Parlor Game. Thus, the blue box’s statement is false, and by extension, the black box’s statement is also false. The only true box hence must be the white box, and as the gems have been proven not to be in the blue box, they must be in the black box."
+    }
   },
   {
     "id": 115,
-    "blue": [
-      "THIS BOX IS BLUE."
-    ],
-    "white": [
-      "THE GEMS ARE IN A TRUE BOX."
-    ],
-    "black": [
-      "THIS BOX IS BLACK."
-    ],
-    "prize": "White",
-    "solution": "The blue and black boxes are both proven true through simple observation. Thus, the white box must be the only false box, and as it implies the gems are in in a false box, it contains the gems."
+    "input": {
+      "blue": [
+        "THIS BOX IS BLUE."
+      ],
+      "white": [
+        "THE GEMS ARE IN A TRUE BOX."
+      ],
+      "black": [
+        "THIS BOX IS BLACK."
+      ]
+    },
+    "solution": {
+      "prize": "White",
+      "description": "The blue and black boxes are both proven true through simple observation. Thus, the white box must be the only false box, and as it implies the gems are in in a false box, it contains the gems."
+    }
   },
   {
     "id": 116,
-    "blue": [
-      "THE GEMS ARE IN A BOX WITH THE WORD \"BLUE\" ON IT."
-    ],
-    "white": [],
-    "black": [
-      "THE GEMS ARE IN A BOX THAT IS ACTUALLY BLUE."
-    ],
-    "prize": "Black",
-    "solution": "If the black box is true, then the blue box’s statement must also be true. This would mean that no box would display only false statements, violating the rules of the Parlor Game. Thus, the black box must be false, and the blue box must be true. This means that the gems are in a box that reads “BLUE” but is not blue, and the only such box is the black box."
+    "input": {
+      "blue": [
+        "THE GEMS ARE IN A BOX WITH THE WORD \"BLUE\" ON IT."
+      ],
+      "white": [],
+      "black": [
+        "THE GEMS ARE IN A BOX THAT IS ACTUALLY BLUE."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "If the black box is true, then the blue box’s statement must also be true. This would mean that no box would display only false statements, violating the rules of the Parlor Game. Thus, the black box must be false, and the blue box must be true. This means that the gems are in a box that reads “BLUE” but is not blue, and the only such box is the black box."
+    }
   },
   {
     "id": 117,
-    "blue": [
-      "THE BLACK BOX IS FALSE."
-    ],
-    "white": [
-      "THE BLACK BOX IS TRUE."
-    ],
-    "black": [
-      "A FALSE BOX CONTAINS THE GEMS."
-    ],
-    "prize": "Blue",
-    "solution": "The blue and white boxes contain opposite statements, so they have opposite truth values. On the other hand, the white box affirms the truthfulness of the black box, so the white and black boxes must have the same truth value. If the black box is true, the white box is also true and the blue box is the one false box. If the black box is false, the white box is also false and the blue box is the one true box. In either scenario, the black box points toward the gems being in the blue box."
+    "input": {
+      "blue": [
+        "THE BLACK BOX IS FALSE."
+      ],
+      "white": [
+        "THE BLACK BOX IS TRUE."
+      ],
+      "black": [
+        "A FALSE BOX CONTAINS THE GEMS."
+      ]
+    },
+    "solution": {
+      "prize": "Blue",
+      "description": "The blue and white boxes contain opposite statements, so they have opposite truth values. On the other hand, the white box affirms the truthfulness of the black box, so the white and black boxes must have the same truth value. If the black box is true, the white box is also true and the blue box is the one false box. If the black box is false, the white box is also false and the blue box is the one true box. In either scenario, the black box points toward the gems being in the blue box."
+    }
   },
   {
     "id": 118,
-    "blue": [
-      "THE BLACK BOX IS BLACK."
-    ],
-    "white": [
-      "THE BLACK BOX IS TRUE."
-    ],
-    "black": [
-      "THE BLACK BOX IS EMPTY."
-    ],
-    "prize": "Black",
-    "solution": "The blue box’s statement is trivially true. If the white box’s statement is true, the black box’s statement must also be true. This would make every box display a true statement, violating the rules of the Parlor Game. Thus, the white box must be false, and thus the black box is also false. Since the black box is false, it statement reveals that it contains the gems."
+    "input": {
+      "blue": [
+        "THE BLACK BOX IS BLACK."
+      ],
+      "white": [
+        "THE BLACK BOX IS TRUE."
+      ],
+      "black": [
+        "THE BLACK BOX IS EMPTY."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The blue box’s statement is trivially true. If the white box’s statement is true, the black box’s statement must also be true. This would make every box display a true statement, violating the rules of the Parlor Game. Thus, the white box must be false, and thus the black box is also false. Since the black box is false, it statement reveals that it contains the gems."
+    }
   },
   {
     "id": 119,
-    "blue": [
-      "THIS BOX AND THE WHITE BOX ARE BOTH EMPTY."
-    ],
-    "white": [
-      "THIS BOX AND THE BLUE BOX ARE BOTH EMPTY."
-    ],
-    "black": [
-      "THE OTHER TWO STATEMENTS HAVE IDENTICAL WORDING."
-    ],
-    "prize": "Black",
-    "solution": "The black box’s statement can be proven false through simple observation. The blue and white boxes state the same concept, and thus share a truth value. If the blue and white boxes are both false, every box would be false, violating the rules of the Parlor Game. Thus, the blue and white boxes must be true, and by process of elimination, the gems are in the black box."
+    "input": {
+      "blue": [
+        "THIS BOX AND THE WHITE BOX ARE BOTH EMPTY."
+      ],
+      "white": [
+        "THIS BOX AND THE BLUE BOX ARE BOTH EMPTY."
+      ],
+      "black": [
+        "THE OTHER TWO STATEMENTS HAVE IDENTICAL WORDING."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "The black box’s statement can be proven false through simple observation. The blue and white boxes state the same concept, and thus share a truth value. If the blue and white boxes are both false, every box would be false, violating the rules of the Parlor Game. Thus, the blue and white boxes must be true, and by process of elimination, the gems are in the black box."
+    }
   },
   {
     "id": 120,
-    "blue": [
-      "GEMS ARE IN BOTH THE BLACK BOX AND THE WHITE BOX."
-    ],
-    "white": [
-      "GEMS ARE IN BOTH THE BLUE BOX AND THE BLACK BOX."
-    ],
-    "black": [
-      "GEMS ARE NOT IN THE WHITE BOX OR THE BLUE BOX."
-    ],
-    "prize": "Black",
-    "solution": "Based on the rules of the Parlor Game, the gems are only in one box. Thus, the blue and white boxes must be false. The box that displays only true statements hence must be the black box, and by process of elimination, the black box contains the gems."
+    "input": {
+      "blue": [
+        "GEMS ARE IN BOTH THE BLACK BOX AND THE WHITE BOX."
+      ],
+      "white": [
+        "GEMS ARE IN BOTH THE BLUE BOX AND THE BLACK BOX."
+      ],
+      "black": [
+        "GEMS ARE NOT IN THE WHITE BOX OR THE BLUE BOX."
+      ]
+    },
+    "solution": {
+      "prize": "Black",
+      "description": "Based on the rules of the Parlor Game, the gems are only in one box. Thus, the blue and white boxes must be false. The box that displays only true statements hence must be the black box, and by process of elimination, the black box contains the gems."
+    }
   }
 ]
