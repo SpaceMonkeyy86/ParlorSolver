@@ -23,7 +23,7 @@ parsing each listed puzzle into a PuzzleVariation object and exporting the list 
  */
 public class ScrapePuzzles {
     static Path wikiPagePath = Paths.get("puzzles-wiki-page.txt");
-    static Path outputPath = Paths.get("puzzles.json");
+    public static Path outputPath = Paths.get("puzzles.json");
 
     public static void main(String[] args) throws Exception {
         String page;
