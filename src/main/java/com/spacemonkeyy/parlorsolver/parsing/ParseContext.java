@@ -41,6 +41,6 @@ public class ParseContext {
     }
 
     public Formula get(String identifier, int index) {
-        return bindings.get(identifier).get(index);
+        return bindings.get(identifier).get(index - 1);
     }
 }

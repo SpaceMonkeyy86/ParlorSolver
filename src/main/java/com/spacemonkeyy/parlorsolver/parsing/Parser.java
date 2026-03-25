@@ -4,6 +4,7 @@ import com.spacemonkeyy.parlorsolver.formula.ConstantFormula;
 import com.spacemonkeyy.parlorsolver.formula.Formula;
 import com.spacemonkeyy.parlorsolver.formula.FunctionFormula;
 import com.spacemonkeyy.parlorsolver.formula.Functions;
+import com.spacemonkeyy.parlorsolver.value.Box;
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
 import com.spacemonkeyy.parlorsolver.value.Value;
 
@@ -20,20 +21,65 @@ public class Parser {
             // True; the game takes place in the parlor.
             return new ConstantFormula(new Value(true));
         });
+        addRule("THERE IS A SECOND WIND-UP KEY IN THIS ROOM.", ctx -> {
+            // False; there is only ever one wind-up key in the room.
+            return new ConstantFormula(new Value(false));
+        });
 
         // Colors
         addRule("BLUE", "color", ctx -> {
             return new ConstantFormula(new Value(BoxColor.BLUE));
+        });
+        addRule("WHITE", "color", ctx -> {
+            return new ConstantFormula(new Value(BoxColor.WHITE));
+        });
+        addRule("BLACK", "color", ctx -> {
+            return new ConstantFormula(new Value(BoxColor.BLACK));
         });
 
         // Boxes
         addRule("THE :color BOX", "box", ctx -> {
             return new FunctionFormula(Functions.BOX_BY_COLOR, ctx.get("color"));
         });
+        addRule("THE MIDDLE BOX", "box", ctx -> {
+            // The order of the boxes is blue, white, black
+            return new ConstantFormula(new Value(new Box(BoxColor.WHITE)));
+        });
+        addRule("THIS BOX", "box", ctx -> {
+            // TODO
+            return null;
+        });
 
         // Simple statements
         addRule(":box IS TRUE.", ctx -> {
             return new FunctionFormula(Functions.BOX_IS_TRUE, ctx.get("box"));
+        });
+        addRule("THE STATEMENT ON :box IS TRUE.", ctx -> {
+            // TODO: Assert the box only has one statement
+            return new FunctionFormula(Functions.BOX_IS_TRUE, ctx.get("box"));
+        });
+        addRule(":box IS :box.", ctx -> {
+            return new FunctionFormula(Functions.BOX_EQUALS, ctx.get("box", 1), ctx.get("box", 2));
+        });
+
+        // Location of gems
+        addRule(":box CONTAINS THE GEMS.", ctx -> {
+            return new FunctionFormula(Functions.BOX_HAS_GEMS, ctx.get("box"));
+        });
+        addRule(":box CONTAINS GEMS.", ctx -> {
+            return new FunctionFormula(Functions.BOX_HAS_GEMS, ctx.get("box"));
+        });
+        addRule(":box HAS THE GEMS.", ctx -> {
+            return new FunctionFormula(Functions.BOX_HAS_GEMS, ctx.get("box"));
+        });
+        addRule("THE GEMS ARE IN :box.", ctx -> {
+            return new FunctionFormula(Functions.BOX_HAS_GEMS, ctx.get("box"));
+        });
+        addRule(":box IS EMPTY.", ctx -> {
+            return new FunctionFormula(Functions.NOT, new FunctionFormula(Functions.BOX_HAS_GEMS, ctx.get("box")));
+        });
+        addRule("THE GEMS ARE NOT IN :box.", ctx -> {
+            return new FunctionFormula(Functions.NOT, new FunctionFormula(Functions.BOX_HAS_GEMS, ctx.get("box")));
         });
     }
 

@@ -1,5 +1,7 @@
 package com.spacemonkeyy.parlorsolver.value;
 
+import java.util.List;
+
 // An element of the model's base set.
 // Can be a box color, a box, a statement, a number, or true/false.
 public class Value {
@@ -45,6 +47,10 @@ public class Value {
 
     public Box asBox() {
         return (Box)value;
+    }
+
+    public List<Box> asBoxes() {
+        return (List<Box>)value;
     }
 
     public String asStatement() {
