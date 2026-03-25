@@ -1,6 +1,8 @@
 package com.spacemonkeyy.parlorsolver.parsing;
 
 import com.spacemonkeyy.parlorsolver.formula.Formula;
+import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
+import com.spacemonkeyy.parlorsolver.value.BoxColor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,18 +11,32 @@ import java.util.Map;
 
 // Information used in rules to generate formulas
 public class ParseContext {
-    // The full input statement
-    // TODO: Replace this with PuzzleInput
-    private final String statement;
+    // The input to the puzzle
+    private final PuzzleInput input;
+
+    // Intermediate formulas that were matched as part of the rule
     private final Map<String, List<Formula>> bindings;
 
-    public ParseContext(String statement) {
-        this.statement = statement;
+    // Current box and statement index
+    BoxColor currentColor;
+    int currentStatement;
+
+    public ParseContext(PuzzleInput input) {
+        this.input = input;
         bindings = new HashMap<>();
     }
 
-    public String getStatement() {
-        return statement;
+    public BoxColor getCurrentBox() {
+        return currentColor;
+    }
+
+    public String getCurrentStatement() {
+        return input.byColor(currentColor).get(currentStatement);
+    }
+
+    public void setCurrent(BoxColor color, int index) {
+        currentColor = color;
+        currentStatement = index;
     }
 
     public void clearBindings() {

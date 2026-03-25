@@ -29,7 +29,6 @@ public class Functions {
         // TODO
         return new Value(false);
     }, ValueType.BOX, ValueType.BOOLEAN);
-
     public static ValueFunction BOX_HAS_GEMS = Functions.makeFunction("BOX_HAS_GEMS", box -> {
         // TODO
         return new Value(false);

@@ -4,6 +4,7 @@ import com.spacemonkeyy.parlorsolver.formula.ConstantFormula;
 import com.spacemonkeyy.parlorsolver.formula.Formula;
 import com.spacemonkeyy.parlorsolver.formula.FunctionFormula;
 import com.spacemonkeyy.parlorsolver.formula.Functions;
+import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
 import com.spacemonkeyy.parlorsolver.value.Box;
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
 import com.spacemonkeyy.parlorsolver.value.Value;
@@ -46,8 +47,7 @@ public class Parser {
             return new ConstantFormula(new Value(new Box(BoxColor.WHITE)));
         });
         addRule("THIS BOX", "box", ctx -> {
-            // TODO
-            return null;
+            return new ConstantFormula(new Value(new Box(ctx.getCurrentBox())));
         });
 
         // Simple statements
@@ -91,8 +91,22 @@ public class Parser {
         rules.add(new ParseRule(pattern, true, identifier, action));
     }
 
-    public static Formula parse(String statement) {
-        ParseContext context = new ParseContext(statement);
+    public static List<Formula> parse(PuzzleInput input) {
+        ParseContext context = new ParseContext(input);
+        List<Formula> result = new ArrayList<>();
+
+        for (BoxColor color : BoxColor.values()) {
+            List<String> statements = input.byColor(color);
+            for (int i = 0; i < statements.size(); i++) {
+                context.setCurrent(color, i);
+                result.add(parseStatement(context.getCurrentStatement(), context));
+            }
+        }
+
+        return result;
+    }
+
+    private static Formula parseStatement(String statement, ParseContext context) {
         List<Token> tokens = Token.tokenize(statement);
 
         while (true) {

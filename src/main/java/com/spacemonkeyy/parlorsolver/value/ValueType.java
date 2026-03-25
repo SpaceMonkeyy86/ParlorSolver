@@ -5,6 +5,5 @@ public enum ValueType {
     BOX,
     STATEMENT,
     NUMBER,
-    BOOLEAN,
-    LIST
+    BOOLEAN
 }

@@ -1,7 +1,9 @@
 package com.spacemonkeyy.parlorsolver;
 
 import com.spacemonkeyy.parlorsolver.parsing.Parser;
+import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -10,7 +12,8 @@ public class Main {
         while (true) {
             System.out.println("Enter statement:");
             String statement = scanner.nextLine();
-            System.out.println(Parser.parse(statement));
+            PuzzleInput input = new PuzzleInput(List.of(statement), List.of(), List.of());
+            System.out.println(Parser.parse(input));
         }
     }
 }

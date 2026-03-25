@@ -49,10 +49,6 @@ public class Value {
         return (Box)value;
     }
 
-    public List<Box> asBoxes() {
-        return (List<Box>)value;
-    }
-
     public String asStatement() {
         return (String)value;
     }

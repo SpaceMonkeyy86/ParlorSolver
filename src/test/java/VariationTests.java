@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 // Tests the solver against all puzzle variations
@@ -33,9 +34,12 @@ public class VariationTests {
     @ParameterizedTest
     @MethodSource("allVariations")
     void testParsing(PuzzleVariation variation) {
-        for (String statement : variation.input().allStatements()) {
-            Formula formula = Parser.parse(statement);
+        List<Formula> result = Parser.parse(variation.input());
+
+        Assertions.assertEquals(variation.input().allStatements().size(), result.size());
+        for (Formula formula : result) {
             Assertions.assertNotNull(formula);
+            System.out.println(formula);
         }
     }
 
