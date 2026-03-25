@@ -18,12 +18,16 @@ public class ParseContext {
     private final Map<String, List<Formula>> bindings;
 
     // Current box and statement index
-    BoxColor currentColor;
-    int currentStatement;
+    private BoxColor currentColor;
+    private int currentStatement;
 
     public ParseContext(PuzzleInput input) {
         this.input = input;
         bindings = new HashMap<>();
+    }
+
+    public PuzzleInput getInput() {
+        return input;
     }
 
     public BoxColor getCurrentBox() {

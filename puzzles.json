@@ -96,7 +96,7 @@
         "THE BLACK BOX CONTAINS GEMS."
       ],
       "white": [
-        "THIS BOX AND THE BLUE BOX ARE EMPTY"
+        "THIS BOX AND THE BLUE BOX ARE EMPTY."
       ],
       "black": [
         "ALL THREE BOXES ARE EMPTY."
@@ -207,7 +207,7 @@
         "THE STATEMENT ON THE BLUE BOX IS TRUE."
       ],
       "black": [
-        " THE GEMS ARE IN A BOX WITH A TRUE STATEMENT."
+        "THE GEMS ARE IN A BOX WITH A TRUE STATEMENT."
       ]
     },
     "solution": {
@@ -243,7 +243,7 @@
         "THIS IS THE BLACK BOX."
       ],
       "black": [
-        "THE BLACK BOX IS NOT EMPTY"
+        "THE BLACK BOX IS NOT EMPTY."
       ]
     },
     "solution": {
@@ -910,7 +910,7 @@
         "BOTH STATEMENTS ON THE BLACK BOX ARE FALSE."
       ],
       "black": [
-        "THE GEMS ARE IN A BOX WITH A TRUE STATEMENT",
+        "THE GEMS ARE IN A BOX WITH A TRUE STATEMENT.",
         "THIS IS THE SECOND STATEMENT ON THIS BOX."
       ]
     },
@@ -1207,16 +1207,16 @@
     "id": 73,
     "input": {
       "blue": [
-        "TWO OF THE TOP STATEMENTS ARE FALSE",
-        "ONLY ONE BOTTOM STATEMENT IS FALSE"
+        "TWO OF THE TOP STATEMENTS ARE FALSE.",
+        "ONLY ONE BOTTOM STATEMENT IS FALSE."
       ],
       "white": [
-        "THE GEMS ARE IN A BOX WITH A TRUE TOP STATEMENT",
-        "THE GEMS ARE IN A BOX WITH A FALSE BOTTOM STATEMENT"
+        "THE GEMS ARE IN A BOX WITH A TRUE TOP STATEMENT.",
+        "THE GEMS ARE IN A BOX WITH A FALSE BOTTOM STATEMENT."
       ],
       "black": [
-        "TWO OF THE TOP STATEMENTS ARE TRUE",
-        "ONLY ONE BOTTOM STATEMENT IS TRUE"
+        "TWO OF THE TOP STATEMENTS ARE TRUE.",
+        "ONLY ONE BOTTOM STATEMENT IS TRUE."
       ]
     },
     "solution": {
@@ -1351,7 +1351,7 @@
         "THE GEMS ARE IN THIS BOX."
       ],
       "black": [
-        "THIS IS A TRUE STATEMENT",
+        "THIS IS A TRUE STATEMENT.",
         "THIS IS A TRUE STATEMENT.",
         "THE GEMS ARE IN THIS BOX."
       ]

@@ -100,8 +100,11 @@ public class ScrapePuzzles {
 
         List<String> result = new ArrayList<>();
         for (String statement : statements.split("<hr>")) {
-            // Normalize quoted words
             statement = statement.replaceAll("'(\\w+)'", "\"$1\"");
+            statement = statement.trim();
+            if (!statement.endsWith(".")) {
+                statement += ".";
+            }
 
             result.add(statement);
         }

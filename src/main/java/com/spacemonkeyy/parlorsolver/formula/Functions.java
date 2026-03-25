@@ -11,25 +11,50 @@ import java.util.function.Function;
 
 public class Functions {
     // Basic operations
-    public static ValueFunction NOT = Functions.makeFunction("NOT", bool -> {
+
+    public static ValueFunction AND = makeFunction("AND", (bool1, bool2) -> {
+        return new Value(bool1.asBoolean() && bool2.asBoolean());
+    }, ValueType.BOOLEAN, ValueType.BOOLEAN, ValueType.BOOLEAN);
+
+    public static ValueFunction NOT = makeFunction("NOT", bool -> {
         return new Value(!bool.asBoolean());
     }, ValueType.BOOLEAN, ValueType.BOOLEAN);
 
     // Conversions
-    public static ValueFunction BOX_BY_COLOR = Functions.makeFunction("BOX_BY_COLOR", color -> {
+
+    public static ValueFunction BOX_OF_COLOR = makeFunction("BOX_OF_COLOR", color -> {
         return new Value(new Box(color.asColor()));
     }, ValueType.COLOR, ValueType.BOX);
 
+    public static ValueFunction COLOR_OF_BOX = makeFunction("COLOR_OF_BOX", box -> {
+        return new Value(box.asBox().color());
+    }, ValueType.BOX, ValueType.COLOR);
+
     // Equality
-    public static ValueFunction BOX_EQUALS = Functions.makeFunction("BOX_EQUALS", (box1, box2) -> {
+
+    public static ValueFunction COLOR_EQUALS = makeFunction("COLOR_EQUALS", (color1, color2) -> {
+        return new Value(color1.asColor() == color2.asColor());
+    }, ValueType.COLOR, ValueType.COLOR, ValueType.BOOLEAN);
+
+    public static ValueFunction NUMBER_EQUALS = makeFunction("NUMBER_EQUALS", (number1, number2) -> {
+        return new Value(number1.asNumber() == number2.asNumber());
+    }, ValueType.NUMBER, ValueType.NUMBER, ValueType.BOOLEAN);
+
+    public static ValueFunction BOX_EQUALS = makeFunction("BOX_EQUALS", (box1, box2) -> {
         return new Value(Objects.equals(box1.asBox(), box2.asBox()));
     }, ValueType.BOX, ValueType.BOX, ValueType.BOOLEAN);
 
-    public static ValueFunction BOX_IS_TRUE = Functions.makeFunction("BOX_IS_TRUE", box -> {
+    public static ValueFunction BOX_IS_TRUE = makeFunction("BOX_IS_TRUE", box -> {
         // TODO
         return new Value(false);
     }, ValueType.BOX, ValueType.BOOLEAN);
-    public static ValueFunction BOX_HAS_GEMS = Functions.makeFunction("BOX_HAS_GEMS", box -> {
+
+    public static ValueFunction BOX_IS_FALSE = makeFunction("BOX_IS_FALSE", box -> {
+        // TODO
+        return new Value(false);
+    }, ValueType.BOX, ValueType.BOOLEAN);
+
+    public static ValueFunction BOX_HAS_GEMS = makeFunction("BOX_HAS_GEMS", box -> {
         // TODO
         return new Value(false);
     }, ValueType.BOX, ValueType.BOOLEAN);

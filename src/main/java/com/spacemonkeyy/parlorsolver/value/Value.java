@@ -13,6 +13,11 @@ public class Value {
         value = color;
     }
 
+    public Value(int number) {
+        type = ValueType.NUMBER;
+        value = number;
+    }
+
     public Value(Box box) {
         type = ValueType.BOX;
         value = box;
@@ -21,11 +26,6 @@ public class Value {
     public Value(String statement) {
         type = ValueType.STATEMENT;
         value = statement;
-    }
-
-    public Value(int number) {
-        type = ValueType.NUMBER;
-        value = number;
     }
 
     public Value(boolean bool) {
@@ -45,16 +45,16 @@ public class Value {
         return (BoxColor)value;
     }
 
+    public int asNumber() {
+        return (int)value;
+    }
+
     public Box asBox() {
         return (Box)value;
     }
 
     public String asStatement() {
         return (String)value;
-    }
-
-    public int asNumber() {
-        return (int)value;
     }
 
     public boolean asBoolean() {
