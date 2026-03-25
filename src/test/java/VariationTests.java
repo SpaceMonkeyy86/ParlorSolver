@@ -1,6 +1,8 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.spacemonkeyy.parlorsolver.Solver;
+import com.spacemonkeyy.parlorsolver.formula.Formula;
+import com.spacemonkeyy.parlorsolver.parsing.Parser;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleSolution;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleVariation;
 import com.spacemonkeyy.parlorsolver.puzzle.ScrapePuzzles;
@@ -30,7 +32,16 @@ public class VariationTests {
 
     @ParameterizedTest
     @MethodSource("allVariations")
-    void testVariation(PuzzleVariation variation) {
+    void testParsing(PuzzleVariation variation) {
+        for (String statement : variation.input().allStatements()) {
+            Formula formula = Parser.parse(statement);
+            Assertions.assertNotNull(formula);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("allVariations")
+    void testCorrectSolution(PuzzleVariation variation) {
         PuzzleSolution solution = Solver.solve(variation.input());
 
         Assertions.assertNotNull(solution);
