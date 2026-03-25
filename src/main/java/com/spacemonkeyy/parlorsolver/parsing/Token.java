@@ -12,28 +12,28 @@ import java.util.regex.Pattern;
 // a group of words parsed into a formula.
 public class Token {
     // The type of phrase this token represents, or empty if just a single word.
-    private String identifier;
+    private final String identifier;
 
-    // The corresponding word in the original string, or empty if this is a phrase.
-    private String source;
+    // The originating word, or empty if this is a phrase.
+    private final String source;
 
     // The parsed formula, if this is a phrase.
-    private Formula formula;
+    private final Formula formula;
+
+    public Token(String source) {
+        if (source.startsWith(":")) {
+            identifier = source.substring(1);
+        } else {
+            identifier = "";
+        }
+        this.source = source;
+        formula = null;
+    }
 
     public Token(String identifier, Formula formula) {
         this.identifier = identifier;
         this.source = "";
         this.formula = formula;
-    }
-
-    public Token(String word) {
-        if (word.startsWith(":")) {
-            identifier = word.substring(1);
-        } else {
-            identifier = "";
-        }
-        source = word;
-        formula = null;
     }
 
     public String getIdentifier() {
@@ -62,6 +62,7 @@ public class Token {
             if (!matcher.matches()) {
                 throw new RuntimeException("Malformed statement");
             }
+
             tokens.add(new Token(matcher.group(1)));
             statement = matcher.group(2);
         }

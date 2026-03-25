@@ -35,8 +35,8 @@ public class ParseRule {
             }
 
             if (matches) {
+                // Set bindings for use in the parse action
                 context.clearBindings();
-
                 for (int j = 0; j < pattern.size(); j++) {
                     if (!pattern.get(j).getIdentifier().isEmpty()) {
                         context.addBinding(pattern.get(j).getIdentifier(), tokens.get(i + j).getFormula());
@@ -50,8 +50,8 @@ public class ParseRule {
                 for (int j = 0; j < pattern.size(); j++) {
                     tokens.remove(i);
                 }
-
                 tokens.add(i, token);
+
                 return true;
             }
         }

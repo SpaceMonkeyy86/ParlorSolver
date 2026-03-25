@@ -127,14 +127,12 @@ public class Parser {
                 Token token = tokens.getFirst();
                 if (!Objects.equals(token.getIdentifier(), "sentence")) {
                     // Input statement was just a sentence fragment
-                    System.err.println("Input must be a full sentence");
                     return null;
                 }
                 return token.getFormula();
             }
         }
 
-        System.err.println("Unable to parse");
         return null;
     }
 }
