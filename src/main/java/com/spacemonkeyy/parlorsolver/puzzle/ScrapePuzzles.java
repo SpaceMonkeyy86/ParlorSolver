@@ -2,6 +2,7 @@ package com.spacemonkeyy.parlorsolver.puzzle;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.spacemonkeyy.parlorsolver.value.BoxColor;
 
 import java.io.IOException;
 import java.net.URI;

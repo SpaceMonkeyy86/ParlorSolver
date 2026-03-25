@@ -1,4 +1,4 @@
-package com.spacemonkeyy.parlorsolver.puzzle;
+package com.spacemonkeyy.parlorsolver.value;
 
 import com.google.gson.annotations.SerializedName;
 
