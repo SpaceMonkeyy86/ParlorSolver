@@ -21,4 +21,9 @@ public class ConstantFormula implements Formula {
     public ValueType getType() {
         return value.getType();
     }
+
+    @Override
+    public String toString() {
+        return "const " + value.toString();
+    }
 }

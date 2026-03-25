@@ -26,4 +26,9 @@ public class FunctionFormula implements Formula {
     public ValueType getType() {
         return function.returnType();
     }
+
+    @Override
+    public String toString() {
+        return function.name() + "(" + String.join(", ", arguments.stream().map(Formula::toString).toList()) + ")";
+    }
 }

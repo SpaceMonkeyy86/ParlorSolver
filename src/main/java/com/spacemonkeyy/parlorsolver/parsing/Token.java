@@ -59,6 +59,9 @@ public class Token {
 
         while (!statement.isEmpty()) {
             Matcher matcher = pattern.matcher(statement);
+            if (!matcher.matches()) {
+                throw new RuntimeException("Malformed statement");
+            }
             tokens.add(new Token(matcher.group(1)));
             statement = matcher.group(2);
         }

@@ -28,7 +28,7 @@ public class ParseRule {
         for (int i = 0; i < tokens.size() - pattern.size() + 1; i++) {
             boolean matches = true;
             for (int j = 0; j < pattern.size(); j++) {
-                if (!tokensMatch(pattern.get(j), tokens.get(i))) {
+                if (!tokensMatch(pattern.get(j), tokens.get(i + j))) {
                     matches = false;
                     break;
                 }

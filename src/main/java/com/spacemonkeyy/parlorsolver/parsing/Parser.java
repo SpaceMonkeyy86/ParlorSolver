@@ -1,6 +1,7 @@
 package com.spacemonkeyy.parlorsolver.parsing;
 
 import com.spacemonkeyy.parlorsolver.formula.ConstantFormula;
+import com.spacemonkeyy.parlorsolver.formula.Formula;
 import com.spacemonkeyy.parlorsolver.formula.FunctionFormula;
 import com.spacemonkeyy.parlorsolver.formula.Functions;
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
@@ -37,14 +38,14 @@ public class Parser {
     }
 
     private static void addRule(String pattern, ParseAction action) {
-        rules.add(new ParseRule(pattern, false, "", action));
+        rules.add(new ParseRule(pattern, false, "sentence", action));
     }
 
     private static void addRule(String pattern, String identifier, ParseAction action) {
         rules.add(new ParseRule(pattern, true, identifier, action));
     }
 
-    public static ParseResult parse(String statement) {
+    public static Formula parse(String statement) {
         ParseContext context = new ParseContext(statement);
         List<Token> tokens = Token.tokenize(statement);
 
@@ -64,14 +65,16 @@ public class Parser {
 
             if (tokens.size() == 1) {
                 Token token = tokens.getFirst();
-                if (!Objects.equals(token.getIdentifier(), "statement")) {
+                if (!Objects.equals(token.getIdentifier(), "sentence")) {
                     // Input statement was just a sentence fragment
+                    System.err.println("Input must be a full sentence");
                     return null;
                 }
-                return new ParseResult(token.getSource(), token.getFormula());
+                return token.getFormula();
             }
         }
 
+        System.err.println("Unable to parse");
         return null;
     }
 }
