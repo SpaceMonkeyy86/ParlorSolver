@@ -7,12 +7,15 @@ import com.spacemonkeyy.parlorsolver.parsing.Parser;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleSolution;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleVariation;
 import com.spacemonkeyy.parlorsolver.solver.Solver;
+import com.spacemonkeyy.parlorsolver.value.Statement;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 // Tests the solver against all puzzle variations
 public class VariationTests {
@@ -38,9 +41,21 @@ public class VariationTests {
             for (int i = 0; i < statements.size(); i++) {
                 int index = i;
                 tests.add(DynamicTest.dynamicTest(statements.get(i), () -> {
-                    List<Formula> formulas = Parser.parse(variation.input());
-                    Formula formula = formulas.get(index);
-                    System.out.printf("%s -> %s\n", statements.get(index), formula);
+                    Map<Statement, Formula> formulas = Parser.parse(variation.input());
+
+                    Map.Entry<Statement, Formula> entry = formulas.entrySet().stream()
+                        .sorted(Map.Entry.comparingByKey())
+                        .toList().get(index);
+                    Statement statement = entry.getKey();
+                    Formula formula = entry.getValue();
+
+                    System.out.printf("(%s %d) %s -> %s\n",
+                        statement.box().color(),
+                        statement.index() + 1,
+                        statements.get(index),
+                        formula
+                    );
+
                     Assertions.assertNotNull(formula);
                 }));
             }
@@ -49,7 +64,9 @@ public class VariationTests {
                 PuzzleSolution solution = Solver.solve(variation.input());
 
                 Assertions.assertNotNull(solution);
+                System.out.println(solution);
                 Assertions.assertEquals(variation.solution().prize(), solution.prize());
+                System.out.println(variation.solution().description());
             }));
 
             result.add(DynamicContainer.dynamicContainer(variation.toString(), tests));

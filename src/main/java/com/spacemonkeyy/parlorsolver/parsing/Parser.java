@@ -2,22 +2,26 @@ package com.spacemonkeyy.parlorsolver.parsing;
 
 import com.spacemonkeyy.parlorsolver.formula.Formula;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
+import com.spacemonkeyy.parlorsolver.value.Box;
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
+import com.spacemonkeyy.parlorsolver.value.Statement;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Parser {
-    public static List<Formula> parse(PuzzleInput input) {
+    public static Map<Statement, Formula> parse(PuzzleInput input) {
         ParseContext context = new ParseContext(input);
-        List<Formula> result = new ArrayList<>();
+        Map<Statement, Formula> result = new HashMap<>();
 
         for (BoxColor color : BoxColor.values()) {
+            Box box = new Box(color);
             List<String> statements = input.byColor(color);
             for (int i = 0; i < statements.size(); i++) {
                 context.setCurrent(color, i);
-                result.add(parseStatement(context.getCurrentStatement(), context));
+
+                Statement statement = new Statement(box, i);
+                Formula formula = parseStatement(context.getCurrentStatement(), context);
+                result.put(statement, formula);
             }
         }
 

@@ -10,6 +10,7 @@ import com.spacemonkeyy.parlorsolver.value.Value;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class Rules {
     public static List<ParseRule> rules = new ArrayList<>();
@@ -173,21 +174,57 @@ public class Rules {
 
     // Helper functions
 
-    private static Formula formulaThisBox(ParseContext ctx) {
+    public static Formula formulaThisBox(ParseContext ctx) {
         return new ConstantFormula(new Value(new Box(ctx.getCurrentBox())));
     }
 
-    private static Formula formulaBoxIsTrue(Formula box) {
+    public static Formula formulaBoxIsTrue(Formula box) {
         return new FunctionFormula(Functions.BOX_IS,
             box,
             new ConstantFormula(new Value(true))
         );
     }
 
-    private static Formula formulaBoxIsFalse(Formula box) {
+    public static Formula formulaBoxIsFalse(Formula box) {
         return new FunctionFormula(Functions.BOX_IS,
             box,
             new ConstantFormula(new Value(false))
+        );
+    }
+
+    public static Formula formulaAtLeastOneBox(Function<Formula, Formula> predicate) {
+        Formula blue = predicate.apply(new ConstantFormula(new Value(new Box(BoxColor.BLUE))));
+        Formula white = predicate.apply(new ConstantFormula(new Value(new Box(BoxColor.WHITE))));
+        Formula black = predicate.apply(new ConstantFormula(new Value(new Box(BoxColor.BLACK))));
+
+        return new FunctionFormula(Functions.OR3,
+            blue,
+            white,
+            black
+        );
+    }
+
+    public static Formula formulaExactlyOneBox(Function<Formula, Formula> predicate) {
+        Formula blue = predicate.apply(new ConstantFormula(new Value(new Box(BoxColor.BLUE))));
+        Formula white = predicate.apply(new ConstantFormula(new Value(new Box(BoxColor.WHITE))));
+        Formula black = predicate.apply(new ConstantFormula(new Value(new Box(BoxColor.BLACK))));
+
+        return new FunctionFormula(Functions.OR3,
+            new FunctionFormula(Functions.AND3,
+                blue,
+                new FunctionFormula(Functions.NOT, white),
+                new FunctionFormula(Functions.NOT, black)
+            ),
+            new FunctionFormula(Functions.AND3,
+                new FunctionFormula(Functions.NOT, blue),
+                white,
+                new FunctionFormula(Functions.NOT, black)
+            ),
+            new FunctionFormula(Functions.AND3,
+                new FunctionFormula(Functions.NOT, blue),
+                new FunctionFormula(Functions.NOT, white),
+                black
+            )
         );
     }
 }

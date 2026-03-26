@@ -15,6 +15,18 @@ public class Functions {
         return new Value(ctx.arg(1).asBoolean() && ctx.arg(2).asBoolean());
     }, ValueType.BOOLEAN, ValueType.BOOLEAN, ValueType.BOOLEAN);
 
+    public static ValueFunction OR = makeFunction("OR", ctx -> {
+        return new Value(ctx.arg(1).asBoolean() || ctx.arg(2).asBoolean());
+    }, ValueType.BOOLEAN, ValueType.BOOLEAN, ValueType.BOOLEAN);
+
+    public static ValueFunction AND3 = makeFunction("AND3", ctx -> {
+        return new Value(ctx.arg(1).asBoolean() && ctx.arg(2).asBoolean() && ctx.arg(3).asBoolean());
+    }, ValueType.BOOLEAN, ValueType.BOOLEAN, ValueType.BOOLEAN, ValueType.BOOLEAN);
+
+    public static ValueFunction OR3 = makeFunction("OR3", ctx -> {
+        return new Value(ctx.arg(1).asBoolean() || ctx.arg(2).asBoolean() || ctx.arg(3).asBoolean());
+    }, ValueType.BOOLEAN, ValueType.BOOLEAN, ValueType.BOOLEAN, ValueType.BOOLEAN);
+
     public static ValueFunction NOT = makeFunction("NOT", ctx -> {
         return new Value(!ctx.arg(1).asBoolean());
     }, ValueType.BOOLEAN, ValueType.BOOLEAN);
@@ -35,6 +47,10 @@ public class Functions {
 
     // Equality
 
+    public static ValueFunction BOOLEAN_EQUALS = makeFunction("BOOLEAN_EQUALS", ctx -> {
+        return new Value(ctx.arg(1).asBoolean() == ctx.arg(2).asBoolean());
+    }, ValueType.BOOLEAN, ValueType.BOOLEAN, ValueType.BOOLEAN);
+
     public static ValueFunction COLOR_EQUALS = makeFunction("COLOR_EQUALS", ctx -> {
         return new Value(ctx.arg(1).asColor() == ctx.arg(2).asColor());
     }, ValueType.COLOR, ValueType.COLOR, ValueType.BOOLEAN);
@@ -47,10 +63,11 @@ public class Functions {
         return new Value(Objects.equals(ctx.arg(1).asBox(), ctx.arg(2).asBox()));
     }, ValueType.BOX, ValueType.BOX, ValueType.BOOLEAN);
 
-    // Evaluation-dependent
+    // Evaluation variables
 
     public static ValueFunction STATEMENT_IS_TRUE = makeFunction("STATEMENT_IS_TRUE", ctx -> {
-        return new Value(ctx.isStatementTrue(ctx.arg(1).asStatement()));
+        Statement statement = ctx.arg(1).asStatement();
+        return new Value(ctx.getVariable(statement.getVariableName()));
     }, ValueType.STATEMENT, ValueType.BOOLEAN);
 
     // Simple checking without having to know in advance every statement on a box
@@ -60,7 +77,8 @@ public class Functions {
         int statementCount = ctx.getInput().byColor(box.color()).size();
 
         for (int i = 0; i < statementCount; i++) {
-            if (ctx.isStatementTrue(new Statement(box, i)) != bool) {
+            Statement statement = new Statement(box, i);
+            if (ctx.getVariable(statement.getVariableName()) != bool) {
                 return new Value(false);
             }
         }
@@ -69,7 +87,8 @@ public class Functions {
     }, ValueType.BOX, ValueType.BOOLEAN, ValueType.BOOLEAN);
 
     public static ValueFunction BOX_HAS_GEMS = makeFunction("BOX_HAS_GEMS", ctx -> {
-        return new Value(ctx.boxHasGems(ctx.arg(1).asBox()));
+        Box box = ctx.arg(1).asBox();
+        return new Value(ctx.getVariable(box.getVariableName()));
     }, ValueType.BOX, ValueType.BOOLEAN);
 
     private static ValueFunction makeFunction(String name, Function<EvaluationContext, Value> function, ValueType... signature) {

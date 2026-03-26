@@ -5,4 +5,14 @@ package com.spacemonkeyy.parlorsolver.value;
 // while a color does not do these things.
 public record Box(
     BoxColor color
-) {}
+) implements Comparable<Box> {
+
+    public String getVariableName() {
+        return color.toString();
+    }
+
+    @Override
+    public int compareTo(Box o) {
+        return color.compareTo(o.color);
+    }
+}
