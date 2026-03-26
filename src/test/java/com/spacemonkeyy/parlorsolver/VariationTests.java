@@ -6,23 +6,19 @@ import com.spacemonkeyy.parlorsolver.formula.Formula;
 import com.spacemonkeyy.parlorsolver.parsing.Parser;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleSolution;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleVariation;
-import com.spacemonkeyy.parlorsolver.puzzle.ScrapePuzzles;
+import com.spacemonkeyy.parlorsolver.solver.Solver;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.function.Executable;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 // Tests the solver against all puzzle variations
 public class VariationTests {
     @Test
     void testSanity() {
+        // Makes sure JUnit is set up correctly
         System.out.println("sanity check");
     }
 
@@ -38,28 +34,16 @@ public class VariationTests {
             List<String> statements = variation.input().allStatements();
 
             List<DynamicNode> tests = new ArrayList<>();
-            List<DynamicNode> parsingTests = new ArrayList<>();
-
-            parsingTests.add(DynamicTest.dynamicTest("Basic Checks", () -> {
-                List<Formula> formulas = Parser.parse(variation.input());
-                Assertions.assertNotNull(formulas);
-                Assertions.assertEquals(statements.size(), formulas.size());
-
-                for (int i = 0; i < statements.size(); i++) {
-                    System.out.printf("%s -> %s\n", statements.get(i), formulas.get(i));
-                }
-            }));
 
             for (int i = 0; i < statements.size(); i++) {
                 int index = i;
-                parsingTests.add(DynamicTest.dynamicTest(statements.get(i), () -> {
+                tests.add(DynamicTest.dynamicTest(statements.get(i), () -> {
                     List<Formula> formulas = Parser.parse(variation.input());
                     Formula formula = formulas.get(index);
+                    System.out.printf("%s -> %s\n", statements.get(index), formula);
                     Assertions.assertNotNull(formula);
                 }));
             }
-
-            tests.add(DynamicContainer.dynamicContainer("Parsing", parsingTests));
 
             tests.add(DynamicTest.dynamicTest("Correct Solution", () -> {
                 PuzzleSolution solution = Solver.solve(variation.input());

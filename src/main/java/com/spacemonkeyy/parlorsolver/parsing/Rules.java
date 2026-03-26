@@ -38,7 +38,8 @@ public class Rules {
             // There are three boxes in the room.
             return new FunctionFormula(Functions.NUMBER_EQUALS,
                 ctx.get("number"),
-                new ConstantFormula(new Value(3)));
+                new ConstantFormula(new Value(3))
+            );
         });
         addRule("THERE IS ONLY ONE BOX IN THIS ROOM.", ctx -> {
             return new ConstantFormula(new Value(false));
@@ -74,7 +75,7 @@ public class Rules {
         // Boxes
 
         addRule("THE :color BOX", "box", ctx -> {
-            return new FunctionFormula(Functions.BOX_OF_COLOR, ctx.get("color"));
+            return new FunctionFormula(Functions.BOX_FOR_COLOR, ctx.get("color"));
         });
         addRule("THE MIDDLE BOX", "box", ctx -> {
             // The order of the boxes is blue, white, black
@@ -114,17 +115,16 @@ public class Rules {
         });
 
         addRule(":box IS TRUE.", ctx -> {
-            return new FunctionFormula(Functions.BOX_IS_TRUE, ctx.get("box"));
+            return formulaBoxIsTrue(ctx.get("box"));
         });
+        // TODO: Verify the box only has one statement on it
+        addAlias("THE STATEMENT ON :box IS TRUE.");
+
         addRule(":box IS FALSE.", ctx -> {
             // Not the same as the inverse of the box being true, since
-            // there can be both true and false statements on a box.
-            return new FunctionFormula(Functions.BOX_IS_FALSE, ctx.get("box"));
-        });
-
-        addRule("THE STATEMENT ON :box IS TRUE.", ctx -> {
-            assert ctx.getInput().byColor(ctx.getCurrentBox()).size() == 1;
-            return new FunctionFormula(Functions.BOX_IS_TRUE, ctx.get("box"));
+            // there can be both true and false statements on a box (or no statements),
+            // making the box neither true nor false.
+            return formulaBoxIsFalse(ctx.get("box"));
         });
 
         // Location of gems
@@ -140,7 +140,8 @@ public class Rules {
 
         addRule(":box DOES NOT CONTAIN THE GEMS.", ctx -> {
             return new FunctionFormula(Functions.NOT,
-                new FunctionFormula(Functions.BOX_HAS_GEMS, ctx.get("box")));
+                new FunctionFormula(Functions.BOX_HAS_GEMS, ctx.get("box"))
+            );
         });
         addAlias("THE GEMS ARE NOT IN :box.");
         addAlias(":box IS EMPTY.");
@@ -151,7 +152,7 @@ public class Rules {
 
         addRule(":box IS TRUE AND IT CONTAINS THE GEMS.", ctx -> {
             return new FunctionFormula(Functions.AND,
-                new FunctionFormula(Functions.BOX_IS_TRUE, ctx.get("box")),
+                formulaBoxIsTrue(ctx.get("box")),
                 new FunctionFormula(Functions.BOX_HAS_GEMS, ctx.get("box"))
             );
         });
@@ -174,5 +175,19 @@ public class Rules {
 
     private static Formula formulaThisBox(ParseContext ctx) {
         return new ConstantFormula(new Value(new Box(ctx.getCurrentBox())));
+    }
+
+    private static Formula formulaBoxIsTrue(Formula box) {
+        return new FunctionFormula(Functions.BOX_IS,
+            box,
+            new ConstantFormula(new Value(true))
+        );
+    }
+
+    private static Formula formulaBoxIsFalse(Formula box) {
+        return new FunctionFormula(Functions.BOX_IS,
+            box,
+            new ConstantFormula(new Value(false))
+        );
     }
 }

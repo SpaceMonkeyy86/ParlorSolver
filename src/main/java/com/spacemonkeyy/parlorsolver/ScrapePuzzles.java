@@ -1,7 +1,10 @@
-package com.spacemonkeyy.parlorsolver.puzzle;
+package com.spacemonkeyy.parlorsolver;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
+import com.spacemonkeyy.parlorsolver.puzzle.PuzzleSolution;
+import com.spacemonkeyy.parlorsolver.puzzle.PuzzleVariation;
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
 
 import java.io.IOException;

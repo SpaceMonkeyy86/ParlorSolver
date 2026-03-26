@@ -1,4 +1,4 @@
-package com.spacemonkeyy.parlorsolver;
+package com.spacemonkeyy.parlorsolver.solver;
 
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleSolution;

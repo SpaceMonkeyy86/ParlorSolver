@@ -8,6 +8,11 @@ public class Value {
     private final ValueType type;
     private final Object value;
 
+    public Value(boolean bool) {
+        type = ValueType.BOOLEAN;
+        value = bool;
+    }
+
     public Value(BoxColor color) {
         type = ValueType.COLOR;
         value = color;
@@ -18,19 +23,19 @@ public class Value {
         value = number;
     }
 
+    public Value(String string) {
+        type = ValueType.STRING;
+        value = string;
+    }
+
     public Value(Box box) {
         type = ValueType.BOX;
         value = box;
     }
 
-    public Value(String statement) {
+    public Value(Statement statement) {
         type = ValueType.STATEMENT;
         value = statement;
-    }
-
-    public Value(boolean bool) {
-        type = ValueType.BOOLEAN;
-        value = bool;
     }
 
     public ValueType getType() {
@@ -41,6 +46,10 @@ public class Value {
         return this.type == type;
     }
 
+    public boolean asBoolean() {
+        return (boolean)value;
+    }
+
     public BoxColor asColor() {
         return (BoxColor)value;
     }
@@ -49,16 +58,16 @@ public class Value {
         return (int)value;
     }
 
+    public String asString() {
+        return (String)value;
+    }
+
     public Box asBox() {
         return (Box)value;
     }
 
-    public String asStatement() {
-        return (String)value;
-    }
-
-    public boolean asBoolean() {
-        return (boolean)value;
+    public Statement asStatement() {
+        return (Statement)value;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.spacemonkeyy.parlorsolver.formula;
 
+import com.spacemonkeyy.parlorsolver.solver.EvaluationContext;
 import com.spacemonkeyy.parlorsolver.value.Value;
 import com.spacemonkeyy.parlorsolver.value.ValueType;
 
@@ -13,7 +14,7 @@ public class ConstantFormula implements Formula {
     }
 
     @Override
-    public Value evaluate() {
+    public Value evaluate(EvaluationContext ctx) {
         return value;
     }
 

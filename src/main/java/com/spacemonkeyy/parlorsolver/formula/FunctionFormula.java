@@ -1,5 +1,6 @@
 package com.spacemonkeyy.parlorsolver.formula;
 
+import com.spacemonkeyy.parlorsolver.solver.EvaluationContext;
 import com.spacemonkeyy.parlorsolver.value.Value;
 import com.spacemonkeyy.parlorsolver.value.ValueType;
 
@@ -17,9 +18,11 @@ public class FunctionFormula implements Formula {
     }
 
     @Override
-    public Value evaluate() {
-        List<Value> arguments = this.arguments.stream().map(Formula::evaluate).toList();
-        return function.func().apply(arguments);
+    public Value evaluate(EvaluationContext ctx) {
+        List<Value> arguments = this.arguments.stream()
+            .map(formula -> formula.evaluate(ctx)).toList();
+        ctx.setArgs(arguments);
+        return function.func().apply(ctx);
     }
 
     @Override

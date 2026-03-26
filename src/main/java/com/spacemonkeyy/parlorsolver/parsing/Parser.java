@@ -1,13 +1,8 @@
 package com.spacemonkeyy.parlorsolver.parsing;
 
-import com.spacemonkeyy.parlorsolver.formula.ConstantFormula;
 import com.spacemonkeyy.parlorsolver.formula.Formula;
-import com.spacemonkeyy.parlorsolver.formula.FunctionFormula;
-import com.spacemonkeyy.parlorsolver.formula.Functions;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
-import com.spacemonkeyy.parlorsolver.value.Box;
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
-import com.spacemonkeyy.parlorsolver.value.Value;
 
 import java.util.ArrayList;
 import java.util.List;
