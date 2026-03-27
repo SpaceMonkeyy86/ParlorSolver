@@ -6,5 +6,6 @@ public enum ValueType {
     NUMBER,
     BOX,
     STATEMENT,
-    GROUP
+    GROUP,
+    ANY
 }

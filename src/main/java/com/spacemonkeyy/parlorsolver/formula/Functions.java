@@ -31,6 +31,18 @@ public class Functions {
         return new Value(!ctx.arg(1).asBoolean());
     }, ValueType.BOOLEAN, ValueType.BOOLEAN);
 
+    // Grouping
+
+    public static ValueFunction GROUP = makeFunction("GROUP", ctx -> {
+        // TODO: Support adding to existing groups
+        return new Value(new Group(List.of(ctx.arg(1), ctx.arg(2))));
+    }, ValueType.ANY, ValueType.ANY, ValueType.GROUP);
+
+    public static ValueFunction GROUP_ONE = makeFunction("GROUP_ONE", ctx -> {
+        // TODO: Support adding to existing groups
+        return new Value(new Group(List.of(ctx.arg(1), ctx.arg(2)), Quantifier.EXISTS));
+    }, ValueType.ANY, ValueType.ANY, ValueType.GROUP);
+
     // Conversions
 
     public static ValueFunction BOX_FOR_COLOR = makeFunction("BOX_FOR_COLOR", ctx -> {

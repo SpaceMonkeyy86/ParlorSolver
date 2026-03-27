@@ -84,6 +84,15 @@ public class Rules {
         });
         addRule("THIS BOX", "box", Rules::formulaThisBox);
 
+        // Groups
+
+        addRule(":box AND :box", "box", ctx -> {
+            return new FunctionFormula(Functions.GROUP,
+                ctx.get("box", 1),
+                ctx.get("box", 2)
+            );
+        });
+
         // Simple statements
 
         addRule(":box IS :box.", ctx -> {
@@ -146,6 +155,8 @@ public class Rules {
         });
         addAlias("THE GEMS ARE NOT IN :box.");
         addAlias(":box IS EMPTY.");
+        // TODO: Verify there are two boxes in the group
+        addAlias(":box ARE BOTH EMPTY.");
 
         addRule("THIS IS NOT AN EMPTY BOX.", ctx -> {
             return new FunctionFormula(Functions.BOX_HAS_GEMS, formulaThisBox(ctx));

@@ -15,6 +15,10 @@ public class Group {
     private final ValueType type;
     private final Quantifier quantifier;
 
+    public Group(List<Value> values) {
+        this(values, Quantifier.FORALL);
+    }
+
     public Group(List<Value> values, Quantifier quantifier) {
         this.values = values;
         this.quantifier = quantifier;

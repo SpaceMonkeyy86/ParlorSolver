@@ -47,7 +47,13 @@ public class Value {
 
     public boolean typeCheck(ValueType type) {
         if (isGroup()) {
+            if (type == ValueType.GROUP) {
+                return true;
+            }
             return asGroup().typeCheck(type);
+        }
+        if (type == ValueType.ANY) {
+            return true;
         }
         return this.type == type;
     }
