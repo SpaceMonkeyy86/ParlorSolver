@@ -1,7 +1,9 @@
 package com.spacemonkeyy.parlorsolver.parsing;
 
 import com.spacemonkeyy.parlorsolver.formula.Formula;
+import com.spacemonkeyy.parlorsolver.formula.Operator;
 import com.spacemonkeyy.parlorsolver.formula.Operators;
+import com.spacemonkeyy.parlorsolver.formula.Quantifier;
 import com.spacemonkeyy.parlorsolver.value.Box;
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
 import com.spacemonkeyy.parlorsolver.value.Value;
@@ -10,8 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.spacemonkeyy.parlorsolver.formula.Formula.constant;
-import static com.spacemonkeyy.parlorsolver.formula.Formula.function;
+import static com.spacemonkeyy.parlorsolver.formula.Formula.*;
 
 public class Rules {
     public static List<ParseRule> rules = new ArrayList<>();
@@ -156,8 +157,12 @@ public class Rules {
         });
         addAlias("THE GEMS ARE NOT IN :box.");
         addAlias(":box IS EMPTY.");
-        // TODO: Verify there are two boxes in the group
-        addAlias(":box ARE BOTH EMPTY.");
+
+        addRule(":box ARE BOTH EMPTY.", ctx -> {
+            // TODO: Verify there are two boxes in the group
+            return predicate(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT),
+                Quantifier.FORALL, ctx.get("box"));
+        });
 
         addRule("THIS IS NOT AN EMPTY BOX.", ctx -> {
             return function(Operators.BOX_HAS_GEMS, formulaThisBox(ctx));
