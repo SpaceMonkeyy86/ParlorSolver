@@ -34,15 +34,19 @@ public class Functions {
     // Conversions
 
     public static ValueFunction BOX_FOR_COLOR = makeFunction("BOX_FOR_COLOR", ctx -> {
-        return new Value(new Box(ctx.arg(1).asColor()));
+        return ctx.arg(1).apply(v ->
+            new Value(new Box(v.asColor())));
     }, ValueType.COLOR, ValueType.BOX);
 
     public static ValueFunction COLOR_OF_BOX = makeFunction("COLOR_OF_BOX", ctx -> {
-        return new Value(ctx.arg(1).asBox().color());
+        return ctx.arg(1).apply(v ->
+            new Value(v.asBox().color()));
     }, ValueType.BOX, ValueType.COLOR);
 
     public static ValueFunction STATEMENT_ON_BOX = makeFunction("STATEMENT_ON_BOX", ctx -> {
-        return new Value(new Statement(ctx.arg(1).asBox(), ctx.arg(2).asNumber()));
+        return ctx.arg(1).apply(v1 ->
+            ctx.arg(2).apply(v2 ->
+                new Value(new Statement(v1.asBox(), v2.asNumber()))));
     }, ValueType.BOX, ValueType.NUMBER, ValueType.STATEMENT);
 
     // Equality
@@ -66,29 +70,35 @@ public class Functions {
     // Evaluation variables
 
     public static ValueFunction STATEMENT_IS_TRUE = makeFunction("STATEMENT_IS_TRUE", ctx -> {
-        Statement statement = ctx.arg(1).asStatement();
-        return new Value(ctx.getVariable(statement.getVariableName()));
+        return new Value(ctx.arg(1).test(v -> {
+            Statement statement = v.asStatement();
+            return ctx.getVariable(statement.getVariableName());
+        }));
     }, ValueType.STATEMENT, ValueType.BOOLEAN);
 
     // Simple checking without having to know in advance every statement on a box
     public static ValueFunction BOX_IS = makeFunction("BOX_IS", ctx -> {
-        Box box = ctx.arg(1).asBox();
-        boolean bool = ctx.arg(2).asBoolean();
-        int statementCount = ctx.getInput().byColor(box.color()).size();
+        return new Value(ctx.arg(1).test(v -> {
+            Box box = v.asBox();
+            boolean bool = ctx.arg(2).asBoolean();
+            int statementCount = ctx.getInput().byColor(box.color()).size();
 
-        for (int i = 0; i < statementCount; i++) {
-            Statement statement = new Statement(box, i);
-            if (ctx.getVariable(statement.getVariableName()) != bool) {
-                return new Value(false);
+            for (int i = 0; i < statementCount; i++) {
+                Statement statement = new Statement(box, i);
+                if (ctx.getVariable(statement.getVariableName()) != bool) {
+                    return false;
+                }
             }
-        }
 
-        return new Value(true);
+            return true;
+        }));
     }, ValueType.BOX, ValueType.BOOLEAN, ValueType.BOOLEAN);
 
     public static ValueFunction BOX_HAS_GEMS = makeFunction("BOX_HAS_GEMS", ctx -> {
-        Box box = ctx.arg(1).asBox();
-        return new Value(ctx.getVariable(box.getVariableName()));
+        return new Value(ctx.arg(1).test(v -> {
+            Box box = v.asBox();
+            return ctx.getVariable(box.getVariableName());
+        }));
     }, ValueType.BOX, ValueType.BOOLEAN);
 
     private static ValueFunction makeFunction(String name, Function<EvaluationContext, Value> function, ValueType... signature) {
@@ -102,13 +112,13 @@ public class Functions {
             }
 
             for (int i = 0; i < ctx.argCount(); i++) {
-                if (!ctx.arg(i + 1).isType(parameterTypes.get(i))) {
+                if (!ctx.arg(i + 1).typeCheck(parameterTypes.get(i))) {
                     throw new RuntimeException("Invalid parameter type");
                 }
             }
 
             Value result = function.apply(ctx);
-            if (!result.isType(returnType)) {
+            if (!result.typeCheck(returnType)) {
                 throw new RuntimeException("Invalid return type");
             }
 

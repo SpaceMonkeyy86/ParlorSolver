@@ -1,6 +1,9 @@
 package com.spacemonkeyy.parlorsolver.value;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 // An element of the model's base set.
 // Can be a box color, a box, a statement, a number, or true/false.
@@ -23,11 +26,6 @@ public class Value {
         value = number;
     }
 
-    public Value(String string) {
-        type = ValueType.STRING;
-        value = string;
-    }
-
     public Value(Box box) {
         type = ValueType.BOX;
         value = box;
@@ -38,12 +36,38 @@ public class Value {
         value = statement;
     }
 
+    public Value(Group group) {
+        type = ValueType.GROUP;
+        value = group;
+    }
+
     public ValueType getType() {
         return type;
     }
 
-    public boolean isType(ValueType type) {
+    public boolean typeCheck(ValueType type) {
+        if (isGroup()) {
+            return asGroup().typeCheck(type);
+        }
         return this.type == type;
+    }
+
+    public Value apply(Function<Value, Value> func) {
+        if (isGroup()) {
+            return asGroup().apply(func);
+        }
+        return func.apply(this);
+    }
+
+    public boolean test(Predicate<Value> pred) {
+        if (isGroup()) {
+            return asGroup().test(pred);
+        }
+        return pred.test(this);
+    }
+
+    public boolean isGroup() {
+        return type == ValueType.GROUP;
     }
 
     public boolean asBoolean() {
@@ -58,16 +82,16 @@ public class Value {
         return (int)value;
     }
 
-    public String asString() {
-        return (String)value;
-    }
-
     public Box asBox() {
         return (Box)value;
     }
 
     public Statement asStatement() {
         return (Statement)value;
+    }
+
+    public Group asGroup() {
+        return (Group)value;
     }
 
     @Override

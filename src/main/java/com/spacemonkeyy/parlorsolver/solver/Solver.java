@@ -79,7 +79,7 @@ public class Solver {
             boolean solved = true;
             for (Formula formula : system) {
                 Value result = formula.evaluate(ctx);
-                if (!result.isType(ValueType.BOOLEAN)) {
+                if (result.getType() != ValueType.BOOLEAN) {
                     throw new RuntimeException("Invalid equation");
                 }
                 if (!result.asBoolean()) {
