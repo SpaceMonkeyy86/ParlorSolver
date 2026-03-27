@@ -1,9 +1,7 @@
 package com.spacemonkeyy.parlorsolver.parsing;
 
-import com.spacemonkeyy.parlorsolver.formula.ConstantFormula;
 import com.spacemonkeyy.parlorsolver.formula.Formula;
-import com.spacemonkeyy.parlorsolver.formula.FunctionFormula;
-import com.spacemonkeyy.parlorsolver.formula.Functions;
+import com.spacemonkeyy.parlorsolver.formula.Operators;
 import com.spacemonkeyy.parlorsolver.value.Box;
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
 import com.spacemonkeyy.parlorsolver.value.Value;
@@ -11,6 +9,9 @@ import com.spacemonkeyy.parlorsolver.value.Value;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+
+import static com.spacemonkeyy.parlorsolver.formula.Formula.constant;
+import static com.spacemonkeyy.parlorsolver.formula.Formula.function;
 
 public class Rules {
     public static List<ParseRule> rules = new ArrayList<>();
@@ -21,73 +22,73 @@ public class Rules {
 
         addRule("YOU ARE IN THE PARLOR.", ctx -> {
             // True; the game takes place in the parlor.
-            return new ConstantFormula(new Value(true));
+            return constant(new Value(true));
         });
         addRule("THERE IS A SECOND WIND-UP KEY IN THIS ROOM.", ctx -> {
             // False; there is only ever one wind-up key in the room.
-            return new ConstantFormula(new Value(false));
+            return constant(new Value(false));
         });
 
         addRule("THE GEMS ARE ON THE DESK.", ctx -> {
             // False; the gems are always in a box.
-            return new ConstantFormula(new Value(false));
+            return constant(new Value(false));
         });
         addAlias("THE GEMS ARE ON THE FLOOR.");
         addAlias("THE GEMS ARE ON THE TABLE BEHIND YOU.");
 
         addRule("THERE ARE :number BOXES IN THIS ROOM.", ctx -> {
             // There are three boxes in the room.
-            return new FunctionFormula(Functions.NUMBER_EQUALS,
+            return function(Operators.NUMBER_EQUALS,
                 ctx.get("number"),
-                new ConstantFormula(new Value(3))
+                constant(new Value(3))
             );
         });
         addRule("THERE IS ONLY ONE BOX IN THIS ROOM.", ctx -> {
-            return new ConstantFormula(new Value(false));
+            return constant(new Value(false));
         });
 
         // Colors
 
         addRule("BLUE", "color", ctx -> {
-            return new ConstantFormula(new Value(BoxColor.BLUE));
+            return constant(new Value(BoxColor.BLUE));
         });
         addRule("WHITE", "color", ctx -> {
-            return new ConstantFormula(new Value(BoxColor.WHITE));
+            return constant(new Value(BoxColor.WHITE));
         });
         addRule("BLACK", "color", ctx -> {
-            return new ConstantFormula(new Value(BoxColor.BLACK));
+            return constant(new Value(BoxColor.BLACK));
         });
 
         // Numbers
 
         addRule("ONE", "number", ctx -> {
-            return new ConstantFormula(new Value(1));
+            return constant(new Value(1));
         });
         addRule("TWO", "number", ctx -> {
-            return new ConstantFormula(new Value(2));
+            return constant(new Value(2));
         });
         addRule("THREE", "number", ctx -> {
-            return new ConstantFormula(new Value(3));
+            return constant(new Value(3));
         });
         addRule("FOUR", "number", ctx -> {
-            return new ConstantFormula(new Value(4));
+            return constant(new Value(4));
         });
 
         // Boxes
 
         addRule("THE :color BOX", "box", ctx -> {
-            return new FunctionFormula(Functions.BOX_FOR_COLOR, ctx.get("color"));
+            return function(Operators.BOX_FOR_COLOR, ctx.get("color"));
         });
         addRule("THE MIDDLE BOX", "box", ctx -> {
             // The order of the boxes is blue, white, black
-            return new ConstantFormula(new Value(new Box(BoxColor.WHITE)));
+            return constant(new Value(new Box(BoxColor.WHITE)));
         });
         addRule("THIS BOX", "box", Rules::formulaThisBox);
 
         // Groups
 
         addRule(":box AND :box", "box", ctx -> {
-            return new FunctionFormula(Functions.GROUP,
+            return function(Operators.GROUP,
                 ctx.get("box", 1),
                 ctx.get("box", 2)
             );
@@ -96,29 +97,29 @@ public class Rules {
         // Simple statements
 
         addRule(":box IS :box.", ctx -> {
-            return new FunctionFormula(Functions.BOX_EQUALS,
+            return function(Operators.BOX_EQUALS,
                 ctx.get("box", 1),
                 ctx.get("box", 2)
             );
         });
 
         addRule(":box IS :color.", ctx -> {
-            return new FunctionFormula(Functions.COLOR_EQUALS,
-                new FunctionFormula(Functions.COLOR_OF_BOX, ctx.get("box")),
+            return function(Operators.COLOR_EQUALS,
+                function(Operators.COLOR_OF_BOX, ctx.get("box")),
                 ctx.get("color")
             );
         });
         addRule(":box IS NOT :color.", ctx -> {
-            return new FunctionFormula(Functions.NOT,
-                new FunctionFormula(Functions.COLOR_EQUALS,
-                    new FunctionFormula(Functions.COLOR_OF_BOX, ctx.get("box")),
+            return function(Operators.NOT,
+                function(Operators.COLOR_EQUALS,
+                    function(Operators.COLOR_OF_BOX, ctx.get("box")),
                     ctx.get("color")
                 )
             );
         });
 
         addRule("THIS IS :box.", ctx -> {
-            return new FunctionFormula(Functions.BOX_EQUALS,
+            return function(Operators.BOX_EQUALS,
                 formulaThisBox(ctx),
                 ctx.get("box")
             );
@@ -140,7 +141,7 @@ public class Rules {
         // Location of gems
 
         addRule(":box CONTAINS THE GEMS.", ctx -> {
-            return new FunctionFormula(Functions.BOX_HAS_GEMS, ctx.get("box"));
+            return function(Operators.BOX_HAS_GEMS, ctx.get("box"));
         });
         addAlias(":box CONTAINS GEMS.");
         addAlias(":box HAS THE GEMS.");
@@ -149,8 +150,8 @@ public class Rules {
         addAlias(":box IS NOT EMPTY.");
 
         addRule(":box DOES NOT CONTAIN THE GEMS.", ctx -> {
-            return new FunctionFormula(Functions.NOT,
-                new FunctionFormula(Functions.BOX_HAS_GEMS, ctx.get("box"))
+            return function(Operators.NOT,
+                function(Operators.BOX_HAS_GEMS, ctx.get("box"))
             );
         });
         addAlias("THE GEMS ARE NOT IN :box.");
@@ -159,13 +160,13 @@ public class Rules {
         addAlias(":box ARE BOTH EMPTY.");
 
         addRule("THIS IS NOT AN EMPTY BOX.", ctx -> {
-            return new FunctionFormula(Functions.BOX_HAS_GEMS, formulaThisBox(ctx));
+            return function(Operators.BOX_HAS_GEMS, formulaThisBox(ctx));
         });
 
         addRule(":box IS TRUE AND IT CONTAINS THE GEMS.", ctx -> {
-            return new FunctionFormula(Functions.AND,
+            return function(Operators.AND,
                 formulaBoxIsTrue(ctx.get("box")),
-                new FunctionFormula(Functions.BOX_HAS_GEMS, ctx.get("box"))
+                function(Operators.BOX_HAS_GEMS, ctx.get("box"))
             );
         });
     }
@@ -186,29 +187,29 @@ public class Rules {
     // Helper functions
 
     public static Formula formulaThisBox(ParseContext ctx) {
-        return new ConstantFormula(new Value(new Box(ctx.getCurrentBox())));
+        return constant(new Value(new Box(ctx.getCurrentBox())));
     }
 
     public static Formula formulaBoxIsTrue(Formula box) {
-        return new FunctionFormula(Functions.BOX_IS,
+        return function(Operators.BOX_IS,
             box,
-            new ConstantFormula(new Value(true))
+            constant(new Value(true))
         );
     }
 
     public static Formula formulaBoxIsFalse(Formula box) {
-        return new FunctionFormula(Functions.BOX_IS,
+        return function(Operators.BOX_IS,
             box,
-            new ConstantFormula(new Value(false))
+            constant(new Value(false))
         );
     }
 
     public static Formula formulaAtLeastOneBox(Function<Formula, Formula> predicate) {
-        Formula blue = predicate.apply(new ConstantFormula(new Value(new Box(BoxColor.BLUE))));
-        Formula white = predicate.apply(new ConstantFormula(new Value(new Box(BoxColor.WHITE))));
-        Formula black = predicate.apply(new ConstantFormula(new Value(new Box(BoxColor.BLACK))));
+        Formula blue = predicate.apply(constant(new Value(new Box(BoxColor.BLUE))));
+        Formula white = predicate.apply(constant(new Value(new Box(BoxColor.WHITE))));
+        Formula black = predicate.apply(constant(new Value(new Box(BoxColor.BLACK))));
 
-        return new FunctionFormula(Functions.OR3,
+        return function(Operators.OR3,
             blue,
             white,
             black
@@ -216,24 +217,24 @@ public class Rules {
     }
 
     public static Formula formulaExactlyOneBox(Function<Formula, Formula> predicate) {
-        Formula blue = predicate.apply(new ConstantFormula(new Value(new Box(BoxColor.BLUE))));
-        Formula white = predicate.apply(new ConstantFormula(new Value(new Box(BoxColor.WHITE))));
-        Formula black = predicate.apply(new ConstantFormula(new Value(new Box(BoxColor.BLACK))));
+        Formula blue = predicate.apply(constant(new Value(new Box(BoxColor.BLUE))));
+        Formula white = predicate.apply(constant(new Value(new Box(BoxColor.WHITE))));
+        Formula black = predicate.apply(constant(new Value(new Box(BoxColor.BLACK))));
 
-        return new FunctionFormula(Functions.OR3,
-            new FunctionFormula(Functions.AND3,
+        return function(Operators.OR3,
+            function(Operators.AND3,
                 blue,
-                new FunctionFormula(Functions.NOT, white),
-                new FunctionFormula(Functions.NOT, black)
+                function(Operators.NOT, white),
+                function(Operators.NOT, black)
             ),
-            new FunctionFormula(Functions.AND3,
-                new FunctionFormula(Functions.NOT, blue),
+            function(Operators.AND3,
+                function(Operators.NOT, blue),
                 white,
-                new FunctionFormula(Functions.NOT, black)
+                function(Operators.NOT, black)
             ),
-            new FunctionFormula(Functions.AND3,
-                new FunctionFormula(Functions.NOT, blue),
-                new FunctionFormula(Functions.NOT, white),
+            function(Operators.AND3,
+                function(Operators.NOT, blue),
+                function(Operators.NOT, white),
                 black
             )
         );

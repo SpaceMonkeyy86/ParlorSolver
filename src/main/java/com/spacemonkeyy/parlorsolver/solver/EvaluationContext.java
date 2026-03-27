@@ -1,5 +1,6 @@
 package com.spacemonkeyy.parlorsolver.solver;
 
+import com.spacemonkeyy.parlorsolver.formula.Operator;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
 import com.spacemonkeyy.parlorsolver.value.Value;
 
@@ -27,16 +28,37 @@ public class EvaluationContext {
         return variables.get(variableNames.get(name));
     }
 
+    public Value call(Operator op, List<Value> args) {
+        if (args.size() != op.parameterTypes().size()) {
+            throw new RuntimeException("Unexpected number of arguments");
+        }
+
+        for (int i = 0; i < args.size(); i++) {
+            if (!args.get(i).typeCheck(op.parameterTypes().get(i))) {
+                throw new RuntimeException("Wrong argument type");
+            }
+        }
+
+        this.args = args;
+        Value result = op.func().apply(this);
+
+        if (!result.typeCheck(op.returnType())) {
+            throw new RuntimeException("Wrong return type");
+        }
+
+        return result;
+    }
+
     // Convenience for functions
     public Value arg(int index) {
         return args.get(index - 1);
     }
 
-    public int argCount() {
-        return args.size();
+    public List<Value> args() {
+        return args;
     }
 
-    public void setArgs(List<Value> args) {
-        this.args = args;
+    public int argCount() {
+        return args.size();
     }
 }

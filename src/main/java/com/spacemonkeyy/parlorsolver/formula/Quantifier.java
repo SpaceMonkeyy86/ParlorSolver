@@ -1,4 +1,4 @@
-package com.spacemonkeyy.parlorsolver.value;
+package com.spacemonkeyy.parlorsolver.formula;
 
 public enum Quantifier {
     FORALL,

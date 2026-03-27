@@ -1,9 +1,7 @@
 package com.spacemonkeyy.parlorsolver.solver;
 
-import com.spacemonkeyy.parlorsolver.formula.ConstantFormula;
 import com.spacemonkeyy.parlorsolver.formula.Formula;
-import com.spacemonkeyy.parlorsolver.formula.FunctionFormula;
-import com.spacemonkeyy.parlorsolver.formula.Functions;
+import com.spacemonkeyy.parlorsolver.formula.Operators;
 import com.spacemonkeyy.parlorsolver.parsing.Parser;
 import com.spacemonkeyy.parlorsolver.parsing.Rules;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
@@ -37,7 +35,7 @@ public class Solver {
         List<Formula> system = new ArrayList<>();
 
         // Exactly one box contains the gems
-        system.add(Rules.formulaExactlyOneBox(box -> new FunctionFormula(Functions.BOX_HAS_GEMS, box)));
+        system.add(Rules.formulaExactlyOneBox(box -> Formula.function(Operators.BOX_HAS_GEMS, box)));
 
         // There is always at least one box with only true statements
         system.add(Rules.formulaAtLeastOneBox(Rules::formulaBoxIsTrue));
@@ -58,9 +56,11 @@ public class Solver {
             Formula formula = entry.getValue();
 
             // Each statement must be consistent with its truth value
-            system.add(new FunctionFormula(Functions.BOOLEAN_EQUALS,
+            system.add(Formula.function(Operators.BOOLEAN_EQUALS,
                 formula,
-                new FunctionFormula(Functions.STATEMENT_IS_TRUE, new ConstantFormula(new Value(statement)))
+                Formula.function(Operators.STATEMENT_IS_TRUE,
+                    Formula.constant(new Value(statement))
+                )
             ));
         }
 
