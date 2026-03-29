@@ -85,7 +85,8 @@ public class Formula {
             .map(formula -> formula.evaluate(ctx))
             .toList();
 
-        if (args.getFirst().getType() == ValueType.GROUP) {
+        if (args.getFirst().getType() == ValueType.GROUP
+            && operator.parameterTypes().getFirst() != ValueType.GROUP) {
             // Evaluate for each member of the group,
             // then combine results according to the quantifier.
             // The group must be the first argument.

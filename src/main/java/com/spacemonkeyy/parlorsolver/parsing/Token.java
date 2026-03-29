@@ -69,4 +69,28 @@ public class Token {
 
         return tokens;
     }
+
+    public static String stringify(List<Token> tokens) {
+        StringBuilder builder = new StringBuilder();
+        for (Token token : tokens) {
+            if (!builder.isEmpty() && (!token.identifier.isEmpty()
+                || Character.isLetterOrDigit(token.source.charAt(0)))) {
+                builder.append(" ");
+            }
+            builder.append(token.toString());
+        }
+        return builder.toString();
+    }
+
+    @Override
+    public String toString() {
+        if (identifier.isEmpty()) {
+            return source;
+
+        }
+        if (formula == null) {
+            return ":" + identifier;
+        }
+        return identifier + "{" + formula + "}";
+    }
 }

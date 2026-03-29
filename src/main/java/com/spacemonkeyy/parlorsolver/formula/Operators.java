@@ -3,6 +3,7 @@ package com.spacemonkeyy.parlorsolver.formula;
 import com.spacemonkeyy.parlorsolver.solver.EvaluationContext;
 import com.spacemonkeyy.parlorsolver.value.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -93,13 +94,56 @@ public class Operators {
         return new Value(true);
     }, ValueType.BOX, ValueType.BOOLEAN, ValueType.BOOLEAN);
 
+    public static Operator BOX_HAS_BOOL_STATEMENT = makeOperator("BOX_HAS_BOOL_STATEMENT", ctx -> {
+        Box box = ctx.arg(1).asBox();
+        boolean bool = ctx.arg(2).asBoolean();
+        int statementCount = ctx.getInput().byColor(box.color()).size();
+
+        for (int i = 0; i < statementCount; i++) {
+            Statement statement = new Statement(box, i);
+            if (ctx.getVariable(statement.getVariableName()) == bool) {
+                return new Value(true);
+            }
+        }
+
+        return new Value(false);
+    }, ValueType.BOX, ValueType.BOOLEAN, ValueType.BOOLEAN);
+
     public static Operator BOX_HAS_GEMS = makeOperator("BOX_HAS_GEMS", ctx -> {
         Box box = ctx.arg(1).asBox();
         return new Value(ctx.getVariable(box.getVariableName()));
     }, ValueType.BOX, ValueType.BOOLEAN);
 
+    // Higher-order operators
+
+    public static Operator FILTER(Operator predicate) {
+        if (predicate.returnType() != ValueType.BOOLEAN) {
+            throw new RuntimeException("Not a predicate");
+        }
+        Function<EvaluationContext, Value> func = ctx -> {
+            Group group = ctx.arg(1).asGroup();
+            List<Value> args = new ArrayList<>(ctx.args());
+            List<Value> result = new ArrayList<>();
+
+            for (Value value : group.values()) {
+                args.set(0, value);
+                if (ctx.call(predicate, args).asBoolean()) {
+                    result.add(value);
+                }
+            }
+
+            return new Value(new Group(result));
+        };
+
+        List<ValueType> parameterTypes = new ArrayList<>(predicate.parameterTypes());
+        parameterTypes.set(0, ValueType.GROUP);
+        return new Operator("FILTER_" + predicate.name(), func, parameterTypes, ValueType.GROUP);
+    }
+
     private static Operator makeOperator(String name, Function<EvaluationContext, Value> func, ValueType... signature) {
         List<ValueType> types = Arrays.stream(signature).toList();
+        assert !types.isEmpty();
+
         List<ValueType> parameterTypes = types.subList(0, types.size() - 1);
         ValueType returnType = types.getLast();
 

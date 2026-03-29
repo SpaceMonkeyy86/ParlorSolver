@@ -30,11 +30,14 @@ public class Parser {
 
     private static Formula parseStatement(String statement, ParseContext context) {
         List<Token> tokens = Token.tokenize(statement);
+        //System.out.println(Token.stringify(tokens));
 
         while (true) {
             boolean matched = false;
             for (ParseRule rule : Rules.rules) {
                 if (rule.tryMatch(tokens, context)) {
+                    //System.out.printf("Matched %s\n", rule);
+                    //System.out.println(Token.stringify(tokens));
                     matched = true;
                     break;
                 }

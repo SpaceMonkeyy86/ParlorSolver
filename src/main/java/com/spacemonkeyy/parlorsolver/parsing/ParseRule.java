@@ -66,4 +66,9 @@ public class ParseRule {
             return Objects.equals(target.getIdentifier(), pattern.getIdentifier());
         }
     }
+
+    @Override
+    public String toString() {
+        return Token.stringify(pattern) + " -> " + identifier;
+    }
 }
