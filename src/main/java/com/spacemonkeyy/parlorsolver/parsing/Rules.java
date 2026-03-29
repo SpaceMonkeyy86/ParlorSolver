@@ -17,7 +17,9 @@ import static com.spacemonkeyy.parlorsolver.formula.Formula.*;
 
 public class Rules {
     public static List<ParseRule> rules = new ArrayList<>();
+
     private static ParseAction lastAction;
+    private static String lastIdentifier;
 
     static {
         // Trivial statements
@@ -120,11 +122,35 @@ public class Rules {
             return constant(new Value(new Group(boxes)));
         });
 
+        addRule("BOXES NEXT TO :box", "box", ctx -> {
+            return function(Operators.NEIGHBORS, ctx.get("box"));
+        });
+        addRule("A BOX NEXT TO :box", "box", ctx -> {
+            return function(Operators.NEIGHBORS, ctx.get("box"))
+                .withQuantifierHint(Quantifier.EXISTS);
+        });
+        // TODO: Verify there is only one box
+        addAlias("THE BOX NEXT TO :box");
+
+        addRule("A :bool BOX", "box", ctx -> {
+            return function(Operators.FILTER(Operators.BOX_IS),
+                formulaAllBoxes(),
+                ctx.get("bool")
+            ).withQuantifierHint(Quantifier.EXISTS);
+        });
+        // TODO: Verify there is only one box
+        addAlias("THE :bool BOX");
+
         addRule("A BOX WITH A :bool STATEMENT", "box", ctx -> {
             return function(Operators.FILTER(Operators.BOX_HAS_BOOL_STATEMENT),
                 formulaAllBoxes(),
                 ctx.get("bool")
             ).withQuantifierHint(Quantifier.EXISTS);
+        });
+
+        addRule("A BOX WITH A STATEMENT", "box", ctx -> {
+            return function(Operators.FILTER(Operators.BOX_HAS_STATEMENT), formulaAllBoxes())
+                .withQuantifierHint(Quantifier.EXISTS);
         });
 
         // Simple statements
@@ -172,11 +198,25 @@ public class Rules {
             );
         });
         // TODO: Verify the box only has one statement on it
-        addAlias("THE STATEMENT ON :box IS :boolean.");
+        addAlias("THE STATEMENT ON :box IS :bool.");
         addRule(":box ARE :bool.", ctx -> {
             return predicate(Operators.BOX_IS, Quantifier.FORALL,
                 ctx.get("box"),
                 ctx.get("bool")
+            );
+        });
+
+        addRule(":box DISPLAYS A :bool STATEMENT.", ctx -> {
+            return function(Operators.BOX_HAS_BOOL_STATEMENT,
+                ctx.get("box"),
+                ctx.get("bool")
+            );
+        });
+
+        // TODO: Is this ever inverted?
+        addRule(":box DOES NOT HAVE A STATEMENT.", ctx -> {
+            return function(Operators.NOT,
+                function(Operators.BOX_HAS_STATEMENT, ctx.get("box"))
             );
         });
 
@@ -229,16 +269,17 @@ public class Rules {
     }
 
     private static void addRule(String pattern, ParseAction action) {
-        rules.add(new ParseRule(pattern, false, "sentence", action));
-        lastAction = action;
+        addRule(pattern, "sentence", action);
     }
 
     private static void addRule(String pattern, String identifier, ParseAction action) {
-        rules.add(new ParseRule(pattern, true, identifier, action));
+        rules.add(new ParseRule(pattern, identifier, action));
+        lastAction = action;
+        lastIdentifier = identifier;
     }
 
     private static void addAlias(String pattern) {
-        addRule(pattern, lastAction);
+        addRule(pattern, lastIdentifier, lastAction);
     }
 
     // Helper functions

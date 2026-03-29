@@ -7,21 +7,23 @@ import java.util.Objects;
 
 public class ParseRule {
     private final List<Token> pattern;
-    private final boolean partial;
     private final String identifier;
     private final ParseAction action;
 
-    public ParseRule(String pattern, boolean partial, String identifier, ParseAction action) {
+    public ParseRule(String pattern, String identifier, ParseAction action) {
         this.pattern = Token.tokenize(pattern);
-        this.partial = partial;
         this.identifier = identifier;
         this.action = action;
+    }
+
+    public boolean isPartial() {
+        return !identifier.equals("sentence");
     }
 
     public boolean tryMatch(List<Token> tokens, ParseContext context) {
         // Partial rules can match any part of the token string,
         // Full rules must match the entire string
-        if (!partial && tokens.size() != pattern.size()) {
+        if (!isPartial() && tokens.size() != pattern.size()) {
             return false;
         }
 

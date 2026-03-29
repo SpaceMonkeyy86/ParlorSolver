@@ -39,6 +39,16 @@ public class Operators {
         return new Value(new Group(List.of(ctx.arg(1), ctx.arg(2))));
     }, ValueType.ANY, ValueType.ANY, ValueType.GROUP);
 
+    public static Operator NEIGHBORS = makeOperator("NEIGHBORS", ctx -> {
+        // Order of boxes is blue, white, black
+        Box box = ctx.arg(1).asBox();
+        List<Value> neighbors = switch (box.color()) {
+            case BLUE, BLACK -> List.of(new Value(new Box(BoxColor.WHITE)));
+            case WHITE -> List.of(new Value(new Box(BoxColor.BLUE)), new Value(new Box(BoxColor.BLACK)));
+        };
+        return new Value(new Group(neighbors));
+    }, ValueType.BOX, ValueType.GROUP);
+
     // Conversions
 
     public static Operator BOX_FOR_COLOR = makeOperator("BOX_FOR_COLOR", ctx -> {
@@ -72,6 +82,7 @@ public class Operators {
     }, ValueType.BOX, ValueType.BOX, ValueType.BOOLEAN);
 
     // Evaluation variables
+    // TODO: Try to have only STATEMENT_IS_TRUE and BOX_HAS_GEMS as primitives
 
     public static Operator STATEMENT_IS_TRUE = makeOperator("STATEMENT_IS_TRUE", ctx -> {
             Statement statement = ctx.arg(1).asStatement();
@@ -108,6 +119,10 @@ public class Operators {
 
         return new Value(false);
     }, ValueType.BOX, ValueType.BOOLEAN, ValueType.BOOLEAN);
+
+    public static Operator BOX_HAS_STATEMENT = makeOperator("BOX_HAS_STATEMENT", ctx -> {
+        return new Value(!ctx.getInput().byColor(ctx.arg(1).asBox().color()).isEmpty());
+    }, ValueType.BOX, ValueType.BOOLEAN);
 
     public static Operator BOX_HAS_GEMS = makeOperator("BOX_HAS_GEMS", ctx -> {
         Box box = ctx.arg(1).asBox();
