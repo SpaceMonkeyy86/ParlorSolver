@@ -4,10 +4,7 @@ import com.spacemonkeyy.parlorsolver.formula.Formula;
 import com.spacemonkeyy.parlorsolver.formula.Operator;
 import com.spacemonkeyy.parlorsolver.formula.Operators;
 import com.spacemonkeyy.parlorsolver.formula.Quantifier;
-import com.spacemonkeyy.parlorsolver.value.Box;
-import com.spacemonkeyy.parlorsolver.value.BoxColor;
-import com.spacemonkeyy.parlorsolver.value.Group;
-import com.spacemonkeyy.parlorsolver.value.Value;
+import com.spacemonkeyy.parlorsolver.value.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,6 +103,10 @@ public class Rules {
                 ctx.get("box", 2)
             );
         });
+        addRule(":number OF :box", "box", ctx -> {
+            int count = ctx.get("number").evaluate(null).asNumber();
+            return ctx.get("box").withQuantifierHint(Quantifier.atLeast(count));
+        });
 
         addRule("ALL :number BOXES", "box", ctx -> {
             // TODO: Verify that the number was three
@@ -121,13 +122,24 @@ public class Rules {
             }
             return constant(new Value(new Group(boxes)));
         });
+        addRule(":number BOXES IN THIS ROOM", "box", ctx -> {
+            int count = ctx.get("number").evaluate(null).asNumber();
+            return formulaAllBoxes().withQuantifierHint(Quantifier.exactly(count));
+        });
+        addRule("THE :number EMPTY BOXES", "box", ctx -> {
+            // TODO: Check that there are actually that many
+            return function(Operators.FILTER(
+                Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT)),
+                formulaAllBoxes()
+            );
+        });
 
         addRule("BOXES NEXT TO :box", "box", ctx -> {
             return function(Operators.NEIGHBORS, ctx.get("box"));
         });
         addRule("A BOX NEXT TO :box", "box", ctx -> {
             return function(Operators.NEIGHBORS, ctx.get("box"))
-                .withQuantifierHint(Quantifier.EXISTS);
+                .withQuantifierHint(Quantifier.any());
         });
         // TODO: Verify there is only one box
         addAlias("THE BOX NEXT TO :box");
@@ -136,7 +148,7 @@ public class Rules {
             return function(Operators.FILTER(Operators.BOX_IS),
                 formulaAllBoxes(),
                 ctx.get("bool")
-            ).withQuantifierHint(Quantifier.EXISTS);
+            ).withQuantifierHint(Quantifier.any());
         });
         // TODO: Verify there is only one box
         addAlias("THE :bool BOX");
@@ -145,20 +157,31 @@ public class Rules {
             return function(Operators.FILTER(Operators.BOX_HAS_BOOL_STATEMENT),
                 formulaAllBoxes(),
                 ctx.get("bool")
-            ).withQuantifierHint(Quantifier.EXISTS);
+            ).withQuantifierHint(Quantifier.any());
         });
 
+        // TODO: Parse "A STATEMENT" separately
         addRule("A BOX WITH A STATEMENT", "box", ctx -> {
             return function(Operators.FILTER(Operators.BOX_HAS_STATEMENT), formulaAllBoxes())
-                .withQuantifierHint(Quantifier.EXISTS);
+                .withQuantifierHint(Quantifier.any());
         });
 
         // Simple statements
 
         addRule(":box IS :box.", ctx -> {
+            Formula first = ctx.get("box", 1);
+            Formula second = ctx.get("box", 2);
+
+            if (first.getType() != ValueType.GROUP && second.getType() == ValueType.GROUP) {
+                // The group must be the first argument
+                Formula temp = first;
+                first = second;
+                second = temp;
+            }
+
             return function(Operators.BOX_EQUALS,
-                ctx.get("box", 1),
-                ctx.get("box", 2)
+                first,
+                second
             );
         });
 
@@ -177,7 +200,7 @@ public class Rules {
             );
         });
         addRule(":box ARE :color.", ctx -> {
-            return predicate(Operators.COLOR_EQUALS, Quantifier.FORALL,
+            return function(Operators.COLOR_EQUALS,
                 function(Operators.COLOR_OF_BOX, ctx.get("box")),
                 ctx.get("color")
             );
@@ -200,7 +223,7 @@ public class Rules {
         // TODO: Verify the box only has one statement on it
         addAlias("THE STATEMENT ON :box IS :bool.");
         addRule(":box ARE :bool.", ctx -> {
-            return predicate(Operators.BOX_IS, Quantifier.FORALL,
+            return function(Operators.BOX_IS,
                 ctx.get("box"),
                 ctx.get("bool")
             );
@@ -240,17 +263,15 @@ public class Rules {
         addAlias(":box IS EMPTY.");
 
         addRule(":box CONTAIN GEMS.", ctx -> {
-            return predicate(Operators.BOX_HAS_GEMS,
-                Quantifier.FORALL, ctx.get("box"));
+            return function(Operators.BOX_HAS_GEMS, ctx.get("box"));
         });
         addRule(":box ARE EMPTY.", ctx -> {
-            return predicate(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT),
-                Quantifier.FORALL, ctx.get("box"));
+            return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT), ctx.get("box"));
         });
         addRule(":box ARE BOTH EMPTY.", ctx -> {
             // TODO: Verify there are two boxes in the group
             return predicate(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT),
-                Quantifier.FORALL, ctx.get("box"));
+                Quantifier.all(), ctx.get("box"));
         });
 
         addRule("THIS IS NOT AN EMPTY BOX.", ctx -> {

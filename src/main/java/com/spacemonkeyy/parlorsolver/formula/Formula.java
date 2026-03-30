@@ -100,14 +100,24 @@ public class Formula {
                 results.add(ctx.call(operator, list));
             }
 
-            if (isPredicate()) {
-                boolean existential = quantifier == Quantifier.EXISTS;
+            if (operator.returnType() == ValueType.BOOLEAN) {
+                // If no quantifier was hinted, use the "all" quantifier
+                Quantifier quant = quantifier;
+                if (quant == null) {
+                    quant = Quantifier.all();
+                }
+
+                int passed = 0;
+                int total = 0;
+
                 for (Value result : results) {
-                    if (result.asBoolean() == existential) {
-                        return new Value(existential);
+                    total++;
+                    if (result.asBoolean()) {
+                        passed++;
                     }
                 }
-                return new Value(!existential);
+
+                return new Value(quant.test(passed, total));
             } else {
                 return new Value(new Group(results));
             }
