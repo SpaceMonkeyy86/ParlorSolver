@@ -32,14 +32,17 @@ public class Formula {
         // forming the group and not the predicate itself.
         // For example, with the statement "ONE OF THE OTHER BOXES IS FALSE.",
         // the predicate is ":box IS FALSE.", but the quantifier is hinted to be
-        // existential by the rule "ONE OF :group".
-        // TODO: Add these rules or update the comment
-        // TODO: Consider expanding this to include rules like "TWO OF :group"
+        // "at least ___" by the rule ":number OF :box".
 
-        if (operator.returnType() == ValueType.BOOLEAN) {
-            Quantifier hint = args.getFirst().quantifierHint;
-            if (hint != null) {
+        Quantifier hint = args.getFirst().quantifierHint;
+        if (hint != null) {
+            if (operator.returnType() == ValueType.BOOLEAN) {
+                // Convert to predicate
                 return predicate(operator, hint, arguments);
+            } else {
+                // Bubble up hint
+                return new Formula(operator, args, null, null)
+                    .withQuantifierHint(hint);
             }
         }
 

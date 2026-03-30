@@ -39,6 +39,10 @@ public class Operators {
         return new Value(new Group(List.of(ctx.arg(1), ctx.arg(2))));
     }, ValueType.ANY, ValueType.ANY, ValueType.GROUP);
 
+    public static Operator GROUP_SIZE = makeOperator("GROUP_SIZE", ctx -> {
+        return new Value(ctx.arg(1).asGroup().values().size());
+    }, ValueType.GROUP, ValueType.NUMBER);
+
     public static Operator NEIGHBORS = makeOperator("NEIGHBORS", ctx -> {
         // Order of boxes is blue, white, black
         Box box = ctx.arg(1).asBox();

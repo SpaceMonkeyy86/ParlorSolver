@@ -112,31 +112,41 @@ public class Rules {
             // TODO: Verify that the number was three
             return formulaAllBoxes();
         });
-        addRule("THE OTHER :number BOXES", "box", ctx -> {
-            // TODO: Verify that the number was two
-            List<Value> boxes = new ArrayList<>();
-            for (BoxColor color : BoxColor.values()) {
-                if (color != ctx.getCurrentBox()) {
-                    boxes.add(new Value(new Box(color)));
-                }
-            }
-            return constant(new Value(new Group(boxes)));
+
+        addRule("THE OTHER BOXES", "box", ctx -> {
+            return formulaOtherBoxes(ctx);
         });
+        // TODO: Verify that the number was two
+        addAlias("THE OTHER :number BOXES");
+        addRule("THE OTHER BOX", "box", ctx -> {
+            return formulaOtherBoxes(ctx).withQuantifierHint(Quantifier.exactly(1));
+        });
+
         addRule(":number BOXES IN THIS ROOM", "box", ctx -> {
             int count = ctx.get("number").evaluate(null).asNumber();
             return formulaAllBoxes().withQuantifierHint(Quantifier.exactly(count));
         });
-        addRule("THE :number EMPTY BOXES", "box", ctx -> {
-            // TODO: Check that there are actually that many
+
+        addRule("THE EMPTY BOXES", "box", ctx -> {
             return function(Operators.FILTER(
                 Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT)),
                 formulaAllBoxes()
             );
         });
+        addAlias("EMPTY BOXES");
+        addRule("THE :number EMPTY BOXES", "box", ctx -> {
+            int count = ctx.get("number").evaluate(null).asNumber();
+            return function(Operators.FILTER(
+                Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT)),
+                formulaAllBoxes()
+            ).withQuantifierHint(Quantifier.exactly(count));
+        });
 
-        addRule("BOXES NEXT TO :box", "box", ctx -> {
+        addRule("BOTH BOXES NEXT TO :box", "box", ctx -> {
+            // TODO: Verify there are two boxes
             return function(Operators.NEIGHBORS, ctx.get("box"));
         });
+        addAlias("BOXES NEXT TO :box");
         addRule("A BOX NEXT TO :box", "box", ctx -> {
             return function(Operators.NEIGHBORS, ctx.get("box"))
                 .withQuantifierHint(Quantifier.any());
@@ -144,6 +154,13 @@ public class Rules {
         // TODO: Verify there is only one box
         addAlias("THE BOX NEXT TO :box");
 
+        addRule("THE :bool BOXES", "box", ctx -> {
+            return function(Operators.FILTER(Operators.BOX_IS),
+                formulaAllBoxes(),
+                ctx.get("bool")
+            );
+        });
+        addAlias(":bool BOXES");
         addRule("A :bool BOX", "box", ctx -> {
             return function(Operators.FILTER(Operators.BOX_IS),
                 formulaAllBoxes(),
@@ -151,13 +168,25 @@ public class Rules {
             ).withQuantifierHint(Quantifier.any());
         });
         // TODO: Verify there is only one box
-        addAlias("THE :bool BOX");
+        addRule("THE :bool BOX", "box", ctx -> {
+            return function(Operators.FILTER(Operators.BOX_IS),
+                formulaAllBoxes(),
+                ctx.get("bool")
+            ).withQuantifierHint(Quantifier.exactly(1));
+        });
+        addAlias("THE ONLY :bool BOX");
 
         addRule("A BOX WITH A :bool STATEMENT", "box", ctx -> {
             return function(Operators.FILTER(Operators.BOX_HAS_BOOL_STATEMENT),
                 formulaAllBoxes(),
                 ctx.get("bool")
             ).withQuantifierHint(Quantifier.any());
+        });
+        addRule("THE ONLY BOX WITH A :bool STATEMENT", "box", ctx -> {
+            return function(Operators.FILTER(Operators.BOX_HAS_BOOL_STATEMENT),
+                formulaAllBoxes(),
+                ctx.get("bool")
+            ).withQuantifierHint(Quantifier.exactly(1));
         });
 
         // TODO: Parse "A STATEMENT" separately
@@ -207,9 +236,10 @@ public class Rules {
         });
 
         addRule("THIS IS :box.", ctx -> {
+            // Flipped in case the other expression is a group
             return function(Operators.BOX_EQUALS,
-                formulaThisBox(ctx),
-                ctx.get("box")
+                ctx.get("box"),
+                formulaThisBox(ctx)
             );
         });
 
@@ -228,9 +258,19 @@ public class Rules {
                 ctx.get("bool")
             );
         });
+        // TODO: Verify there are two boxes
+        addAlias(":box ARE BOTH :bool.");
 
-        addRule(":box DISPLAYS A :bool STATEMENT.", ctx -> {
+        addRule(":box HAS A :bool STATEMENT.", ctx -> {
             return function(Operators.BOX_HAS_BOOL_STATEMENT,
+                ctx.get("box"),
+                ctx.get("bool")
+            );
+        });
+        addAlias(":box DISPLAYS A :bool STATEMENT.");
+        addRule(":box BOTH HAVE :bool STATEMENTS.", ctx -> {
+            // TODO: Verify there are two boxes
+            return predicate(Operators.BOX_HAS_BOOL_STATEMENT, Quantifier.all(),
                 ctx.get("box"),
                 ctx.get("bool")
             );
@@ -240,6 +280,13 @@ public class Rules {
         addRule(":box DOES NOT HAVE A STATEMENT.", ctx -> {
             return function(Operators.NOT,
                 function(Operators.BOX_HAS_STATEMENT, ctx.get("box"))
+            );
+        });
+
+        addRule("THERE ARE :number :box.", ctx -> {
+            return function(Operators.NUMBER_EQUALS,
+                function(Operators.GROUP_SIZE, ctx.get("box")),
+                ctx.get("number")
             );
         });
 
@@ -261,6 +308,8 @@ public class Rules {
         });
         addAlias("THE GEMS ARE NOT IN :box.");
         addAlias(":box IS EMPTY.");
+        // TODO: Verify there are two boxes
+        addAlias(":box ARE BOTH EMPTY.");
 
         addRule(":box CONTAIN GEMS.", ctx -> {
             return function(Operators.BOX_HAS_GEMS, ctx.get("box"));
@@ -307,6 +356,16 @@ public class Rules {
 
     public static Formula formulaThisBox(ParseContext ctx) {
         return constant(new Value(new Box(ctx.getCurrentBox())));
+    }
+
+    public static Formula formulaOtherBoxes(ParseContext ctx) {
+        List<Value> boxes = new ArrayList<>();
+        for (BoxColor color : BoxColor.values()) {
+            if (color != ctx.getCurrentBox()) {
+                boxes.add(new Value(new Box(color)));
+            }
+        }
+        return constant(new Value(new Group(boxes)));
     }
 
     public static Formula formulaAllBoxes() {
