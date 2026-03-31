@@ -7,6 +7,7 @@ import com.spacemonkeyy.parlorsolver.formula.Quantifier;
 import com.spacemonkeyy.parlorsolver.value.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
@@ -100,22 +101,22 @@ public class Rules {
 
         // Groups of boxes
 
-        addRule("ONLY :number OF :box", "box", ctx -> {
-            int count = ctx.get("number").evaluate(null).asNumber();
-            return ctx.get("box").withQuantifier(Quantifier.exactly(count));
-        });
         addRule(":number OF :box", "box", ctx -> {
             int count = ctx.get("number").evaluate(null).asNumber();
             return ctx.get("box").withQuantifier(Quantifier.atLeast(count));
         });
+        addRule("ONLY :number OF :box", "box", ctx -> {
+            int count = ctx.get("number").evaluate(null).asNumber();
+            return ctx.get("box").withQuantifier(Quantifier.exactly(count));
+        });
 
-        addRule("BOTH :box AND :box", "box", ctx -> {
+        addRule(":box AND :box", "box", ctx -> {
             return function(Operators.GROUP,
                 ctx.get("box", 1),
                 ctx.get("box", 2)
             );
         });
-        addAlias(":box AND :box");
+        addAlias("BOTH :box AND :box");
 
         addRule("ALL :number BOXES", "box", ctx -> {
             // TODO: Verify that the number was three
@@ -152,11 +153,11 @@ public class Rules {
             ).withQuantifier(Quantifier.exactly(count));
         });
 
-        addRule("BOTH BOXES NEXT TO :box", "box", ctx -> {
-            // TODO: Verify there are two boxes
+        addRule("BOXES NEXT TO :box", "box", ctx -> {
             return function(Operators.NEIGHBORS, ctx.get("box"));
         });
-        addAlias("BOXES NEXT TO :box");
+        // TODO: Verify there are two boxes
+        addAlias("BOXES BOXES NEXT TO :box");
         addRule("A BOX NEXT TO :box", "box", ctx -> {
             return function(Operators.NEIGHBORS, ctx.get("box"))
                 .withQuantifier(Quantifier.any());
@@ -164,7 +165,7 @@ public class Rules {
         // TODO: Verify there is only one box
         addAlias("THE BOX NEXT TO :box");
 
-        addRule("THE :bool BOXES", "box", ctx -> {
+        addRule(":bool BOXES", "box", ctx -> {
             return function(
                 Operators.FILTER(
                     Operator.apply(Operators.BOX_IS, 2, ctx.get("bool"))
@@ -172,7 +173,7 @@ public class Rules {
                 formulaAllBoxes()
             );
         });
-        addAlias(":bool BOXES");
+        addAlias("THE :bool BOXES");
         addRule("A :bool BOX", "box", ctx -> {
             return function(
                 Operators.FILTER(
@@ -191,17 +192,6 @@ public class Rules {
             ).withQuantifier(Quantifier.exactly(1));
         });
         addAlias("THE ONLY :bool BOX");
-
-        addRule("A BOX WITH :statement", "box", ctx -> {
-            return function(Operators.UNIQUE,
-                function(Operators.BOX_OF_STATEMENT, ctx.get("statement"))
-            ).withQuantifier(Quantifier.any());
-        });
-        addRule("THE ONLY BOX WITH :statement", "box", ctx -> {
-            return function(Operators.UNIQUE,
-                function(Operators.BOX_OF_STATEMENT, ctx.get("statement"))
-            ).withQuantifier(Quantifier.exactly(1));
-        });
 
         addRule("A BOX WITH THE WORD :word ON IT", "box", ctx -> {
             return function(
@@ -224,6 +214,11 @@ public class Rules {
 
         // TODO: Verify there are that many other statements
         addRule("THE OTHER :number STATEMENTS", "statement", Rules::formulaOtherStatements);
+
+        addRule("STATEMENTS", "statement", Rules::formulaAllStatements);
+        addRule("A STATEMENT", "statement", ctx -> {
+            return formulaAllStatements(ctx).withQuantifier(Quantifier.any());
+        });
 
         addRule(":bool STATEMENTS", "statement", ctx -> {
             return function(
@@ -248,9 +243,25 @@ public class Rules {
             ).withQuantifier(Quantifier.any());
         });
 
-        addRule("STATEMENTS", "statement", Rules::formulaAllStatements);
-        addRule("A STATEMENT", "statement", ctx -> {
-            return formulaAllStatements(ctx).withQuantifier(Quantifier.any());
+        addRule(":statement WITH THE WORD :word", "statement", ctx -> {
+            return function(
+                Operators.FILTER(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource())),
+                ctx.get("statement")
+            );
+        });
+        addAlias(":statement CONTAINING THE LETTER :word");
+
+        // After statements and boxes have parsed
+
+        addRule("A BOX WITH :statement", "box", ctx -> {
+            return function(Operators.UNIQUE,
+                function(Operators.BOX_OF_STATEMENT, ctx.get("statement"))
+            ).withQuantifier(Quantifier.any());
+        });
+        addRule("THE ONLY BOX WITH :statement", "box", ctx -> {
+            return function(Operators.UNIQUE,
+                function(Operators.BOX_OF_STATEMENT, ctx.get("statement"))
+            ).withQuantifier(Quantifier.exactly(1));
         });
 
         addRule("THE STATEMENT ON :box", "statement", ctx -> {
@@ -258,20 +269,6 @@ public class Rules {
             return function(Operators.STATEMENT_ON_BOX,
                 ctx.get("box"),
                 constant(new Value(1))
-            );
-        });
-
-        addRule(":statement WITH THE WORD :word", "statement", ctx -> {
-            return function(
-                Operators.FILTER(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource())),
-                ctx.get("statement")
-            );
-        });
-
-        addRule(":statement CONTAINING THE LETTER :word", "statement", ctx -> {
-            return function(
-                Operators.FILTER(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource())),
-                ctx.get("statement")
             );
         });
 
@@ -442,6 +439,8 @@ public class Rules {
         addRule(":statement HAVE IDENTICAL WORDING.", ctx -> {
             return function(Operators.STATEMENTS_MATCH_GROUP, ctx.get("statement"));
         });
+
+        sortRules();
     }
 
     private static void addRule(String pattern, ParseAction action) {
@@ -456,6 +455,24 @@ public class Rules {
 
     private static void addAlias(String pattern) {
         addRule(pattern, lastIdentifier, lastAction);
+    }
+
+    private static void sortRules() {
+        // Rules that fit inside other rules should always be checked last.
+        // Otherwise, the longer rule would never match.
+
+        for (int i = 0; i < rules.size(); i++) {
+            for (int j = i + 1; j < rules.size(); j++) {
+                ParseRule e1 = rules.get(i);
+                ParseRule e2 = rules.get(j);
+
+                if (e1.matches(e2.getPattern()) != -1) {
+                    // The first rule is shorter, swap them
+                    rules.set(j, e1);
+                    rules.set(i, e2);
+                }
+            }
+        }
     }
 
     // Helper functions

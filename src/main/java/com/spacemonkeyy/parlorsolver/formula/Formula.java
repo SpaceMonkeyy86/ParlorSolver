@@ -74,7 +74,14 @@ public class Formula {
 
             for (Value value : group.values()) {
                 list.set(index, value);
-                results.add(evaluateHelper(ctx, list, index + 1));
+
+                Value result = evaluateHelper(ctx, list, index + 1);
+                if (result.getType() == ValueType.GROUP) {
+                    // Flatten results (monad jump scare)
+                    results.addAll(result.asGroup().values());
+                } else {
+                    results.add(result);
+                }
             }
 
             if (operator.returnType() == ValueType.BOOLEAN) {
