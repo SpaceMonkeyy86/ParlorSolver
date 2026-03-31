@@ -26,7 +26,7 @@ public class Solver {
         for (BoxColor color : BoxColor.values()) {
             Box box = new Box(color);
             List<String> statements = input.byColor(color);
-            for (int i = 0; i < statements.size(); i++) {
+            for (int i = 1; i <= statements.size(); i++) {
                 Statement statement = new Statement(box, i);
                 variableNames.put(statement.getVariableName(), variableCount++);
             }
@@ -56,7 +56,7 @@ public class Solver {
             Formula formula = entry.getValue();
 
             // Each statement must be consistent with its truth value
-            system.add(Formula.function(Operators.BOOLEAN_EQUALS,
+            system.add(Formula.function(Operators.EQUALS,
                 formula,
                 Formula.function(Operators.STATEMENT_IS_TRUE,
                     Formula.constant(new Value(statement))

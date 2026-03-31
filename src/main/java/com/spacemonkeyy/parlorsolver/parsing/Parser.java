@@ -2,25 +2,26 @@ package com.spacemonkeyy.parlorsolver.parsing;
 
 import com.spacemonkeyy.parlorsolver.formula.Formula;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
-import com.spacemonkeyy.parlorsolver.value.Box;
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
 import com.spacemonkeyy.parlorsolver.value.Statement;
 
 import java.util.*;
 
 public class Parser {
+    private static final boolean DEBUG = false;
+
     public static Map<Statement, Formula> parse(PuzzleInput input) {
         ParseContext context = new ParseContext(input);
         Map<Statement, Formula> result = new HashMap<>();
 
         for (BoxColor color : BoxColor.values()) {
-            Box box = new Box(color);
             List<String> statements = input.byColor(color);
-            for (int i = 0; i < statements.size(); i++) {
+            for (int i = 1; i <= statements.size(); i++) {
                 context.setCurrent(color, i);
 
-                Statement statement = new Statement(box, i);
-                Formula formula = parseStatement(context.getCurrentStatement(), context);
+                Statement statement = context.getCurrentStatement();
+                String text = context.getInput().textOfStatement(statement);
+                Formula formula = parseStatement(text, context);
                 result.put(statement, formula);
             }
         }
@@ -30,14 +31,18 @@ public class Parser {
 
     private static Formula parseStatement(String statement, ParseContext context) {
         List<Token> tokens = Token.tokenize(statement);
-        //System.out.println(Token.stringify(tokens));
+        if (DEBUG) {
+            System.out.println(Token.stringify(tokens));
+        }
 
         while (true) {
             boolean matched = false;
             for (ParseRule rule : Rules.rules) {
                 if (rule.tryMatch(tokens, context)) {
-                    //System.out.printf("Matched %s\n", rule);
-                    //System.out.println(Token.stringify(tokens));
+                    if (DEBUG) {
+                        System.out.printf("Matched %s\n", rule);
+                        System.out.println(Token.stringify(tokens));
+                    }
                     matched = true;
                     break;
                 }

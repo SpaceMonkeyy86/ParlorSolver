@@ -1,6 +1,7 @@
 package com.spacemonkeyy.parlorsolver.puzzle;
 
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
+import com.spacemonkeyy.parlorsolver.value.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,5 +31,9 @@ public record PuzzleInput(
         result.addAll(white);
         result.addAll(black);
         return result;
+    }
+
+    public String textOfStatement(Statement statement) {
+        return byColor(statement.box().color()).get(statement.index() - 1);
     }
 }

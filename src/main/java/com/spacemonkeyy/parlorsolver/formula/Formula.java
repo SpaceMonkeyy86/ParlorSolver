@@ -121,6 +121,17 @@ public class Formula {
                 }
 
                 return new Value(quant.test(passed, total));
+            }
+            else if (operator.returnType() == ValueType.GROUP) {
+                // A group was passed to an operator which turns a single value into a group.
+                // Instead of returning a group of groups, flatten the results into
+                // a single group by concatenating them.
+
+                List<Value> combined = new ArrayList<>();
+                for (Value result : results) {
+                    combined.addAll(result.asGroup().values());
+                }
+                return new Value(new Group(combined));
             } else {
                 return new Value(new Group(results));
             }

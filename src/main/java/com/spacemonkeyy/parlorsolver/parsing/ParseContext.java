@@ -2,7 +2,9 @@ package com.spacemonkeyy.parlorsolver.parsing;
 
 import com.spacemonkeyy.parlorsolver.formula.Formula;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
+import com.spacemonkeyy.parlorsolver.value.Box;
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
+import com.spacemonkeyy.parlorsolver.value.Statement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,8 +36,8 @@ public class ParseContext {
         return currentColor;
     }
 
-    public String getCurrentStatement() {
-        return input.byColor(currentColor).get(currentStatement);
+    public Statement getCurrentStatement() {
+        return new Statement(new Box(currentColor), currentStatement);
     }
 
     public void setCurrent(BoxColor color, int index) {

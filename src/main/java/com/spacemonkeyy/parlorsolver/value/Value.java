@@ -72,6 +72,14 @@ public class Value {
     }
 
     @Override
+    public boolean equals(Object other) {
+        if (other instanceof Value v) {
+            return type == v.type && value.equals(v.value);
+        }
+        return false;
+    }
+
+    @Override
     public String toString() {
         return value.toString();
     }

@@ -39,7 +39,7 @@ public class Rules {
 
         addRule("THERE ARE :number BOXES IN THIS ROOM.", ctx -> {
             // There are three boxes in the room.
-            return function(Operators.NUMBER_EQUALS,
+            return function(Operators.EQUALS,
                 ctx.get("number"),
                 constant(new Value(3))
             );
@@ -95,7 +95,7 @@ public class Rules {
         });
         addRule("THIS BOX", "box", Rules::formulaThisBox);
 
-        // Groups
+        // Groups of boxes
 
         addRule(":box AND :box", "box", ctx -> {
             return function(Operators.GROUP,
@@ -113,13 +113,11 @@ public class Rules {
             return formulaAllBoxes();
         });
 
-        addRule("THE OTHER BOXES", "box", ctx -> {
-            return formulaOtherBoxes(ctx);
-        });
+        addRule("THE OTHER BOXES", "box", Rules::formulaOtherBoxes);
         // TODO: Verify that the number was two
         addAlias("THE OTHER :number BOXES");
-        addRule("THE OTHER BOX", "box", ctx -> {
-            return formulaOtherBoxes(ctx).withQuantifierHint(Quantifier.exactly(1));
+        addRule("ANOTHER BOX", "box", ctx -> {
+            return Rules.formulaOtherBoxes(ctx).withQuantifierHint(Quantifier.any());
         });
 
         addRule(":number BOXES IN THIS ROOM", "box", ctx -> {
@@ -133,7 +131,6 @@ public class Rules {
                 formulaAllBoxes()
             );
         });
-        addAlias("EMPTY BOXES");
         addRule("THE :number EMPTY BOXES", "box", ctx -> {
             int count = ctx.get("number").evaluate(null).asNumber();
             return function(Operators.FILTER(
@@ -195,7 +192,13 @@ public class Rules {
                 .withQuantifierHint(Quantifier.any());
         });
 
-        // Simple statements
+        // Statements
+
+        addRule("THIS STATEMENT", "statement", ctx -> {
+            return constant(new Value(ctx.getCurrentStatement()));
+        });
+
+        // Simple sentences
 
         addRule(":box IS :box.", ctx -> {
             Formula first = ctx.get("box", 1);
@@ -208,28 +211,28 @@ public class Rules {
                 second = temp;
             }
 
-            return function(Operators.BOX_EQUALS,
+            return function(Operators.EQUALS,
                 first,
                 second
             );
         });
 
         addRule(":box IS :color.", ctx -> {
-            return function(Operators.COLOR_EQUALS,
+            return function(Operators.EQUALS,
                 function(Operators.COLOR_OF_BOX, ctx.get("box")),
                 ctx.get("color")
             );
         });
         addRule(":box IS NOT :color.", ctx -> {
             return function(Operators.NOT,
-                function(Operators.COLOR_EQUALS,
+                function(Operators.EQUALS,
                     function(Operators.COLOR_OF_BOX, ctx.get("box")),
                     ctx.get("color")
                 )
             );
         });
         addRule(":box ARE :color.", ctx -> {
-            return function(Operators.COLOR_EQUALS,
+            return function(Operators.EQUALS,
                 function(Operators.COLOR_OF_BOX, ctx.get("box")),
                 ctx.get("color")
             );
@@ -237,7 +240,7 @@ public class Rules {
 
         addRule("THIS IS :box.", ctx -> {
             // Flipped in case the other expression is a group
-            return function(Operators.BOX_EQUALS,
+            return function(Operators.EQUALS,
                 ctx.get("box"),
                 formulaThisBox(ctx)
             );
@@ -284,7 +287,7 @@ public class Rules {
         });
 
         addRule("THERE ARE :number :box.", ctx -> {
-            return function(Operators.NUMBER_EQUALS,
+            return function(Operators.EQUALS,
                 function(Operators.GROUP_SIZE, ctx.get("box")),
                 ctx.get("number")
             );
@@ -302,14 +305,10 @@ public class Rules {
         addAlias(":box IS NOT EMPTY.");
 
         addRule(":box DOES NOT CONTAIN THE GEMS.", ctx -> {
-            return function(Operators.NOT,
-                function(Operators.BOX_HAS_GEMS, ctx.get("box"))
-            );
+            return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT), ctx.get("box"));
         });
         addAlias("THE GEMS ARE NOT IN :box.");
         addAlias(":box IS EMPTY.");
-        // TODO: Verify there are two boxes
-        addAlias(":box ARE BOTH EMPTY.");
 
         addRule(":box CONTAIN GEMS.", ctx -> {
             return function(Operators.BOX_HAS_GEMS, ctx.get("box"));
@@ -336,6 +335,13 @@ public class Rules {
                 function(Operators.BOX_HAS_GEMS, ctx.get("box"))
             );
         });
+
+        addRule(":statement APPEARS ON :box.", ctx -> {
+            return predicate(Operators.STATEMENTS_MATCH, Quantifier.any(),
+                function(Operators.STATEMENTS_ON_BOX, ctx.get("box")),
+                ctx.get("statement")
+            );
+        });
     }
 
     private static void addRule(String pattern, ParseAction action) {
@@ -353,6 +359,13 @@ public class Rules {
     }
 
     // Helper functions
+
+    public static Formula contains(Formula group, Formula element) {
+        return predicate(Operators.EQUALS, Quantifier.any(),
+            group,
+            element
+        );
+    }
 
     public static Formula formulaThisBox(ParseContext ctx) {
         return constant(new Value(new Box(ctx.getCurrentBox())));

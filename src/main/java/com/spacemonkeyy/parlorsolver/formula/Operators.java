@@ -6,7 +6,6 @@ import com.spacemonkeyy.parlorsolver.value.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 
 public class Operators {
@@ -31,6 +30,10 @@ public class Operators {
     public static Operator NOT = makeOperator("NOT", ctx -> {
         return new Value(!ctx.arg(1).asBoolean());
     }, ValueType.BOOLEAN, ValueType.BOOLEAN);
+
+    public static Operator EQUALS = makeOperator("EQUALS", ctx -> {
+        return new Value(ctx.arg(1).equals(ctx.arg(2)));
+    }, ValueType.ANY, ValueType.ANY, ValueType.BOOLEAN);
 
     // Grouping
 
@@ -63,27 +66,26 @@ public class Operators {
         return new Value(ctx.arg(1).asBox().color());
     }, ValueType.BOX, ValueType.COLOR);
 
+    public static Operator STATEMENTS_ON_BOX = makeOperator("STATEMENTS_ON_BOX", ctx -> {
+        Box box = ctx.arg(1).asBox();
+        List<Value> statements = new ArrayList<>();
+        for (int i = 1; i <= ctx.getInput().byColor(box.color()).size(); i++) {
+            statements.add(new Value(new Statement(box, i)));
+        }
+        return new Value(new Group(statements));
+    }, ValueType.BOX, ValueType.GROUP);
+
     public static Operator STATEMENT_ON_BOX = makeOperator("STATEMENT_ON_BOX", ctx -> {
         return new Value(new Statement(ctx.arg(1).asBox(), ctx.arg(2).asNumber()));
     }, ValueType.BOX, ValueType.NUMBER, ValueType.STATEMENT);
 
-    // Equality
+    // Information on statements
 
-    public static Operator BOOLEAN_EQUALS = makeOperator("BOOLEAN_EQUALS", ctx -> {
-        return new Value(ctx.arg(1).asBoolean() == ctx.arg(2).asBoolean());
-    }, ValueType.BOOLEAN, ValueType.BOOLEAN, ValueType.BOOLEAN);
-
-    public static Operator COLOR_EQUALS = makeOperator("COLOR_EQUALS", ctx -> {
-        return new Value(ctx.arg(1).asColor() == ctx.arg(2).asColor());
-    }, ValueType.COLOR, ValueType.COLOR, ValueType.BOOLEAN);
-
-    public static Operator NUMBER_EQUALS = makeOperator("NUMBER_EQUALS", ctx -> {
-        return new Value(ctx.arg(1).asNumber() == ctx.arg(2).asNumber());
-    }, ValueType.NUMBER, ValueType.NUMBER, ValueType.BOOLEAN);
-
-    public static Operator BOX_EQUALS = makeOperator("BOX_EQUALS", ctx -> {
-        return new Value(Objects.equals(ctx.arg(1).asBox(), ctx.arg(2).asBox()));
-    }, ValueType.BOX, ValueType.BOX, ValueType.BOOLEAN);
+    public static Operator STATEMENTS_MATCH = makeOperator("STATEMENTS_MATCH", ctx -> {
+       Statement a = ctx.arg(1).asStatement();
+       Statement b = ctx.arg(2).asStatement();
+       return new Value(ctx.getInput().textOfStatement(a).equals(ctx.getInput().textOfStatement(b)));
+    }, ValueType.STATEMENT, ValueType.STATEMENT, ValueType.BOOLEAN);
 
     // Evaluation variables
     // TODO: Try to have only STATEMENT_IS_TRUE and BOX_HAS_GEMS as primitives
@@ -99,7 +101,7 @@ public class Operators {
         boolean bool = ctx.arg(2).asBoolean();
         int statementCount = ctx.getInput().byColor(box.color()).size();
 
-        for (int i = 0; i < statementCount; i++) {
+        for (int i = 1; i <= statementCount; i++) {
             Statement statement = new Statement(box, i);
             if (ctx.getVariable(statement.getVariableName()) != bool) {
                 return new Value(false);
@@ -114,7 +116,7 @@ public class Operators {
         boolean bool = ctx.arg(2).asBoolean();
         int statementCount = ctx.getInput().byColor(box.color()).size();
 
-        for (int i = 0; i < statementCount; i++) {
+        for (int i = 1; i <= statementCount; i++) {
             Statement statement = new Statement(box, i);
             if (ctx.getVariable(statement.getVariableName()) == bool) {
                 return new Value(true);
