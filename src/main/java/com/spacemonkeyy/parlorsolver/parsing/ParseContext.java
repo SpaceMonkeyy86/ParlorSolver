@@ -16,8 +16,8 @@ public class ParseContext {
     // The input to the puzzle
     private final PuzzleInput input;
 
-    // Intermediate formulas that were matched as part of the rule
-    private final Map<String, List<Formula>> bindings;
+    // Intermediate tokens that were matched as part of the rule
+    private final Map<String, List<Token>> bindings;
 
     // Current box and statement index
     private BoxColor currentColor;
@@ -32,8 +32,8 @@ public class ParseContext {
         return input;
     }
 
-    public BoxColor getCurrentBox() {
-        return currentColor;
+    public Box getCurrentBox() {
+        return new Box(currentColor);
     }
 
     public Statement getCurrentStatement() {
@@ -51,18 +51,26 @@ public class ParseContext {
 
     // Bindings are already matched parts of the string
     // which have a formula and are referenced by an identifier
-    public void addBinding(String identifier, Formula formula) {
+    public void addBinding(String identifier, Token token) {
         if (!bindings.containsKey(identifier)) {
             bindings.put(identifier, new ArrayList<>());
         }
-        bindings.get(identifier).add(formula);
+        bindings.get(identifier).add(token);
     }
 
-    public Formula get(String identifier) {
+    public Token getToken(String identifier) {
         return bindings.get(identifier).getFirst();
     }
 
-    public Formula get(String identifier, int index) {
+    public Token getToken(String identifier, int index) {
         return bindings.get(identifier).get(index - 1);
+    }
+
+    public Formula get(String identifier) {
+        return getToken(identifier).getFormula();
+    }
+
+    public Formula get(String identifier, int index) {
+        return getToken(identifier, index).getFormula();
     }
 }

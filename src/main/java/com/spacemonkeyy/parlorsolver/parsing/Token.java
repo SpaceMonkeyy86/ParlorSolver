@@ -30,6 +30,12 @@ public class Token {
         formula = null;
     }
 
+    public Token(String identifier, String source) {
+        this.identifier = identifier;
+        this.source = source;
+        this.formula = null;
+    }
+
     public Token(String identifier, Formula formula) {
         this.identifier = identifier;
         this.source = "";
@@ -52,9 +58,9 @@ public class Token {
         // Generally, each word should be its own token.
         // The period is a separate token.
         // Possessives ('s) should be separate tokens from their root words.
-        // Quotes surrounding words are their own tokens.
+        // Quotes surrounding words are removed.
 
-        Pattern pattern = Pattern.compile("^(\"|.\\w*) ?(.*)$");
+        Pattern pattern = Pattern.compile("^(\"\\w+\"|.\\w*) ?(.*)$");
         List<Token> tokens = new ArrayList<>();
 
         while (!statement.isEmpty()) {
@@ -63,7 +69,13 @@ public class Token {
                 throw new RuntimeException("Malformed statement");
             }
 
-            tokens.add(new Token(matcher.group(1)));
+            String word = matcher.group(1);
+            if (word.startsWith("\"")) {
+                tokens.add(new Token("word", word.substring(1, word.length() - 1)));
+            } else {
+                tokens.add(new Token(word));
+            }
+
             statement = matcher.group(2);
         }
 
@@ -86,7 +98,9 @@ public class Token {
     public String toString() {
         if (identifier.isEmpty()) {
             return source;
-
+        }
+        if (identifier.equals("word") && !source.startsWith(":")) {
+            return "word{\"" + source + "\"}";
         }
         if (formula == null) {
             return ":" + identifier;

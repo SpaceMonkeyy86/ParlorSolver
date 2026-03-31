@@ -7,5 +7,12 @@ public enum ValueType {
     BOX,
     STATEMENT,
     GROUP,
-    ANY
+    ANY;
+
+    public boolean convertsTo(ValueType other) {
+        if (other == ANY) {
+            return true;
+        }
+        return this == other;
+    }
 }

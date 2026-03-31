@@ -4,6 +4,7 @@ import com.spacemonkeyy.parlorsolver.formula.Formula;
 import com.spacemonkeyy.parlorsolver.formula.Operator;
 import com.spacemonkeyy.parlorsolver.formula.Operators;
 import com.spacemonkeyy.parlorsolver.formula.Quantifier;
+import com.spacemonkeyy.parlorsolver.solver.EvaluationContext;
 import com.spacemonkeyy.parlorsolver.value.*;
 
 import java.util.ArrayList;
@@ -89,6 +90,9 @@ public class Rules {
         addRule("THE :color BOX", "box", ctx -> {
             return function(Operators.BOX_FOR_COLOR, ctx.get("color"));
         });
+        addRule("A BOX THAT IS ACTUALLY :color", "box", ctx -> {
+            return function(Operators.BOX_FOR_COLOR, ctx.get("color"));
+        });
         addRule("THE MIDDLE BOX", "box", ctx -> {
             // The order of the boxes is blue, white, black
             return constant(new Value(new Box(BoxColor.WHITE)));
@@ -97,16 +101,18 @@ public class Rules {
 
         // Groups of boxes
 
-        addRule(":box AND :box", "box", ctx -> {
+        addRule(":number OF :box", "box", ctx -> {
+            int count = ctx.get("number").evaluate(null).asNumber();
+            return ctx.get("box").withQuantifierHint(Quantifier.atLeast(count));
+        });
+
+        addRule("BOTH :box AND :box", "box", ctx -> {
             return function(Operators.GROUP,
                 ctx.get("box", 1),
                 ctx.get("box", 2)
             );
         });
-        addRule(":number OF :box", "box", ctx -> {
-            int count = ctx.get("number").evaluate(null).asNumber();
-            return ctx.get("box").withQuantifierHint(Quantifier.atLeast(count));
-        });
+        addAlias(":box AND :box");
 
         addRule("ALL :number BOXES", "box", ctx -> {
             // TODO: Verify that the number was three
@@ -192,11 +198,27 @@ public class Rules {
                 .withQuantifierHint(Quantifier.any());
         });
 
+        addRule("A BOX WITH THE WORD :word ON IT", "box", ctx -> {
+            return function(
+                Operators.FILTER(
+                    Operator.compose(
+                        Operators.STATEMENTS_ON_BOX,
+                        Operators.FILTER(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource())),
+                        Operators.GROUP_SIZE,
+                        Operator.apply(Operators.EQUALS, 2, constant(new Value(0))),
+                        Operators.NOT
+                    )
+                ),
+                formulaAllBoxes()
+            ).withQuantifierHint(Quantifier.any());
+        });
+
         // Statements
 
-        addRule("THIS STATEMENT", "statement", ctx -> {
-            return constant(new Value(ctx.getCurrentStatement()));
-        });
+        addRule("THIS STATEMENT", "statement", Rules::formulaThisStatement);
+
+        // TODO: Verify there are that many other statements
+        addRule("THE OTHER :number STATEMENTS", "statement", Rules::formulaOtherStatements);
 
         // Simple sentences
 
@@ -302,24 +324,26 @@ public class Rules {
         addAlias(":box HAS THE GEMS.");
         addAlias(":box HAS GEMS.");
         addAlias("THE GEMS ARE IN :box.");
+        addAlias("GEMS ARE IN :box.");
         addAlias(":box IS NOT EMPTY.");
+        addAlias(":box CONTAIN GEMS.");
 
         addRule(":box DOES NOT CONTAIN THE GEMS.", ctx -> {
             return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT), ctx.get("box"));
         });
         addAlias("THE GEMS ARE NOT IN :box.");
         addAlias(":box IS EMPTY.");
-
-        addRule(":box CONTAIN GEMS.", ctx -> {
-            return function(Operators.BOX_HAS_GEMS, ctx.get("box"));
-        });
-        addRule(":box ARE EMPTY.", ctx -> {
-            return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT), ctx.get("box"));
-        });
+        addAlias(":box ARE EMPTY.");
         addRule(":box ARE BOTH EMPTY.", ctx -> {
             // TODO: Verify there are two boxes in the group
             return predicate(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT),
                 Quantifier.all(), ctx.get("box"));
+        });
+        addRule("GEMS ARE NOT IN :box OR :box.", ctx -> {
+            return function(Operators.AND,
+                function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT), ctx.get("box", 1)),
+                function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT), ctx.get("box", 2))
+            );
         });
 
         addRule("THIS IS NOT AN EMPTY BOX.", ctx -> {
@@ -342,6 +366,10 @@ public class Rules {
                 ctx.get("statement")
             );
         });
+
+        addRule(":statement HAVE IDENTICAL WORDING.", ctx -> {
+            return function(Operators.STATEMENTS_MATCH_GROUP, ctx.get("statement"));
+        });
     }
 
     private static void addRule(String pattern, ParseAction action) {
@@ -360,21 +388,14 @@ public class Rules {
 
     // Helper functions
 
-    public static Formula contains(Formula group, Formula element) {
-        return predicate(Operators.EQUALS, Quantifier.any(),
-            group,
-            element
-        );
-    }
-
     public static Formula formulaThisBox(ParseContext ctx) {
-        return constant(new Value(new Box(ctx.getCurrentBox())));
+        return constant(new Value(ctx.getCurrentBox()));
     }
 
     public static Formula formulaOtherBoxes(ParseContext ctx) {
         List<Value> boxes = new ArrayList<>();
         for (BoxColor color : BoxColor.values()) {
-            if (color != ctx.getCurrentBox()) {
+            if (color != ctx.getCurrentBox().color()) {
                 boxes.add(new Value(new Box(color)));
             }
         }
@@ -387,6 +408,23 @@ public class Rules {
             boxes.add(new Value(new Box(color)));
         }
         return constant(new Value(new Group(boxes)));
+    }
+
+    public static Formula formulaThisStatement(ParseContext ctx) {
+        return constant(new Value(ctx.getCurrentStatement()));
+    }
+
+    public static Formula formulaOtherStatements(ParseContext ctx) {
+        List<Value> statements = new ArrayList<>();
+        for (BoxColor color : BoxColor.values()) {
+            for (int i = 1; i <= ctx.getInput().byColor(color).size(); i++) {
+                Statement statement = new Statement(new Box(color), i);
+                if (!statement.equals(ctx.getCurrentStatement())) {
+                    statements.add(new Value(new Statement(new Box(color), i)));
+                }
+            }
+        }
+        return constant(new Value(new Group(statements)));
     }
 
     public static Formula formulaBoxIsTrue(Formula box) {

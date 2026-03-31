@@ -50,7 +50,7 @@ public class VariationTests {
 
                     System.out.printf("(%s %d) %s -> %s\n",
                         statement.box().color(),
-                        statement.index() + 1,
+                        statement.index(),
                         statements.get(index),
                         formula
                     );

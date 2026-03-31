@@ -87,12 +87,36 @@ public class Operators {
        return new Value(ctx.getInput().textOfStatement(a).equals(ctx.getInput().textOfStatement(b)));
     }, ValueType.STATEMENT, ValueType.STATEMENT, ValueType.BOOLEAN);
 
+    public static Operator STATEMENTS_MATCH_GROUP = makeOperator("STATEMENTS_MATCH_GROUP", ctx -> {
+        Group group = ctx.arg(1).asGroup();
+        if (group.values().isEmpty()) {
+            return new Value(true);
+        }
+
+        String first = ctx.getInput().textOfStatement(group.values().getFirst().asStatement());
+        for (int i = 1; i < group.values().size(); i++) {
+            Statement statement = group.values().get(i).asStatement();
+            if (!first.equals(ctx.getInput().textOfStatement(statement))) {
+                return new Value(false);
+            }
+        }
+        return new Value(true);
+    }, ValueType.GROUP, ValueType.BOOLEAN);
+
+    // Strings are not values so need to be handled like this
+    public static Operator STATEMENT_HAS_WORD(String word) {
+        return makeOperator("STATEMENT_HAS_WORD(\"" + word + "\")", ctx -> {
+            Statement statement = ctx.arg(1).asStatement();
+            return new Value(ctx.getInput().textOfStatement(statement).contains(word));
+        }, ValueType.STATEMENT, ValueType.BOOLEAN);
+    }
+
     // Evaluation variables
     // TODO: Try to have only STATEMENT_IS_TRUE and BOX_HAS_GEMS as primitives
 
     public static Operator STATEMENT_IS_TRUE = makeOperator("STATEMENT_IS_TRUE", ctx -> {
-            Statement statement = ctx.arg(1).asStatement();
-            return new Value(ctx.getVariable(statement.getVariableName()));
+        Statement statement = ctx.arg(1).asStatement();
+        return new Value(ctx.getVariable(statement.getVariableName()));
     }, ValueType.STATEMENT, ValueType.BOOLEAN);
 
     // Simple checking without having to know in advance every statement on a box
@@ -158,7 +182,7 @@ public class Operators {
 
         List<ValueType> parameterTypes = new ArrayList<>(predicate.parameterTypes());
         parameterTypes.set(0, ValueType.GROUP);
-        return new Operator("FILTER_" + predicate.name(), func, parameterTypes, ValueType.GROUP);
+        return new Operator("FILTER(" + predicate.name() + ")", func, parameterTypes, ValueType.GROUP);
     }
 
     private static Operator makeOperator(String name, Function<EvaluationContext, Value> func, ValueType... signature) {

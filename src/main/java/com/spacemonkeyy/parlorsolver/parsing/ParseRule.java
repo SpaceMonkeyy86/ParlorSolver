@@ -41,7 +41,7 @@ public class ParseRule {
                 context.clearBindings();
                 for (int j = 0; j < pattern.size(); j++) {
                     if (!pattern.get(j).getIdentifier().isEmpty()) {
-                        context.addBinding(pattern.get(j).getIdentifier(), tokens.get(i + j).getFormula());
+                        context.addBinding(pattern.get(j).getIdentifier(), tokens.get(i + j));
                     }
                 }
 
@@ -63,7 +63,8 @@ public class ParseRule {
 
     public boolean tokensMatch(Token pattern, Token target) {
         if (pattern.getIdentifier().isEmpty()) {
-            return Objects.equals(pattern.getSource(), target.getSource());
+            return target.getIdentifier().isEmpty()
+                && Objects.equals(pattern.getSource(), target.getSource());
         } else {
             return Objects.equals(target.getIdentifier(), pattern.getIdentifier());
         }
