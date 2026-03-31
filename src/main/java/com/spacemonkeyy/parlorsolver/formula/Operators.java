@@ -11,6 +11,10 @@ import java.util.function.Function;
 public class Operators {
     // Basic operations
 
+    public static Operator TRIVIAL = makeOperator("TRIVIAL", ctx -> {
+        return new Value(true);
+    }, ValueType.ANY, ValueType.BOOLEAN);
+
     public static Operator AND = makeOperator("AND", ctx -> {
         return new Value(ctx.arg(1).asBoolean() && ctx.arg(2).asBoolean());
     }, ValueType.BOOLEAN, ValueType.BOOLEAN, ValueType.BOOLEAN);

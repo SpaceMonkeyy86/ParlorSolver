@@ -7,7 +7,6 @@ import com.spacemonkeyy.parlorsolver.formula.Quantifier;
 import com.spacemonkeyy.parlorsolver.value.*;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
@@ -85,6 +84,22 @@ public class Rules {
             return constant(new Value(4));
         });
 
+        // General groups
+
+        for (String identifier : List.of("box", "statement")) {
+            addRule(":number :" + identifier, identifier, ctx -> {
+                int count = ctx.get("number").evaluate(null).asNumber();
+                return ctx.get(identifier).withQuantifier(Quantifier.exactly(count));
+            });
+            addAlias(":number OF :" + identifier);
+            addAlias("ONLY :number OF :" + identifier);
+
+            addRule("THERE ARE :" + identifier + ".", ctx -> {
+                // Let the quantifier do its thing with no other manipulation
+                return function(Operators.TRIVIAL, ctx.get(identifier));
+            });
+        }
+
         // Boxes
 
         addRule("THE :color BOX", "box", ctx -> {
@@ -98,17 +113,6 @@ public class Rules {
             return constant(new Value(new Box(BoxColor.WHITE)));
         });
         addRule("THIS BOX", "box", Rules::formulaThisBox);
-
-        // Groups of boxes
-
-        addRule(":number OF :box", "box", ctx -> {
-            int count = ctx.get("number").evaluate(null).asNumber();
-            return ctx.get("box").withQuantifier(Quantifier.atLeast(count));
-        });
-        addRule("ONLY :number OF :box", "box", ctx -> {
-            int count = ctx.get("number").evaluate(null).asNumber();
-            return ctx.get("box").withQuantifier(Quantifier.exactly(count));
-        });
 
         addRule(":box AND :box", "box", ctx -> {
             return function(Operators.GROUP,
@@ -157,7 +161,7 @@ public class Rules {
             return function(Operators.NEIGHBORS, ctx.get("box"));
         });
         // TODO: Verify there are two boxes
-        addAlias("BOXES BOXES NEXT TO :box");
+        addAlias("BOTH BOXES NEXT TO :box");
         addRule("A BOX NEXT TO :box", "box", ctx -> {
             return function(Operators.NEIGHBORS, ctx.get("box"))
                 .withQuantifier(Quantifier.any());
@@ -212,10 +216,22 @@ public class Rules {
 
         addRule("THIS STATEMENT", "statement", Rules::formulaThisStatement);
 
+        addRule("THESE STATEMENTS", "statement", ctx -> {
+            // Could refer to either the statements on this box or all statements
+            Box box = ctx.getCurrentBox();
+            if (ctx.getInput().byColor(box.color()).size() > 1) {
+                return function(Operators.STATEMENTS_ON_BOX, constant(new Value(box)));
+            } else {
+                return formulaAllStatements(ctx);
+            }
+        });
+
         // TODO: Verify there are that many other statements
         addRule("THE OTHER :number STATEMENTS", "statement", Rules::formulaOtherStatements);
 
         addRule("STATEMENTS", "statement", Rules::formulaAllStatements);
+        // TODO: Verify the number was correct
+        addAlias("ALL :number STATEMENTS");
         addRule("A STATEMENT", "statement", ctx -> {
             return formulaAllStatements(ctx).withQuantifier(Quantifier.any());
         });
@@ -241,6 +257,17 @@ public class Rules {
                 ),
                 formulaAllStatements(ctx)
             ).withQuantifier(Quantifier.any());
+        });
+        addRule("THE ONLY :bool STATEMENT", "statement", ctx -> {
+            return function(
+                Operators.FILTER(
+                    Operator.compose(
+                        Operators.STATEMENT_IS_TRUE,
+                        Operator.apply(Operators.EQUALS, 2, ctx.get("bool"))
+                    )
+                ),
+                formulaAllStatements(ctx)
+            ).withQuantifier(Quantifier.exactly(1));
         });
 
         addRule(":statement WITH THE WORD :word", "statement", ctx -> {
@@ -336,7 +363,7 @@ public class Rules {
         // TODO: Verify there are two boxes
         addAlias(":box ARE BOTH :bool.");
 
-        addRule(":box HAS :statement", ctx -> {
+        addRule(":box HAS :statement.", ctx -> {
             // Multiple quantifiers at once
             return function(Operators.BOX_HAS_STATEMENT,
                 ctx.get("box"),
@@ -420,13 +447,14 @@ public class Rules {
             );
         });
 
-        addRule(":statement ARE ALWAYS :bool.", ctx -> {
+        addRule(":statement ARE :bool.", ctx -> {
             return function(Operators.EQUALS,
                 function(Operators.STATEMENT_IS_TRUE, ctx.get("statement"))
                     .withQuantifier(Quantifier.all()),
                 ctx.get("bool")
             );
         });
+        addAlias(":statement ARE ALWAYS :bool.");
 
         addRule(":statement APPEARS ON :box.", ctx -> {
             return function(Operators.STATEMENTS_MATCH,
@@ -438,6 +466,13 @@ public class Rules {
 
         addRule(":statement HAVE IDENTICAL WORDING.", ctx -> {
             return function(Operators.STATEMENTS_MATCH_GROUP, ctx.get("statement"));
+        });
+
+        addRule("THIS IS :statement.", ctx -> {
+            return function(Operators.EQUALS,
+                ctx.get("statement"),
+                formulaThisStatement(ctx)
+            );
         });
 
         sortRules();
