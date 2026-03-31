@@ -4,7 +4,6 @@ import com.spacemonkeyy.parlorsolver.formula.Formula;
 import com.spacemonkeyy.parlorsolver.formula.Operator;
 import com.spacemonkeyy.parlorsolver.formula.Operators;
 import com.spacemonkeyy.parlorsolver.formula.Quantifier;
-import com.spacemonkeyy.parlorsolver.solver.EvaluationContext;
 import com.spacemonkeyy.parlorsolver.value.*;
 
 import java.util.ArrayList;
@@ -101,9 +100,13 @@ public class Rules {
 
         // Groups of boxes
 
+        addRule("ONLY :number OF :box", "box", ctx -> {
+            int count = ctx.get("number").evaluate(null).asNumber();
+            return ctx.get("box").withQuantifier(Quantifier.exactly(count));
+        });
         addRule(":number OF :box", "box", ctx -> {
             int count = ctx.get("number").evaluate(null).asNumber();
-            return ctx.get("box").withQuantifierHint(Quantifier.atLeast(count));
+            return ctx.get("box").withQuantifier(Quantifier.atLeast(count));
         });
 
         addRule("BOTH :box AND :box", "box", ctx -> {
@@ -118,17 +121,21 @@ public class Rules {
             // TODO: Verify that the number was three
             return formulaAllBoxes();
         });
+        addRule("ONLY :number BOX", "box", ctx -> {
+            // TODO: Verify that the number was one
+            return formulaAllBoxes().withQuantifier(Quantifier.exactly(1));
+        });
 
         addRule("THE OTHER BOXES", "box", Rules::formulaOtherBoxes);
         // TODO: Verify that the number was two
         addAlias("THE OTHER :number BOXES");
         addRule("ANOTHER BOX", "box", ctx -> {
-            return Rules.formulaOtherBoxes(ctx).withQuantifierHint(Quantifier.any());
+            return Rules.formulaOtherBoxes(ctx).withQuantifier(Quantifier.any());
         });
 
         addRule(":number BOXES IN THIS ROOM", "box", ctx -> {
             int count = ctx.get("number").evaluate(null).asNumber();
-            return formulaAllBoxes().withQuantifierHint(Quantifier.exactly(count));
+            return formulaAllBoxes().withQuantifier(Quantifier.exactly(count));
         });
 
         addRule("THE EMPTY BOXES", "box", ctx -> {
@@ -142,7 +149,7 @@ public class Rules {
             return function(Operators.FILTER(
                 Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT)),
                 formulaAllBoxes()
-            ).withQuantifierHint(Quantifier.exactly(count));
+            ).withQuantifier(Quantifier.exactly(count));
         });
 
         addRule("BOTH BOXES NEXT TO :box", "box", ctx -> {
@@ -152,50 +159,48 @@ public class Rules {
         addAlias("BOXES NEXT TO :box");
         addRule("A BOX NEXT TO :box", "box", ctx -> {
             return function(Operators.NEIGHBORS, ctx.get("box"))
-                .withQuantifierHint(Quantifier.any());
+                .withQuantifier(Quantifier.any());
         });
         // TODO: Verify there is only one box
         addAlias("THE BOX NEXT TO :box");
 
         addRule("THE :bool BOXES", "box", ctx -> {
-            return function(Operators.FILTER(Operators.BOX_IS),
-                formulaAllBoxes(),
-                ctx.get("bool")
+            return function(
+                Operators.FILTER(
+                    Operator.apply(Operators.BOX_IS, 2, ctx.get("bool"))
+                ),
+                formulaAllBoxes()
             );
         });
         addAlias(":bool BOXES");
         addRule("A :bool BOX", "box", ctx -> {
-            return function(Operators.FILTER(Operators.BOX_IS),
-                formulaAllBoxes(),
-                ctx.get("bool")
-            ).withQuantifierHint(Quantifier.any());
+            return function(
+                Operators.FILTER(
+                    Operator.apply(Operators.BOX_IS, 2, ctx.get("bool"))
+                ),
+                formulaAllBoxes()
+            ).withQuantifier(Quantifier.any());
         });
         // TODO: Verify there is only one box
         addRule("THE :bool BOX", "box", ctx -> {
-            return function(Operators.FILTER(Operators.BOX_IS),
-                formulaAllBoxes(),
-                ctx.get("bool")
-            ).withQuantifierHint(Quantifier.exactly(1));
+            return function(
+                Operators.FILTER(
+                    Operator.apply(Operators.BOX_IS, 2, ctx.get("bool"))
+                ),
+                formulaAllBoxes()
+            ).withQuantifier(Quantifier.exactly(1));
         });
         addAlias("THE ONLY :bool BOX");
 
-        addRule("A BOX WITH A :bool STATEMENT", "box", ctx -> {
-            return function(Operators.FILTER(Operators.BOX_HAS_BOOL_STATEMENT),
-                formulaAllBoxes(),
-                ctx.get("bool")
-            ).withQuantifierHint(Quantifier.any());
+        addRule("A BOX WITH :statement", "box", ctx -> {
+            return function(Operators.UNIQUE,
+                function(Operators.BOX_OF_STATEMENT, ctx.get("statement"))
+            ).withQuantifier(Quantifier.any());
         });
-        addRule("THE ONLY BOX WITH A :bool STATEMENT", "box", ctx -> {
-            return function(Operators.FILTER(Operators.BOX_HAS_BOOL_STATEMENT),
-                formulaAllBoxes(),
-                ctx.get("bool")
-            ).withQuantifierHint(Quantifier.exactly(1));
-        });
-
-        // TODO: Parse "A STATEMENT" separately
-        addRule("A BOX WITH A STATEMENT", "box", ctx -> {
-            return function(Operators.FILTER(Operators.BOX_HAS_STATEMENT), formulaAllBoxes())
-                .withQuantifierHint(Quantifier.any());
+        addRule("THE ONLY BOX WITH :statement", "box", ctx -> {
+            return function(Operators.UNIQUE,
+                function(Operators.BOX_OF_STATEMENT, ctx.get("statement"))
+            ).withQuantifier(Quantifier.exactly(1));
         });
 
         addRule("A BOX WITH THE WORD :word ON IT", "box", ctx -> {
@@ -210,7 +215,7 @@ public class Rules {
                     )
                 ),
                 formulaAllBoxes()
-            ).withQuantifierHint(Quantifier.any());
+            ).withQuantifier(Quantifier.any());
         });
 
         // Statements
@@ -220,10 +225,53 @@ public class Rules {
         // TODO: Verify there are that many other statements
         addRule("THE OTHER :number STATEMENTS", "statement", Rules::formulaOtherStatements);
 
-        addRule("STATEMENTS WITH THE WORD :word", "statement", ctx -> {
+        addRule(":bool STATEMENTS", "statement", ctx -> {
+            return function(
+                Operators.FILTER(
+                    Operator.compose(
+                        Operators.STATEMENT_IS_TRUE,
+                        Operator.apply(Operators.EQUALS, 2, ctx.get("bool"))
+                    )
+                ),
+                formulaAllStatements(ctx)
+            );
+        });
+        addRule("A :bool STATEMENT", "statement", ctx -> {
+            return function(
+                Operators.FILTER(
+                    Operator.compose(
+                        Operators.STATEMENT_IS_TRUE,
+                        Operator.apply(Operators.EQUALS, 2, ctx.get("bool"))
+                    )
+                ),
+                formulaAllStatements(ctx)
+            ).withQuantifier(Quantifier.any());
+        });
+
+        addRule("STATEMENTS", "statement", Rules::formulaAllStatements);
+        addRule("A STATEMENT", "statement", ctx -> {
+            return formulaAllStatements(ctx).withQuantifier(Quantifier.any());
+        });
+
+        addRule("THE STATEMENT ON :box", "statement", ctx -> {
+            // TODO: Verify the box has only one statement
+            return function(Operators.STATEMENT_ON_BOX,
+                ctx.get("box"),
+                constant(new Value(1))
+            );
+        });
+
+        addRule(":statement WITH THE WORD :word", "statement", ctx -> {
             return function(
                 Operators.FILTER(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource())),
-                formulaAllStatements(ctx)
+                ctx.get("statement")
+            );
+        });
+
+        addRule(":statement CONTAINING THE LETTER :word", "statement", ctx -> {
+            return function(
+                Operators.FILTER(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource())),
+                ctx.get("statement")
             );
         });
 
@@ -282,8 +330,6 @@ public class Rules {
                 ctx.get("bool")
             );
         });
-        // TODO: Verify the box only has one statement on it
-        addAlias("THE STATEMENT ON :box IS :bool.");
         addRule(":box ARE :bool.", ctx -> {
             return function(Operators.BOX_IS,
                 ctx.get("box"),
@@ -293,25 +339,27 @@ public class Rules {
         // TODO: Verify there are two boxes
         addAlias(":box ARE BOTH :bool.");
 
-        addRule(":box HAS A :bool STATEMENT.", ctx -> {
-            return function(Operators.BOX_HAS_BOOL_STATEMENT,
+        addRule(":box HAS :statement", ctx -> {
+            // Multiple quantifiers at once
+            return function(Operators.BOX_HAS_STATEMENT,
                 ctx.get("box"),
-                ctx.get("bool")
+                ctx.get("statement")
             );
         });
-        addAlias(":box DISPLAYS A :bool STATEMENT.");
-        addRule(":box BOTH HAVE :bool STATEMENTS.", ctx -> {
+        addAlias(":box DISPLAYS :statement.");
+
+        addRule(":box BOTH HAVE :statement.", ctx -> {
             // TODO: Verify there are two boxes
-            return predicate(Operators.BOX_HAS_BOOL_STATEMENT, Quantifier.all(),
-                ctx.get("box"),
-                ctx.get("bool")
+            return function(Operators.BOX_HAS_STATEMENT,
+                ctx.get("box").withQuantifier(Quantifier.all()),
+                ctx.get("statement")
             );
         });
 
-        // TODO: Is this ever inverted?
-        addRule(":box DOES NOT HAVE A STATEMENT.", ctx -> {
-            return function(Operators.NOT,
-                function(Operators.BOX_HAS_STATEMENT, ctx.get("box"))
+        addRule(":box DOES NOT HAVE :statement.", ctx -> {
+            return function(Operator.compose(Operators.EQUALS, Operators.NOT),
+                function(Operators.BOX_OF_STATEMENT, ctx.get("statement")),
+                ctx.get("box")
             );
         });
 
@@ -343,8 +391,9 @@ public class Rules {
         addAlias(":box ARE EMPTY.");
         addRule(":box ARE BOTH EMPTY.", ctx -> {
             // TODO: Verify there are two boxes in the group
-            return predicate(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT),
-                Quantifier.all(), ctx.get("box"));
+            return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT),
+                ctx.get("box").withQuantifier(Quantifier.all())
+            );
         });
         addRule("GEMS ARE NOT IN :box OR :box.", ctx -> {
             return function(Operators.AND,
@@ -367,20 +416,25 @@ public class Rules {
             );
         });
 
+        addRule(":statement IS :bool.", ctx -> {
+            return function(Operators.EQUALS,
+                function(Operators.STATEMENT_IS_TRUE, ctx.get("statement")),
+                ctx.get("bool")
+            );
+        });
+
         addRule(":statement ARE ALWAYS :bool.", ctx -> {
-            return predicate(
-                Operator.compose(
-                    Operators.STATEMENT_IS_TRUE,
-                    Operator.apply(Operators.EQUALS, 2, ctx.get("bool"))
-                ),
-                Quantifier.all(),
-                ctx.get("statement")
+            return function(Operators.EQUALS,
+                function(Operators.STATEMENT_IS_TRUE, ctx.get("statement"))
+                    .withQuantifier(Quantifier.all()),
+                ctx.get("bool")
             );
         });
 
         addRule(":statement APPEARS ON :box.", ctx -> {
-            return predicate(Operators.STATEMENTS_MATCH, Quantifier.any(),
-                function(Operators.STATEMENTS_ON_BOX, ctx.get("box")),
+            return function(Operators.STATEMENTS_MATCH,
+                function(Operators.STATEMENTS_ON_BOX, ctx.get("box"))
+                    .withQuantifier(Quantifier.any()),
                 ctx.get("statement")
             );
         });

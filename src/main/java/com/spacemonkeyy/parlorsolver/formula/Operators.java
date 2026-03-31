@@ -46,6 +46,24 @@ public class Operators {
         return new Value(ctx.arg(1).asGroup().values().size());
     }, ValueType.GROUP, ValueType.NUMBER);
 
+    public static Operator UNIQUE = makeOperator("UNIQUE", ctx -> {
+        Group group = ctx.arg(1).asGroup();
+        List<Value> result = new ArrayList<>();
+        for (Value value : group.values()) {
+            boolean duplicate = false;
+            for (Value other : result) {
+                if (value.equals(other)) {
+                    duplicate = true;
+                    break;
+                }
+            }
+            if (!duplicate) {
+                result.add(value);
+            }
+        }
+        return new Value(new Group(result));
+    }, ValueType.GROUP, ValueType.GROUP);
+
     public static Operator NEIGHBORS = makeOperator("NEIGHBORS", ctx -> {
         // Order of boxes is blue, white, black
         Box box = ctx.arg(1).asBox();
@@ -79,6 +97,10 @@ public class Operators {
         return new Value(new Statement(ctx.arg(1).asBox(), ctx.arg(2).asNumber()));
     }, ValueType.BOX, ValueType.NUMBER, ValueType.STATEMENT);
 
+    public static Operator BOX_OF_STATEMENT = makeOperator("BOX_OF_STATEMENT", ctx -> {
+        return new Value(ctx.arg(1).asStatement().box());
+    }, ValueType.STATEMENT, ValueType.BOX);
+
     // Information on statements
 
     public static Operator STATEMENTS_MATCH = makeOperator("STATEMENTS_MATCH", ctx -> {
@@ -111,6 +133,12 @@ public class Operators {
         }, ValueType.STATEMENT, ValueType.BOOLEAN);
     }
 
+    // Helpers
+
+    public static Operator BOX_HAS_STATEMENT = makeOperator("BOX_HAS_STATEMENT", ctx -> {
+        return new Value(ctx.arg(2).asStatement().box().equals(ctx.arg(1).asBox()));
+    }, ValueType.BOX, ValueType.STATEMENT, ValueType.BOOLEAN);
+
     // Evaluation variables
     // TODO: Try to have only STATEMENT_IS_TRUE and BOX_HAS_GEMS as primitives
 
@@ -140,25 +168,6 @@ public class Operators {
         return new Value(true);
     }, ValueType.BOX, ValueType.BOOLEAN, ValueType.BOOLEAN);
 
-    public static Operator BOX_HAS_BOOL_STATEMENT = makeOperator("BOX_HAS_BOOL_STATEMENT", ctx -> {
-        Box box = ctx.arg(1).asBox();
-        boolean bool = ctx.arg(2).asBoolean();
-        int statementCount = ctx.getInput().byColor(box.color()).size();
-
-        for (int i = 1; i <= statementCount; i++) {
-            Statement statement = new Statement(box, i);
-            if (ctx.getVariable(statement.getVariableName()) == bool) {
-                return new Value(true);
-            }
-        }
-
-        return new Value(false);
-    }, ValueType.BOX, ValueType.BOOLEAN, ValueType.BOOLEAN);
-
-    public static Operator BOX_HAS_STATEMENT = makeOperator("BOX_HAS_STATEMENT", ctx -> {
-        return new Value(!ctx.getInput().byColor(ctx.arg(1).asBox().color()).isEmpty());
-    }, ValueType.BOX, ValueType.BOOLEAN);
-
     public static Operator BOX_HAS_GEMS = makeOperator("BOX_HAS_GEMS", ctx -> {
         Box box = ctx.arg(1).asBox();
         return new Value(ctx.getVariable(box.getVariableName()));
@@ -170,14 +179,13 @@ public class Operators {
         if (predicate.returnType() != ValueType.BOOLEAN) {
             throw new RuntimeException("Not a predicate");
         }
+
         Function<EvaluationContext, Value> func = ctx -> {
             Group group = ctx.arg(1).asGroup();
-            List<Value> args = new ArrayList<>(ctx.args());
             List<Value> result = new ArrayList<>();
 
             for (Value value : group.values()) {
-                args.set(0, value);
-                if (ctx.call(predicate, args).asBoolean()) {
+                if (ctx.call(predicate, List.of(value)).asBoolean()) {
                     result.add(value);
                 }
             }
@@ -185,9 +193,35 @@ public class Operators {
             return new Value(new Group(result));
         };
 
-        List<ValueType> parameterTypes = new ArrayList<>(predicate.parameterTypes());
-        parameterTypes.set(0, ValueType.GROUP);
-        return new Operator("FILTER(" + predicate.name() + ")", func, parameterTypes, ValueType.GROUP);
+        return new Operator(
+            "FILTER(" + predicate.name() + ")",
+            func,
+            List.of(ValueType.GROUP),
+            ValueType.GROUP
+        );
+    }
+
+    public static Operator ALL(Operator predicate) {
+        if (predicate.returnType() != ValueType.BOOLEAN) {
+            throw new RuntimeException("Not a predicate");
+        }
+
+        Function<EvaluationContext, Value> func = ctx -> {
+            Group group = ctx.arg(1).asGroup();
+            for (Value value : group.values()) {
+                if (ctx.call(predicate, List.of(value)).asBoolean()) {
+                    return new Value(false);
+                }
+            }
+            return new Value(true);
+        };
+
+        return new Operator(
+            "ALL(" + predicate.name() + ")",
+            func,
+            List.of(ValueType.GROUP),
+            ValueType.BOOLEAN
+        );
     }
 
     private static Operator makeOperator(String name, Function<EvaluationContext, Value> func, ValueType... signature) {
