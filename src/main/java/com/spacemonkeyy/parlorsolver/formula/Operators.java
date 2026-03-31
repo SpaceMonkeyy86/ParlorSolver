@@ -123,7 +123,12 @@ public class Operators {
     public static Operator BOX_IS = makeOperator("BOX_IS", ctx -> {
         Box box = ctx.arg(1).asBox();
         boolean bool = ctx.arg(2).asBoolean();
+
         int statementCount = ctx.getInput().byColor(box.color()).size();
+        if (statementCount == 0) {
+            // A box with no statements is neither true nor false
+            return new Value(false);
+        }
 
         for (int i = 1; i <= statementCount; i++) {
             Statement statement = new Statement(box, i);

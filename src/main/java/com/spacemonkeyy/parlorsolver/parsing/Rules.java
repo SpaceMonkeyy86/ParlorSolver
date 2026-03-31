@@ -220,6 +220,13 @@ public class Rules {
         // TODO: Verify there are that many other statements
         addRule("THE OTHER :number STATEMENTS", "statement", Rules::formulaOtherStatements);
 
+        addRule("STATEMENTS WITH THE WORD :word", "statement", ctx -> {
+            return function(
+                Operators.FILTER(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource())),
+                formulaAllStatements(ctx)
+            );
+        });
+
         // Simple sentences
 
         addRule(":box IS :box.", ctx -> {
@@ -360,6 +367,17 @@ public class Rules {
             );
         });
 
+        addRule(":statement ARE ALWAYS :bool.", ctx -> {
+            return predicate(
+                Operator.compose(
+                    Operators.STATEMENT_IS_TRUE,
+                    Operator.apply(Operators.EQUALS, 2, ctx.get("bool"))
+                ),
+                Quantifier.all(),
+                ctx.get("statement")
+            );
+        });
+
         addRule(":statement APPEARS ON :box.", ctx -> {
             return predicate(Operators.STATEMENTS_MATCH, Quantifier.any(),
                 function(Operators.STATEMENTS_ON_BOX, ctx.get("box")),
@@ -420,8 +438,18 @@ public class Rules {
             for (int i = 1; i <= ctx.getInput().byColor(color).size(); i++) {
                 Statement statement = new Statement(new Box(color), i);
                 if (!statement.equals(ctx.getCurrentStatement())) {
-                    statements.add(new Value(new Statement(new Box(color), i)));
+                    statements.add(new Value(statement));
                 }
+            }
+        }
+        return constant(new Value(new Group(statements)));
+    }
+
+    public static Formula formulaAllStatements(ParseContext ctx) {
+        List<Value> statements = new ArrayList<>();
+        for (BoxColor color : BoxColor.values()) {
+            for (int i = 1; i <= ctx.getInput().byColor(color).size(); i++) {
+                statements.add(new Value(new Statement(new Box(color), i)));
             }
         }
         return constant(new Value(new Group(statements)));
