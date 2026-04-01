@@ -63,10 +63,10 @@ public class Formula {
             .map(formula -> formula.evaluate(ctx))
             .toList();
 
-        return evaluateHelper(ctx, args, 0);
+        return evaluateHelper(ctx, args, 0, false);
     }
 
-    private Value evaluateHelper(EvaluationContext ctx, List<Value> args, int index) {
+    private Value evaluateHelper(EvaluationContext ctx, List<Value> args, int index, boolean didFilter) {
         if (index == args.size()) {
             // All groups have been substituted, so args contains a single value
             // from each. Operator is safe to call now.
@@ -85,7 +85,7 @@ public class Formula {
             for (Value value : group.values()) {
                 list.set(index, value);
 
-                Value result = evaluateHelper(ctx, list, index + 1);
+                Value result = evaluateHelper(ctx, list, index + 1, didFilter || filter);
                 if (result.getType() == ValueType.GROUP) {
                     // Flatten results (monad jump scare)
                     results.addAll(result.asGroup().values());
@@ -95,7 +95,7 @@ public class Formula {
             }
 
             if (operator.returnType() == ValueType.BOOLEAN) {
-                if (filter) {
+                if (filter && !didFilter) {
                     if (results.size() != group.values().size()) {
                         throw new RuntimeException("Invalid use of groups in a filter");
                     }
@@ -133,7 +133,7 @@ public class Formula {
             }
         }
 
-        return evaluateHelper(ctx, args, index + 1);
+        return evaluateHelper(ctx, args, index + 1, didFilter);
     }
 
     public ValueType getType() {

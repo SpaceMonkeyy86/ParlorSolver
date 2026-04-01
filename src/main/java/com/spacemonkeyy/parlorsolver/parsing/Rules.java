@@ -39,17 +39,6 @@ public class Rules {
         addAlias("THE GEMS ARE ON THE FLOOR.");
         addAlias("THE GEMS ARE ON THE TABLE BEHIND YOU.");
 
-        addRule("THERE ARE :number BOXES IN THIS ROOM.", ctx -> {
-            // There are three boxes in the room.
-            return function(Operators.EQUALS,
-                ctx.get("number"),
-                constant(new Value(3))
-            );
-        });
-        addRule("THERE IS ONLY ONE BOX IN THIS ROOM.", ctx -> {
-            return constant(new Value(false));
-        });
-
         // Booleans
 
         addRule("TRUE", "bool", ctx -> {
@@ -94,11 +83,15 @@ public class Rules {
                 return ctx.get(identifier).withQuantifier(Quantifier.exactly(count));
             });
             addAlias(":number OF :" + identifier);
+            addAlias("ONLY :number :" + identifier);
             addAlias("ONLY :number OF :" + identifier);
 
             addRule("THERE ARE :" + identifier + ".", ctx -> {
                 // Let the quantifier do its thing with no other manipulation
                 return function(Operators.TRIVIAL, ctx.get(identifier));
+            });
+            addVariant("THERE IS :" + identifier + ".", ctx -> {
+                ctx.assumeQuantity(ctx.get(identifier), 1);
             });
         }
 
@@ -107,9 +100,8 @@ public class Rules {
         addRule("THE :color BOX", "box", ctx -> {
             return function(Operators.BOX_FOR_COLOR, ctx.get("color"));
         });
-        addRule("A BOX THAT IS ACTUALLY :color", "box", ctx -> {
-            return function(Operators.BOX_FOR_COLOR, ctx.get("color"));
-        });
+        addAlias("A BOX THAT IS ACTUALLY :color");
+
         addRule("THE MIDDLE BOX", "box", ctx -> {
             // The order of the boxes is blue, white, black
             return constant(new Value(new Box(BoxColor.WHITE)));
@@ -227,11 +219,19 @@ public class Rules {
             return f;
         });
         addVariant("A STATEMENT", (Formula f) -> f.withQuantifier(Quantifier.any()));
+        addVariant("ONLY :number STATEMENT", (f, ctx) -> {
+            ctx.addAssumption(function(Operators.EQUALS,
+                ctx.get("number"),
+                constant(new Value(1))
+            ));
+            return f.withQuantifier(Quantifier.exactly(1));
+        });
 
         addRule(":bool STATEMENTS", "statement", ctx -> {
             boolean bool = ctx.get("bool").evaluate(null).asBoolean();
             return function(operatorStatementIs(bool), formulaAllStatements(ctx)).makeFilter();
         });
+        addAlias(":bool STATEMENT");
         addVariant("A :bool STATEMENT", (Formula f) -> f.withQuantifier(Quantifier.any()));
         addVariant("THE ONLY :bool STATEMENT", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
@@ -250,12 +250,26 @@ public class Rules {
                 function(Operators.BOX_OF_STATEMENT, ctx.get("statement"))
             ).withQuantifier(Quantifier.any());
         });
-        addVariant("THE ONLY BOX WITH :statement", (Formula f) ->
-            f.withQuantifier(Quantifier.exactly(1)));
+        addVariant("THE ONLY BOX WITH :statement", (f, ctx) ->
+            ctx.assumeQuantity(f, 1));
 
-        addRule("THE STATEMENT ON :box", "statement", ctx -> {
-            return ctx.assumeQuantity(function(Operators.STATEMENTS_ON_BOX, ctx.get("box")), 1);
+        addRule("THE OTHER BOX WITH :statement", "box", ctx -> {
+            // Implies this box also has the statement
+            ctx.addAssumption(function(Operators.BOX_HAS_STATEMENT,
+                formulaThisBox(ctx),
+                ctx.get("statement")
+            ));
+            return ctx.assumeQuantity(function(Operators.BOX_HAS_STATEMENT,
+                formulaOtherBoxes(ctx),
+                ctx.get("statement")
+            ).makeFilter(), 1);
         });
+
+        addRule("THE STATEMENTS ON :box", "statement", ctx -> {
+            return function(Operators.STATEMENTS_ON_BOX, ctx.get("box"));
+        });
+        addVariant("THE STATEMENT ON :box", (f, ctx) ->
+            ctx.assumeQuantity(f, 1));
 
         // Simple sentences
 
@@ -312,7 +326,7 @@ public class Rules {
             ctx.assumeQuantity(ctx.get("box"), 2);
             return function(Operators.BOX_HAS_STATEMENT,
                 ctx.get("box").withQuantifier(Quantifier.all()),
-                ctx.get("statement")
+                ctx.get("statement").withQuantifier(Quantifier.any())
             );
         });
 
@@ -346,14 +360,14 @@ public class Rules {
         addRule(":box DOES NOT CONTAIN THE GEMS.", ctx -> {
             return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT), ctx.get("box"));
         });
-        addAlias("THE GEMS ARE NOT IN :box.");
         addAlias(":box IS EMPTY.");
         addAlias(":box ARE EMPTY.");
-        addRule(":box ARE BOTH EMPTY.", ctx -> {
+        addVariant("THE GEMS ARE NOT IN :box.", ctx -> {
+            ctx.get("box").withQuantifier(Quantifier.all());
+        });
+        addVariant(":box ARE BOTH EMPTY.", ctx -> {
             ctx.assumeQuantity(ctx.get("box"), 2);
-            return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT),
-                ctx.get("box").withQuantifier(Quantifier.all())
-            );
+            ctx.get("box").withQuantifier(Quantifier.all());
         });
         addRule("GEMS ARE NOT IN :box OR :box.", ctx -> {
             return function(Operators.AND,
@@ -391,6 +405,16 @@ public class Rules {
             );
         });
         addAlias(":statement ARE ALWAYS :bool.");
+        addVariant(":statement ARE BOTH :bool.", ctx -> {
+            ctx.assumeQuantity(ctx.get("statement"), 2);
+        });
+
+        addRule(":statement IS AS :bool AS :statement.", ctx -> {
+            return function(Operators.EQUALS,
+                function(Operators.STATEMENT_IS_TRUE, ctx.get("statement", 1)),
+                function(Operators.STATEMENT_IS_TRUE, ctx.get("statement", 2))
+            );
+        });
 
         addRule(":statement APPEARS ON :box.", ctx -> {
             return function(Operators.STATEMENTS_MATCH,

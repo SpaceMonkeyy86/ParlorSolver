@@ -8,7 +8,7 @@ import com.spacemonkeyy.parlorsolver.value.Statement;
 import java.util.*;
 
 public class Parser {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     public static Map<Statement, Formula> parse(PuzzleInput input) {
         ParseContext context = new ParseContext(input);
