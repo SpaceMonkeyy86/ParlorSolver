@@ -139,6 +139,8 @@ public class Formula {
     public ValueType getType() {
         if (isConstant()) {
             return constant.getType();
+        } else if (filter) {
+            return ValueType.GROUP;
         } else {
             return operator.returnType();
         }

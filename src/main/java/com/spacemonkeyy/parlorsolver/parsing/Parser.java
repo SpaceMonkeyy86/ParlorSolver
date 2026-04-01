@@ -21,7 +21,12 @@ public class Parser {
 
                 Statement statement = context.getCurrentStatement();
                 String text = context.getInput().textOfStatement(statement);
+
                 Formula formula = parseStatement(text, context);
+                if (formula != null) {
+                    formula = context.includeAssumptions(formula);
+                }
+
                 result.put(statement, formula);
             }
         }

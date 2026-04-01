@@ -1,6 +1,8 @@
 package com.spacemonkeyy.parlorsolver.parsing;
 
 import com.spacemonkeyy.parlorsolver.formula.Formula;
+import com.spacemonkeyy.parlorsolver.formula.Operators;
+import com.spacemonkeyy.parlorsolver.formula.Quantifier;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
 import com.spacemonkeyy.parlorsolver.value.Box;
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
@@ -44,6 +46,7 @@ public class ParseContext {
     public void setCurrent(BoxColor color, int index) {
         currentColor = color;
         currentStatement = index;
+        assumptions = new ArrayList<>();
     }
 
     public void clearBindings() {
@@ -73,5 +76,26 @@ public class ParseContext {
 
     public Formula get(String identifier, int index) {
         return getToken(identifier, index).getFormula();
+    }
+
+    public void addAssumption(Formula assumption) {
+        assumptions.add(assumption);
+    }
+
+    public Formula assumeQuantity(Formula formula, int count) {
+        addAssumption(Formula.function(Operators.TRIVIAL,
+            formula.withQuantifier(Quantifier.exactly(count))
+        ));
+        return formula;
+    }
+
+    public Formula includeAssumptions(Formula formula) {
+        for (Formula assumption : assumptions) {
+            formula = Formula.function(Operators.AND,
+                formula,
+                assumption
+            );
+        }
+        return formula;
     }
 }

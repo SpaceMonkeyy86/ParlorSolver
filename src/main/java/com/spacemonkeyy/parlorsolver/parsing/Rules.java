@@ -8,6 +8,8 @@ import com.spacemonkeyy.parlorsolver.value.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static com.spacemonkeyy.parlorsolver.formula.Formula.*;
@@ -123,20 +125,28 @@ public class Rules {
         addAlias("BOTH :box AND :box");
 
         addRule("ALL :number BOXES", "box", ctx -> {
-            // TODO: Verify that the number was three
+            ctx.addAssumption(function(Operators.EQUALS,
+                ctx.get("number"),
+                constant(new Value(3))
+            ));
             return formulaAllBoxes();
         });
         addRule("ONLY :number BOX", "box", ctx -> {
-            // TODO: Verify that the number was one
+            ctx.addAssumption(function(Operators.EQUALS,
+                ctx.get("number"),
+                constant(new Value(1))
+            ));
             return formulaAllBoxes().withQuantifier(Quantifier.exactly(1));
         });
 
         addRule("THE OTHER BOXES", "box", Rules::formulaOtherBoxes);
-        // TODO: Verify that the number was two
-        addAlias("THE OTHER :number BOXES");
-        addRule("ANOTHER BOX", "box", ctx -> {
-            return Rules.formulaOtherBoxes(ctx).withQuantifier(Quantifier.any());
+        addVariant("THE OTHER :number BOXES", ctx -> {
+            ctx.addAssumption(function(Operators.EQUALS,
+                ctx.get("number"),
+                constant(new Value(2))
+            ));
         });
+        addVariant("ANOTHER BOX", (Formula f) -> f.withQuantifier(Quantifier.any()));
 
         addRule(":number BOXES IN THIS ROOM", "box", ctx -> {
             int count = ctx.get("number").evaluate(null).asNumber();
@@ -148,24 +158,19 @@ public class Rules {
                 formulaAllBoxes()
             ).makeFilter();
         });
-        addRule("THE :number EMPTY BOXES", "box", ctx -> {
+        addVariant("THE :number EMPTY BOXES", (f, ctx) -> {
             int count = ctx.get("number").evaluate(null).asNumber();
-            return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT),
-                formulaAllBoxes()
-            ).makeFilter().withQuantifier(Quantifier.exactly(count));
+            return f.withQuantifier(Quantifier.exactly(count));
         });
 
         addRule("BOXES NEXT TO :box", "box", ctx -> {
             return function(Operators.NEIGHBORS, ctx.get("box"));
         });
-        // TODO: Verify there are two boxes
-        addAlias("BOTH BOXES NEXT TO :box");
-        addRule("A BOX NEXT TO :box", "box", ctx -> {
-            return function(Operators.NEIGHBORS, ctx.get("box"))
-                .withQuantifier(Quantifier.any());
-        });
-        // TODO: Verify there is only one box
-        addAlias("THE BOX NEXT TO :box");
+        addVariant("THE BOX NEXT TO :box", (f, ctx) ->
+            ctx.assumeQuantity(f, 1));
+        addVariant("BOTH BOXES NEXT TO :box", (f, ctx) ->
+            ctx.assumeQuantity(f, 2));
+        addVariant("A BOX NEXT TO :box", (Formula f) -> f.withQuantifier(Quantifier.any()));
 
         addRule(":bool BOXES", "box", ctx -> {
             return function(Operators.BOX_IS,
@@ -174,20 +179,11 @@ public class Rules {
             ).makeFilter();
         });
         addAlias("THE :bool BOXES");
-        addRule("A :bool BOX", "box", ctx -> {
-            return function(Operators.BOX_IS,
-                formulaAllBoxes(),
-                ctx.get("bool")
-            ).makeFilter().withQuantifier(Quantifier.any());
-        });
-        // TODO: Verify there is only one box
-        addRule("THE :bool BOX", "box", ctx -> {
-            return function(Operators.BOX_IS,
-                formulaAllBoxes(),
-                ctx.get("bool")
-            ).makeFilter().withQuantifier(Quantifier.exactly(1));
-        });
-        addAlias("THE ONLY :bool BOX");
+        addVariant("A :bool BOX", (Formula f) -> f.withQuantifier(Quantifier.any()));
+        addVariant("THE :bool BOX", (f, ctx) ->
+            ctx.assumeQuantity(f, 1));
+        addVariant("THE ONLY :bool BOX", (f, ctx) ->
+            ctx.assumeQuantity(f, 1));
 
         addRule("A BOX WITH THE WORD :word ON IT", "box", ctx -> {
             return function(Operators.UNIQUE,
@@ -213,30 +209,32 @@ public class Rules {
             }
         });
 
-        // TODO: Verify there are that many other statements
-        addRule("THE OTHER :number STATEMENTS", "statement", Rules::formulaOtherStatements);
+        addRule("THE OTHER :number STATEMENTS", "statement", ctx -> {
+            Formula f = formulaOtherStatements(ctx);
+            ctx.addAssumption(function(Operators.EQUALS,
+                function(Operators.GROUP_SIZE, f),
+                ctx.get("number")
+            ));
+            return f;
+        });
 
         addRule("STATEMENTS", "statement", Rules::formulaAllStatements);
-        // TODO: Verify the number was correct
-        addAlias("ALL :number STATEMENTS");
-        addRule("A STATEMENT", "statement", ctx -> {
-            return formulaAllStatements(ctx).withQuantifier(Quantifier.any());
+        addVariant("ALL :number STATEMENTS", (f, ctx) -> {
+            ctx.addAssumption(function(Operators.EQUALS,
+                function(Operators.GROUP_SIZE, f),
+                ctx.get("number")
+            ));
+            return f;
         });
+        addVariant("A STATEMENT", (Formula f) -> f.withQuantifier(Quantifier.any()));
 
         addRule(":bool STATEMENTS", "statement", ctx -> {
             boolean bool = ctx.get("bool").evaluate(null).asBoolean();
             return function(operatorStatementIs(bool), formulaAllStatements(ctx)).makeFilter();
         });
-        addRule("A :bool STATEMENT", "statement", ctx -> {
-            boolean bool = ctx.get("bool").evaluate(null).asBoolean();
-            return function(operatorStatementIs(bool), formulaAllStatements(ctx)).makeFilter()
-                .withQuantifier(Quantifier.any());
-        });
-        addRule("THE ONLY :bool STATEMENT", "statement", ctx -> {
-            boolean bool = ctx.get("bool").evaluate(null).asBoolean();
-            return function(operatorStatementIs(bool), formulaAllStatements(ctx)).makeFilter()
-                .withQuantifier(Quantifier.exactly(1));
-        });
+        addVariant("A :bool STATEMENT", (Formula f) -> f.withQuantifier(Quantifier.any()));
+        addVariant("THE ONLY :bool STATEMENT", (f, ctx) ->
+            ctx.assumeQuantity(f, 1));
 
         addRule(":statement WITH THE WORD :word", "statement", ctx -> {
             return function(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource()),
@@ -252,36 +250,19 @@ public class Rules {
                 function(Operators.BOX_OF_STATEMENT, ctx.get("statement"))
             ).withQuantifier(Quantifier.any());
         });
-        addRule("THE ONLY BOX WITH :statement", "box", ctx -> {
-            return function(Operators.UNIQUE,
-                function(Operators.BOX_OF_STATEMENT, ctx.get("statement"))
-            ).withQuantifier(Quantifier.exactly(1));
-        });
+        addVariant("THE ONLY BOX WITH :statement", (Formula f) ->
+            f.withQuantifier(Quantifier.exactly(1)));
 
         addRule("THE STATEMENT ON :box", "statement", ctx -> {
-            // TODO: Verify the box has only one statement
-            return function(Operators.STATEMENT_ON_BOX,
-                ctx.get("box"),
-                constant(new Value(1))
-            );
+            return ctx.assumeQuantity(function(Operators.STATEMENTS_ON_BOX, ctx.get("box")), 1);
         });
 
         // Simple sentences
 
         addRule(":box IS :box.", ctx -> {
-            Formula first = ctx.get("box", 1);
-            Formula second = ctx.get("box", 2);
-
-            if (first.getType() != ValueType.GROUP && second.getType() == ValueType.GROUP) {
-                // The group must be the first argument
-                Formula temp = first;
-                first = second;
-                second = temp;
-            }
-
             return function(Operators.EQUALS,
-                first,
-                second
+                ctx.get("box", 1),
+                ctx.get("box", 2)
             );
         });
 
@@ -291,6 +272,7 @@ public class Rules {
                 ctx.get("color")
             );
         });
+        addAlias(":box ARE :color.");
         addRule(":box IS NOT :color.", ctx -> {
             return function(Operators.NOT,
                 function(Operators.EQUALS,
@@ -299,22 +281,14 @@ public class Rules {
                 )
             );
         });
-        addRule(":box ARE :color.", ctx -> {
-            return function(Operators.EQUALS,
-                function(Operators.COLOR_OF_BOX, ctx.get("box")),
-                ctx.get("color")
-            );
-        });
 
         addRule("THIS IS :box.", ctx -> {
-            // Flipped in case the other expression is a group
             return function(Operators.EQUALS,
-                ctx.get("box"),
-                formulaThisBox(ctx)
+                formulaThisBox(ctx),
+                ctx.get("box")
             );
         });
 
-        // TODO: check if plurality of verb matches presence of group for rules like these
         addRule(":box IS :bool.", ctx -> {
             return function(Operators.BOX_IS,
                 ctx.get("box"),
@@ -322,8 +296,8 @@ public class Rules {
             );
         });
         addAlias(":box ARE :bool.");
-        // TODO: Verify there are two boxes
-        addAlias(":box ARE BOTH :bool.");
+        addVariant(":box ARE BOTH :bool.", (f, ctx) ->
+            ctx.assumeQuantity(f, 2));
 
         addRule(":box HAS :statement.", ctx -> {
             // Multiple quantifiers at once
@@ -335,7 +309,7 @@ public class Rules {
         addAlias(":box DISPLAYS :statement.");
 
         addRule(":box BOTH HAVE :statement.", ctx -> {
-            // TODO: Verify there are two boxes
+            ctx.assumeQuantity(ctx.get("box"), 2);
             return function(Operators.BOX_HAS_STATEMENT,
                 ctx.get("box").withQuantifier(Quantifier.all()),
                 ctx.get("statement")
@@ -376,7 +350,7 @@ public class Rules {
         addAlias(":box IS EMPTY.");
         addAlias(":box ARE EMPTY.");
         addRule(":box ARE BOTH EMPTY.", ctx -> {
-            // TODO: Verify there are two boxes in the group
+            ctx.assumeQuantity(ctx.get("box"), 2);
             return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT),
                 ctx.get("box").withQuantifier(Quantifier.all())
             );
@@ -446,12 +420,31 @@ public class Rules {
 
     private static void addRule(String pattern, String identifier, ParseAction action) {
         rules.add(new ParseRule(pattern, identifier, action));
-        lastAction = action;
         lastIdentifier = identifier;
+        lastAction = action;
     }
 
     private static void addAlias(String pattern) {
-        addRule(pattern, lastIdentifier, lastAction);
+        rules.add(new ParseRule(pattern, lastIdentifier, lastAction));
+    }
+
+    private static void addVariant(String pattern, Function<Formula, Formula> func) {
+        addVariant(pattern, (f, ctx) -> func.apply(f));
+    }
+
+    private static void addVariant(String pattern, Consumer<ParseContext> func) {
+        addVariant(pattern, (f, ctx) -> {
+            func.accept(ctx);
+            return f;
+        });
+    }
+
+    private static void addVariant(String pattern, BiFunction<Formula, ParseContext, Formula> func) {
+        ParseAction last = lastAction;
+        rules.add(new ParseRule(pattern, lastIdentifier, ctx -> {
+            Formula formula = last.apply(ctx);
+            return func.apply(formula, ctx);
+        }));
     }
 
     private static void sortRules() {
