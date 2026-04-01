@@ -51,6 +51,11 @@ public class Rules {
             return function(Operators.STATEMENT_IS_TRUE, formulaThisStatement(ctx));
         });
 
+        addRule("YOU WILL NOT SOLVE THIS PUZZLE.", ctx -> {
+            // False; all puzzles are solvable and can be solved with enough effort.
+            return constant(new Value(false));
+        });
+
         // Booleans
 
         addRule("TRUE", "bool", ctx -> {
@@ -86,6 +91,19 @@ public class Rules {
         addRule("FOUR", "number", ctx -> {
             return constant(new Value(4));
         });
+        addRule("FIVE", "number", ctx -> {
+            return constant(new Value(5));
+        });
+        addRule("SIX", "number", ctx -> {
+            return constant(new Value(6));
+        });
+
+        for (int i = 1; i < 10; i++) {
+            int number = i;
+            addRule(String.valueOf(i), "number", ctx -> {
+                return constant(new Value(number));
+            });
+        }
 
         // General groups
 
@@ -98,6 +116,11 @@ public class Rules {
             addAlias(":number OF :" + identifier);
             addAlias("ONLY :number :" + identifier);
             addAlias("ONLY :number OF :" + identifier);
+
+            addRule("AT LEAST :number :" + identifier, identifier, ctx -> {
+                int count = ctx.get("number").evaluate(null).asNumber();
+                return ctx.get(identifier).withQuantifier(Quantifier.atLeast(count));
+            });
 
             addRule("BOTH OF :" + identifier, identifier, ctx -> {
                 return ctx.get(identifier).withQuantifier(Quantifier.exactly(2));
@@ -117,7 +140,6 @@ public class Rules {
         addRule("THE :color BOX", "box", ctx -> {
             return function(Operators.BOX_FOR_COLOR, ctx.get("color"));
         });
-        addAlias("A BOX THAT IS ACTUALLY :color");
 
         addRule("THE MIDDLE BOX", "box", ctx -> {
             // The order of the boxes is blue, white, black
@@ -134,19 +156,23 @@ public class Rules {
         addAlias("BOTH :box AND :box");
 
         addRule("EACH BOX", "box", ctx -> Rules.formulaAllBoxes());
-        addRule("ALL :number BOXES", "box", ctx -> {
+        addAlias("BOXES IN THIS ROOM");
+        addVariant("ALL :number BOXES", ctx -> {
             ctx.addAssumption(function(Operators.EQUALS,
                 ctx.get("number"),
                 constant(new Value(3))
             ));
-            return formulaAllBoxes();
         });
-        addRule("ONLY :number BOX", "box", ctx -> {
+        addVariant(":number BOXES IN THIS ROOM", (f, ctx) -> {
+            int count = ctx.get("number").evaluate(null).asNumber();
+            return f.withQuantifier(Quantifier.exactly(count));
+        });
+        addVariant("ONLY :number BOX", (f, ctx) -> {
             ctx.addAssumption(function(Operators.EQUALS,
                 ctx.get("number"),
                 constant(new Value(1))
             ));
-            return formulaAllBoxes().withQuantifier(Quantifier.exactly(1));
+            return f.withQuantifier(Quantifier.exactly(1));
         });
         addAlias("ONLY :number BOX IN THIS ROOM");
 
@@ -159,9 +185,11 @@ public class Rules {
         });
         addVariant("ANOTHER BOX", (Formula f) -> f.withQuantifier(Quantifier.any()));
 
-        addRule(":number BOXES IN THIS ROOM", "box", ctx -> {
-            int count = ctx.get("number").evaluate(null).asNumber();
-            return formulaAllBoxes().withQuantifier(Quantifier.exactly(count));
+        addRule(":box THAT IS ACTUALLY :color", "box", ctx -> {
+            return function(Operator.compose(Operators.COLOR_OF_BOX, Operators.EQUALS),
+                ctx.get("box"),
+                ctx.get("color")
+            ).makeFilter().withQuantifier(ctx.get("box").getQuantifier());
         });
 
         addRule("EMPTY BOXES", "box", ctx -> {
@@ -170,38 +198,70 @@ public class Rules {
             ).makeFilter();
         });
         addAlias("THE EMPTY BOXES");
+        addVariant("AN EMPTY BOX", (Formula f) -> f.withQuantifier(Quantifier.any()));
         addVariant("THE :number EMPTY BOXES", (f, ctx) -> {
             int count = ctx.get("number").evaluate(null).asNumber();
             return f.withQuantifier(Quantifier.exactly(count));
         });
 
         addRule("BOXES NEXT TO :box", "box", ctx -> {
-            return function(Operators.NEIGHBORS, ctx.get("box"));
+            return function(Operators.NEIGHBORS,
+                formulaAllBoxes(),
+                ctx.get("box")
+            ).makeFilter();
         });
-        addVariant("THE BOX NEXT TO :box", (f, ctx) ->
-            ctx.assumeQuantity(f, 1));
+        addVariant("A BOX NEXT TO :box", (Formula f) -> f.withQuantifier(Quantifier.any()));
         addVariant("BOTH BOXES NEXT TO :box", (f, ctx) ->
             ctx.assumeQuantity(f, 2));
-        addVariant("A BOX NEXT TO :box", (Formula f) -> f.withQuantifier(Quantifier.any()));
 
-        addRule(":bool BOXES", "box", ctx -> {
+        addRule(":box NEXT TO :box", "box", ctx -> {
+            return function(Operators.NEIGHBORS,
+                ctx.get("box", 1),
+                ctx.get("box", 2)
+            ).makeFilter().withQuantifier(ctx.get("box", 1).getQuantifier());
+        });
+
+        addRule(":bool BOX", "box", ctx -> {
             return function(Operators.BOX_IS,
                 formulaAllBoxes(),
                 ctx.get("bool")
             ).makeFilter();
         });
+        addAlias(":bool BOXES");
         addAlias("THE :bool BOXES");
         addVariant("A :bool BOX", (Formula f) -> f.withQuantifier(Quantifier.any()));
+        addVariant("A COMPLETELY :bool BOX", (Formula f) -> f.withQuantifier(Quantifier.any()));
         // Don't assume quantity here because of variation 109
         addVariant("THE :bool BOX", (Formula f) -> f.withQuantifier(Quantifier.exactly(1)));
         addVariant("THE ONLY :bool BOX", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
 
-        addRule("THE BOX WITH THE GEMS", "box", ctx -> {
-            return ctx.assumeQuantity(function(Operators.BOX_HAS_GEMS,
-                formulaAllBoxes()
-            ).makeFilter(), 1);
+        addRule("A BOX THAT CONTAINS A MIX OF TRUE AND FALSE STATEMENTS", "box", ctx -> {
+            Formula trueStatements = function(operatorStatementIs(true),
+                formulaAllStatements(ctx)
+            ).makeFilter().withQuantifier(Quantifier.any());
+            Formula falseStatements = function(operatorStatementIs(false),
+                formulaAllStatements(ctx)
+            ).makeFilter().withQuantifier(Quantifier.any());
+
+            return function(Operators.BOX_HAS_STATEMENT,
+                function(Operators.BOX_HAS_STATEMENT,
+                    formulaAllBoxes(),
+                    trueStatements
+                ).makeFilter(),
+                falseStatements
+            ).makeFilter().withQuantifier(Quantifier.any());
         });
+        addVariant("NO BOX THAT CONTAINS A MIX OF TRUE AND FALSE STATEMENTS",
+            (Formula f) -> f.withQuantifier(Quantifier.none()));
+
+        addRule("A BOX CONTAINING GEMS", "box", ctx -> {
+            return function(Operators.BOX_HAS_GEMS,
+                formulaAllBoxes()
+            ).makeFilter().withQuantifier(Quantifier.any());
+        });
+        addVariant("THE BOX WITH THE GEMS", (f, ctx) ->
+            ctx.assumeQuantity(f, 1));
 
         // Statements
 
@@ -229,6 +289,7 @@ public class Rules {
         addRule("THE ABOVE STATEMENT", "statement", ctx -> {
             return constant(new Value(ctx.getLastStatement()));
         });
+
         addRule("THE TOP STATEMENT OF :box", "statement", ctx -> {
             return function(Operators.STATEMENT_ON_BOX,
                 ctx.get("box"),
@@ -236,7 +297,30 @@ public class Rules {
             );
         });
 
-        addRule("STATEMENTS", "statement", Rules::formulaAllStatements);
+        addRule("TOP STATEMENT", "statement", ctx -> {
+            List<Value> values = new ArrayList<>();
+            for (BoxColor color : BoxColor.values()) {
+                if (!ctx.getInput().byColor(color).isEmpty()) {
+                    values.add(new Value(new Statement(new Box(color), 1)));
+                }
+            }
+            return constant(new Value(new Group(values)));
+        });
+        addAlias("THE TOP STATEMENTS");
+        addRule("BOTTOM STATEMENT", "statement", ctx -> {
+            List<Value> values = new ArrayList<>();
+            for (BoxColor color : BoxColor.values()) {
+                if (!ctx.getInput().byColor(color).isEmpty()) {
+                    values.add(new Value(new Statement(new Box(color),
+                        ctx.getInput().byColor(color).size())));
+                }
+            }
+            return constant(new Value(new Group(values)));
+        });
+
+        addRule("STATEMENTS", "statement", Rules::formulaAllStatements)
+            .setDelay(1);
+        addAlias("ALL STATEMENTS");
         addVariant("ALL :number STATEMENTS", (f, ctx) -> {
             ctx.addAssumption(function(Operators.EQUALS,
                 function(Operators.GROUP_SIZE, f),
@@ -253,29 +337,51 @@ public class Rules {
             ));
             return f.withQuantifier(Quantifier.exactly(1));
         });
+        addVariant("BOTH STATEMENTS", (f, ctx) ->
+            ctx.assumeQuantity(f, 2));
 
-        addRule(":bool STATEMENTS", "statement", ctx -> {
+        addRule(":bool STATEMENT", "statement", ctx -> {
             boolean bool = ctx.get("bool").evaluate(null).asBoolean();
             return function(operatorStatementIs(bool), formulaAllStatements(ctx)).makeFilter();
         });
-        addAlias(":bool STATEMENT");
         addVariant("A :bool STATEMENT", (Formula f) -> f.withQuantifier(Quantifier.any()));
         addVariant("THE ONLY :bool STATEMENT", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
         addVariant("NO :bool STATEMENTS", (Formula f) -> f.withQuantifier(Quantifier.none()));
 
+        addRule(":bool :statement", "statement", ctx -> {
+            boolean bool = ctx.get("bool").evaluate(null).asBoolean();
+            return function(operatorStatementIs(bool),
+                ctx.get("statement")
+            ).makeFilter();
+        });
+        addAlias("A :bool :statement");
+
         addRule(":statement WITH THE WORD :word", "statement", ctx -> {
-            return function(Operators.STATEMENT_CONTAINS(ctx.getToken("word").getSource()),
+            return function(Operators.STATEMENT_CONTAINS(ctx.getToken("word").getSource(), true),
                 ctx.get("statement")
             ).makeFilter().withQuantifier(ctx.get("statement").getQuantifier());
         });
         addAlias(":statement CONTAINING THE WORD :word");
-        addAlias(":statement CONTAINING THE LETTER :word");
+        addAlias(":statement DISPLAYING THE WORD :word");
+
+        addRule(":statement CONTAINING THE LETTER :word", "statement", ctx -> {
+            return function(Operators.STATEMENT_CONTAINS(ctx.getToken("word").getSource(), false),
+                ctx.get("statement")
+            ).makeFilter().withQuantifier(ctx.get("statement").getQuantifier());
+        });
 
         addRule("EVERY STATEMENT CLAIMING WHERE THE GEMS ARE", "statement", ctx -> {
-            return function(Operators.STATEMENT_CONTAINS("THE GEMS ARE"),
+            return function(Operators.STATEMENT_CONTAINS("THE GEMS ARE", true),
                 formulaAllStatements(ctx)
             ).makeFilter();
+        });
+
+        addRule("THE STATEMENT MATCHING :statement", "statement", ctx -> {
+            return ctx.assumeQuantity(function(Operators.STATEMENTS_MATCH,
+                formulaOtherStatements(ctx),
+                ctx.get("statement")
+            ).makeFilter(), 1);
         });
 
         // After statements and boxes have parsed
@@ -290,6 +396,7 @@ public class Rules {
             ctx.assumeQuantity(f, 1));
         addVariant("THE ONLY BOX WITH :statement", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
+        addVariant("NO BOX THAT DISPLAYS :statement", (Formula f) -> f.withQuantifier(Quantifier.none()));
 
         addRule("THE OTHER BOX WITH :statement", "box", ctx -> {
             // Implies this box also has the statement
@@ -307,17 +414,17 @@ public class Rules {
             return function(Operator.curry(Operators.BOX_HAS_STATEMENT),
                 ctx.get("statement"),
                 ctx.get("box")
-            ).makeFilter();
+            ).makeFilter().withQuantifier(ctx.get("statement").getQuantifier());
         });
+        addAlias(":statement WRITTEN ON :box");
 
         addRule("THE STATEMENTS ON :box", "statement", ctx -> {
             return function(Operators.STATEMENTS_ON_BOX, ctx.get("box"));
         });
         addAlias("ALL THE STATEMENTS ON :box");
+        addAlias(":box'S STATEMENTS");
         addVariant("THE STATEMENT ON :box", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
-        addVariant("BOTH STATEMENTS ON :box", (f, ctx) ->
-            ctx.assumeQuantity(f, 2));
         addVariant(":box'S STATEMENT", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
 
@@ -335,6 +442,7 @@ public class Rules {
         addRule("EVERY BOX WITH THE WORD :word", "box", ctx -> {
             return formulaBoxesWithWord(ctx, ctx.getToken("word").getSource());
         });
+        addAlias("ALL BOXES DISPLAYING THE WORD :word");
         addVariant("A BOX WITH THE WORD :word ON IT", (Formula f) -> f.withQuantifier(Quantifier.any()));
 
         addRule("THE BOX THAT CLAIMS TO BE :color", "box", ctx -> {
@@ -361,6 +469,73 @@ public class Rules {
             return function(Operators.TRIVIAL,
                 function(Operators.STATEMENTS_ON_BOX, ctx.get("box"))
                     .withQuantifier(Quantifier.any())
+            );
+        });
+
+        addRule(":statement CONTAIN WORDS.", ctx -> {
+            return function(Operators.TRIVIAL, ctx.get("statement"));
+        });
+
+        addRule("A BOX WITH THE MOST WORDS", "box", ctx -> {
+            List<Value> values = new ArrayList<>();
+            int maxWordCount = 0;
+            for (BoxColor color : BoxColor.values()) {
+                int wordCount = 0;
+                for (String statement : ctx.getInput().byColor(color)) {
+                    wordCount += statement.split(" ").length;
+                }
+                if (wordCount > maxWordCount) {
+                    values.clear();
+                    maxWordCount = wordCount;
+                }
+                if (wordCount >= maxWordCount) {
+                    values.add(new Value(new Box(color)));
+                }
+            }
+            return constant(new Value(new Group(values)));
+        });
+        addVariant("THE BOX WITH THE MOST WORDS", (f, ctx) ->
+            ctx.assumeQuantity(f, 1));
+
+        addRule(":statement WITH AN ODD NUMBER OF WORDS", "statement", ctx -> {
+            return function(Operators.WORD_COUNT(
+                "ODD_WORD_COUNT",
+                    count -> count % 2 == 1
+                ),
+                ctx.get("statement")
+            ).makeFilter().withQuantifier(ctx.get("statement").getQuantifier());
+        });
+
+        addRule(":statement HAVE LESS THAN :number WORDS.", ctx -> {
+            int x = ctx.get("number").evaluate(null).asNumber();
+            return function(
+                Operators.WORD_COUNT(
+                    "LESS_THAN_" + x + "_WORDS",
+                    count -> count < x
+                ),
+                ctx.get("statement")
+            );
+        });
+
+        addRule("A :number WORD STATEMENT", "statement", ctx -> {
+            int x = ctx.get("number").evaluate(null).asNumber();
+            return function(
+                Operators.WORD_COUNT(
+                    "HAS_" + x + "_WORDS",
+                    count -> count == x
+                ),
+                formulaAllStatements(ctx)
+            ).makeFilter().withQuantifier(Quantifier.any());
+        });
+
+        addRule(":statement CONTAINS :number WORDS.", ctx -> {
+            int x = ctx.get("number").evaluate(null).asNumber();
+            return function(
+                Operators.WORD_COUNT(
+                    "HAS_" + x + "_WORDS",
+                    count -> count == x
+                ),
+                ctx.get("statement")
             );
         });
 
@@ -414,6 +589,7 @@ public class Rules {
             );
         });
         addAlias(":box DISPLAYS :statement.");
+        addAlias(":box CONTAINS :statement.");
 
         addRule(":box BOTH HAVE :statement.", ctx -> {
             ctx.assumeQuantity(ctx.get("box"), 2);
@@ -453,6 +629,7 @@ public class Rules {
         addRule(":box DOES NOT CONTAIN THE GEMS.", ctx -> {
             return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT), ctx.get("box"));
         });
+        addAlias(":box DOES NOT HAVE GEMS.");
         addAlias(":box IS EMPTY.");
         addAlias(":box ARE EMPTY.");
         // A slight stretch, the inverse is taken to be
@@ -485,6 +662,8 @@ public class Rules {
                 function(Operators.BOX_HAS_GEMS, ctx.get("box"))
             );
         });
+        addAlias(":box IS :bool AND IT CONTAINS GEMS.");
+
         addRule(":box CONTAINS THE GEMS IF ITS STATEMENT IS :bool.", ctx -> {
             ctx.assumeQuantity(function(Operators.STATEMENTS_ON_BOX, ctx.get("box")), 1);
             return function(Operators.IMPLIES,
@@ -495,6 +674,17 @@ public class Rules {
                 function(Operators.BOX_HAS_GEMS, ctx.get("box"))
             );
         });
+        addRule(":box IS EMPTY IF IT IS :bool.", ctx -> {
+            return function(Operators.IMPLIES,
+                function(Operators.BOX_IS,
+                    ctx.get("box"),
+                    ctx.get("bool")
+                ),
+                function(Operators.NOT,
+                    function(Operators.BOX_HAS_GEMS, ctx.get("box"))
+                )
+            );
+        });
 
         // Statements about statements
 
@@ -503,6 +693,9 @@ public class Rules {
             return function(operatorStatementIs(bool), ctx.get("statement"));
         });
         addAlias(":statement ARE :bool.");
+        addVariant(":statement IS ALWAYS :bool.", ctx -> {
+            ctx.get("statement").withQuantifier(Quantifier.all());
+        });
         addVariant(":statement ARE ALWAYS :bool.", ctx -> {
             ctx.get("statement").withQuantifier(Quantifier.all());
         });
@@ -547,6 +740,7 @@ public class Rules {
                 ctx.get("statement")
             );
         });
+        addAlias(":statement IS ON :box.");
 
         addRule(":statement HAVE IDENTICAL WORDING.", ctx -> {
             return function(Operators.STATEMENTS_MATCH_GROUP, ctx.get("statement"));
@@ -559,6 +753,33 @@ public class Rules {
             );
         });
 
+        addRule("THAT IS :bool.", ctx -> {
+            boolean bool = ctx.get("bool").evaluate(null).asBoolean();
+            return function(operatorStatementIs(bool), constant(new Value(ctx.getLastStatement())));
+        });
+        addRule("THAT'S NOT :bool.", ctx -> {
+            boolean bool = ctx.get("bool").evaluate(null).asBoolean();
+            return function(operatorStatementIs(!bool), constant(new Value(ctx.getLastStatement())));
+        });
+
+        // Oddballs
+
+        addRule("THERE ARE AN EQUAL NUMBER OF TRUE AND FALSE STATEMENTS.", ctx -> {
+            return function(Operators.EQUALS,
+                function(Operators.GROUP_SIZE,
+                    function(operatorStatementIs(true),
+                        formulaAllStatements(ctx)
+                    ).makeFilter()
+                ),
+                function(Operators.GROUP_SIZE,
+                    function(operatorStatementIs(false),
+                        formulaAllStatements(ctx)
+                    ).makeFilter()
+                )
+            );
+        });
+        addAlias("THERE ARE THE SAME NUMBER OF TRUE AND FALSE STATEMENTS ON BOXES.");
+
         sortRules();
     }
 
@@ -566,38 +787,46 @@ public class Rules {
         addRule(pattern, "sentence", action);
     }
 
-    private static void addRule(String pattern, String identifier, ParseAction action) {
-        rules.add(new ParseRule(pattern, identifier, action));
+    private static ParseRule addRule(String pattern, String identifier, ParseAction action) {
+        ParseRule rule = new ParseRule(pattern, identifier, action);
+        rules.add(rule);
         lastIdentifier = identifier;
         lastAction = action;
+        return rule;
     }
 
-    private static void addAlias(String pattern) {
-        rules.add(new ParseRule(pattern, lastIdentifier, lastAction));
+    private static ParseRule addAlias(String pattern) {
+        ParseRule rule = new ParseRule(pattern, lastIdentifier, lastAction);
+        rules.add(rule);
+        return rule;
     }
 
-    private static void addVariant(String pattern, Function<Formula, Formula> func) {
-        addVariant(pattern, (f, ctx) -> func.apply(f));
+    private static ParseRule addVariant(String pattern, Function<Formula, Formula> func) {
+        return addVariant(pattern, (f, ctx) -> func.apply(f));
     }
 
-    private static void addVariant(String pattern, Consumer<ParseContext> func) {
-        addVariant(pattern, (f, ctx) -> {
+    private static ParseRule addVariant(String pattern, Consumer<ParseContext> func) {
+        return addVariant(pattern, (f, ctx) -> {
             func.accept(ctx);
             return f;
         });
     }
 
-    private static void addVariant(String pattern, BiFunction<Formula, ParseContext, Formula> func) {
+    private static ParseRule addVariant(String pattern, BiFunction<Formula, ParseContext, Formula> func) {
         ParseAction last = lastAction;
-        rules.add(new ParseRule(pattern, lastIdentifier, ctx -> {
+        ParseRule rule = new ParseRule(pattern, lastIdentifier, ctx -> {
             Formula formula = last.apply(ctx);
             return func.apply(formula, ctx);
-        }));
+        });
+        rules.add(rule);
+        return rule;
     }
 
     private static void sortRules() {
         // Rules that fit inside other rules should always be checked last.
         // Otherwise, the longer rule would never match.
+
+        boolean modified = false;
 
         for (int i = 0; i < rules.size(); i++) {
             for (int j = i + 1; j < rules.size(); j++) {
@@ -605,11 +834,15 @@ public class Rules {
                 ParseRule e2 = rules.get(j);
 
                 if (e1.matches(e2.getPattern()) != -1) {
-                    // The first rule is shorter, swap them
-                    rules.set(j, e1);
+                    modified = true;
                     rules.set(i, e2);
+                    rules.set(j, e1);
                 }
             }
+        }
+
+        if (modified) {
+            sortRules();
         }
     }
 
@@ -725,7 +958,7 @@ public class Rules {
     public static Formula formulaBoxesWithWord(ParseContext ctx, String word) {
         return function(Operators.UNIQUE,
             function(Operators.BOX_OF_STATEMENT,
-                function(Operators.STATEMENT_CONTAINS(word),
+                function(Operators.STATEMENT_CONTAINS(word, true),
                     formulaAllStatements(ctx)
                 ).makeFilter()
             )

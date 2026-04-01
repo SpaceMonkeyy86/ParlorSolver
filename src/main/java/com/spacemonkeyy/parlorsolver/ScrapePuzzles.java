@@ -38,6 +38,10 @@ public class ScrapePuzzles {
             "THE GEMS ARE IN A BOX NO TRUE STATEMENTS.",
             "THE GEMS ARE IN A BOX WITH NO TRUE STATEMENTS."
         );
+        corrections.put(
+            "ONLY ONE OF WHITE BOX'S STATEMENTS IS TRUE.",
+            "ONLY ONE OF THE WHITE BOX'S STATEMENTS IS TRUE."
+        );
     }
 
     public static void main(String[] args) throws Exception {

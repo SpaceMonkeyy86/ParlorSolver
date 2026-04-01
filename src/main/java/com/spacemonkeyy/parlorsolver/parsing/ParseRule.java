@@ -9,6 +9,7 @@ public class ParseRule {
     private final List<Token> pattern;
     private final String identifier;
     private final ParseAction action;
+    private int delay;
 
     public ParseRule(String pattern, String identifier, ParseAction action) {
         this.pattern = Token.tokenize(pattern);
@@ -26,6 +27,14 @@ public class ParseRule {
 
     public boolean isPartial() {
         return !identifier.equals("sentence");
+    }
+
+    public int getDelay() {
+        return delay;
+    }
+
+    public void setDelay(int delay) {
+        this.delay = delay;
     }
 
     public int matches(List<Token> tokens) {

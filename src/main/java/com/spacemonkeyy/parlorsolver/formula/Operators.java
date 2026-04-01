@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 public class Operators {
@@ -74,13 +75,10 @@ public class Operators {
 
     public static Operator NEIGHBORS = makeOperator("NEIGHBORS", ctx -> {
         // Order of boxes is blue, white, black
-        Box box = ctx.arg(1).asBox();
-        List<Value> neighbors = switch (box.color()) {
-            case BLUE, BLACK -> List.of(new Value(new Box(BoxColor.WHITE)));
-            case WHITE -> List.of(new Value(new Box(BoxColor.BLUE)), new Value(new Box(BoxColor.BLACK)));
-        };
-        return new Value(new Group(neighbors));
-    }, ValueType.BOX, ValueType.GROUP);
+        Box box1 = ctx.arg(1).asBox();
+        Box box2 = ctx.arg(2).asBox();
+        return new Value((box1.color() == BoxColor.WHITE) != (box2.color() == BoxColor.WHITE));
+    }, ValueType.BOX, ValueType.BOX, ValueType.BOOLEAN);
 
     // Conversions
 
@@ -134,11 +132,23 @@ public class Operators {
     }, ValueType.GROUP, ValueType.BOOLEAN);
 
     // Strings are not values so need to be handled like this
-    public static Operator STATEMENT_CONTAINS(String s) {
-        Pattern pattern = Pattern.compile("\\b" + s + "\\b");
+    public static Operator STATEMENT_CONTAINS(String s, boolean isWord) {
+        if (isWord) {
+            s = "\\b" + s + "\\b";
+        }
+        Pattern pattern = Pattern.compile(s);
         return makeOperator("STATEMENT_CONTAINS(\"" + s + "\")", ctx -> {
             String statement = ctx.getInput().textOfStatement(ctx.arg(1).asStatement());
             return new Value(pattern.matcher(statement).find());
+        }, ValueType.STATEMENT, ValueType.BOOLEAN);
+    }
+
+    // Can handle any operation on word count (odd/even, more/less than number, etc.)
+    public static Operator WORD_COUNT(String name, Predicate<Integer> predicate) {
+        return makeOperator(name, ctx -> {
+            String statement = ctx.getInput().textOfStatement(ctx.arg(1).asStatement());
+            int wordCount = statement.split(" ").length;
+            return new Value(predicate.test(wordCount));
         }, ValueType.STATEMENT, ValueType.BOOLEAN);
     }
 

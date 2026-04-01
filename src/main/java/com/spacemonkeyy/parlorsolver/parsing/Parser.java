@@ -9,7 +9,7 @@ import com.spacemonkeyy.parlorsolver.value.Statement;
 import java.util.*;
 
 public class Parser {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     public static Map<Statement, Formula> parse(PuzzleInput input) {
         ParseContext context = new ParseContext(input);
@@ -41,21 +41,30 @@ public class Parser {
             System.out.println(Token.stringify(tokens));
         }
 
+        int round = 0;
         while (true) {
             boolean matched = false;
+            int maxDelay = 0;
             for (ParseRule rule : Rules.rules) {
+                if (rule.getDelay() > maxDelay) {
+                    maxDelay = rule.getDelay();
+                }
+                if (rule.getDelay() > round) {
+                    continue;
+                }
                 if (rule.tryMatch(tokens, context)) {
                     if (DEBUG) {
                         System.out.printf("Matched %s\n", rule);
                         System.out.println(Token.stringify(tokens));
                     }
                     matched = true;
+                    round = -1;
                     break;
                 }
             }
 
             // Failed to parse
-            if (!matched) {
+            if (!matched && round >= maxDelay) {
                 break;
             }
 
@@ -67,6 +76,8 @@ public class Parser {
                 }
                 return token.getFormula();
             }
+
+            round++;
         }
 
         return null;
