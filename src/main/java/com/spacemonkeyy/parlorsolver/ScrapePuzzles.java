@@ -16,7 +16,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,8 +28,17 @@ Takes the contents of the page https://blueprince.wiki.gg/wiki/Parlor_Game/List_
 parsing each listed puzzle into a PuzzleVariation object and exporting the list to puzzles.json.
  */
 public class ScrapePuzzles {
-    static Path wikiPagePath = Paths.get("puzzles-wiki-page.txt");
-    public static Path outputPath = Paths.get("puzzles.json");
+    private static final Path wikiPagePath = Paths.get("puzzles-wiki-page.txt");
+    public static final Path outputPath = Paths.get("puzzles.json");
+    private static final Map<String, String> corrections = new HashMap<>();
+
+    static {
+        // The wiki page has some typos
+        corrections.put(
+            "THE GEMS ARE IN A BOX NO TRUE STATEMENTS.",
+            "THE GEMS ARE IN A BOX WITH NO TRUE STATEMENTS."
+        );
+    }
 
     public static void main(String[] args) throws Exception {
         String page;
@@ -105,8 +116,14 @@ public class ScrapePuzzles {
         for (String statement : statements.split("<hr>")) {
             statement = statement.replaceAll("'(\\w+)'", "\"$1\"");
             statement = statement.trim();
+            statement = statement.toUpperCase();
+
             if (!statement.endsWith(".")) {
                 statement += ".";
+            }
+
+            if (corrections.get(statement) != null) {
+                statement = corrections.get(statement);
             }
 
             result.add(statement);

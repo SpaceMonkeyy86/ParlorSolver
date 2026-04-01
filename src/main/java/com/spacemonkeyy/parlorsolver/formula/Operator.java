@@ -71,4 +71,25 @@ public record Operator(
             operator.returnType
         );
     }
+
+    // Flips the argument order of a two-argument operator.
+    public static Operator curry(Operator operator) {
+        if (operator.parameterTypes.size() != 2) {
+            throw new RuntimeException("Operator cannot be curried");
+        }
+
+        Function<EvaluationContext, Value> func = ctx -> {
+            return ctx.call(operator, List.of(ctx.arg(2), ctx.arg(1)));
+        };
+
+        return new Operator(
+            operator.name + "_CURRIED",
+            func,
+            List.of(
+                operator.parameterTypes.get(1),
+                operator.parameterTypes.get(0)
+            ),
+            operator.returnType
+        );
+    }
 }

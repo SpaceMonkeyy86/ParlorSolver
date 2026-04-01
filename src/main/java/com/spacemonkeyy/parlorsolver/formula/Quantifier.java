@@ -20,6 +20,11 @@ public class Quantifier {
         return new Quantifier(1, -1, false);
     }
 
+    public static Quantifier none() {
+        // No element should pass
+        return new Quantifier(-1, 0, false);
+    }
+
     public static Quantifier exactly(int count) {
         return new Quantifier(count, count, false);
     }

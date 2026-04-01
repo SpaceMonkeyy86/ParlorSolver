@@ -39,6 +39,18 @@ public class Rules {
         addAlias("THE GEMS ARE ON THE FLOOR.");
         addAlias("THE GEMS ARE ON THE TABLE BEHIND YOU.");
 
+        addRule("THIS STATEMENT IS OF NO HELP AT ALL.", ctx -> {
+            // False; if this statement were actually true, then by definition
+            // it does not matter that we assume that it is false.
+            return constant(new Value(false));
+        });
+
+        addRule("THIS PUZZLE IS HARDER THAN IT SEEMS.", ctx -> {
+            // Indeterminate, could be either true or false
+            // (In reality this statement is always false)
+            return function(Operators.STATEMENT_IS_TRUE, formulaThisStatement(ctx));
+        });
+
         // Booleans
 
         addRule("TRUE", "bool", ctx -> {
@@ -86,6 +98,10 @@ public class Rules {
             addAlias("ONLY :number :" + identifier);
             addAlias("ONLY :number OF :" + identifier);
 
+            addRule("BOTH OF :" + identifier, identifier, ctx -> {
+                return ctx.get(identifier).withQuantifier(Quantifier.exactly(2));
+            });
+
             addRule("THERE ARE :" + identifier + ".", ctx -> {
                 // Let the quantifier do its thing with no other manipulation
                 return function(Operators.TRIVIAL, ctx.get(identifier));
@@ -130,6 +146,7 @@ public class Rules {
             ));
             return formulaAllBoxes().withQuantifier(Quantifier.exactly(1));
         });
+        addAlias("ONLY :number BOX IN THIS ROOM");
 
         addRule("THE OTHER BOXES", "box", Rules::formulaOtherBoxes);
         addVariant("THE OTHER :number BOXES", ctx -> {
@@ -181,11 +198,20 @@ public class Rules {
         addRule("A BOX WITH THE WORD :word ON IT", "box", ctx -> {
             return function(Operators.UNIQUE,
                 function(Operators.BOX_OF_STATEMENT,
-                    function(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource()),
+                    function(Operators.STATEMENT_CONTAINS(ctx.getToken("word").getSource()),
                         formulaAllStatements(ctx)
                     ).makeFilter()
                 )
             ).withQuantifier(Quantifier.any());
+        });
+
+        addRule("THE BOX THAT CLAIMS TO BE :color", "box", ctx -> {
+            String word = ctx.get("color").evaluate(null).asColor().toString();
+            return ctx.assumeQuantity(function(Operators.BOX_OF_STATEMENT,
+                function(Operators.STATEMENT_CONTAINS("THIS BOX IS THE " + word + " BOX."),
+                    formulaAllStatements(ctx)
+                ).makeFilter()
+            ), 1);
         });
 
         // Statements
@@ -237,13 +263,21 @@ public class Rules {
         addVariant("A :bool STATEMENT", (Formula f) -> f.withQuantifier(Quantifier.any()));
         addVariant("THE ONLY :bool STATEMENT", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
+        addVariant("NO :bool STATEMENTS", (Formula f) -> f.withQuantifier(Quantifier.none()));
 
         addRule(":statement WITH THE WORD :word", "statement", ctx -> {
-            return function(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource()),
+            return function(Operators.STATEMENT_CONTAINS(ctx.getToken("word").getSource()),
                 ctx.get("statement")
             ).makeFilter().withQuantifier(ctx.get("statement").getQuantifier());
         });
+        addAlias(":statement CONTAINING THE WORD :word");
         addAlias(":statement CONTAINING THE LETTER :word");
+
+        addRule("EVERY STATEMENT CLAIMING WHERE THE GEMS ARE", "statement", ctx -> {
+            return function(Operators.STATEMENT_CONTAINS("THE GEMS ARE"),
+                formulaAllStatements(ctx)
+            ).makeFilter();
+        });
 
         // After statements and boxes have parsed
 
@@ -267,13 +301,31 @@ public class Rules {
             ).makeFilter(), 1);
         });
 
+        addRule(":statement ON :box", "statement", ctx -> {
+            return function(Operator.curry(Operators.BOX_HAS_STATEMENT),
+                ctx.get("statement"),
+                ctx.get("box")
+            ).makeFilter();
+        });
+
         addRule("THE STATEMENTS ON :box", "statement", ctx -> {
             return function(Operators.STATEMENTS_ON_BOX, ctx.get("box"));
         });
         addVariant("THE STATEMENT ON :box", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
+        addVariant("BOTH STATEMENTS ON :box", (f, ctx) ->
+            ctx.assumeQuantity(f, 2));
         addVariant(":box'S STATEMENT", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
+
+        addRule("THE SECOND STATEMENT ON :box", "statement", ctx -> {
+            ctx.assumeQuantity(function(Operators.STATEMENTS_ON_BOX, ctx.get("box")),
+                Quantifier.atLeast(2));
+            return function(Operators.STATEMENT_ON_BOX,
+                ctx.get("box"),
+                constant(new Value(2))
+            );
+        });
 
         // Simple sentences
 
@@ -366,6 +418,9 @@ public class Rules {
         });
         addAlias(":box IS EMPTY.");
         addAlias(":box ARE EMPTY.");
+        // A slight stretch, the inverse is taken to be
+        // "YOU WILL OPEN :box AND FIND IT NOT EMPTY", i.e. it contains the gems.
+        addAlias("YOU WILL OPEN :box AND FIND IT EMPTY.");
         addVariant("THE GEMS ARE NOT IN :box.", ctx -> {
             ctx.get("box").withQuantifier(Quantifier.all());
         });
@@ -447,8 +502,8 @@ public class Rules {
 
         addRule("THIS IS :statement.", ctx -> {
             return function(Operators.EQUALS,
-                ctx.get("statement"),
-                formulaThisStatement(ctx)
+                formulaThisStatement(ctx),
+                ctx.get("statement")
             );
         });
 

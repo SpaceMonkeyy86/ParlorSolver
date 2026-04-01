@@ -46,7 +46,6 @@ public class Operators {
     // Grouping
 
     public static Operator GROUP = makeOperator("GROUP", ctx -> {
-        // TODO: Support adding to existing groups
         return new Value(new Group(List.of(ctx.arg(1), ctx.arg(2))));
     }, ValueType.ANY, ValueType.ANY, ValueType.GROUP);
 
@@ -134,10 +133,10 @@ public class Operators {
     }, ValueType.GROUP, ValueType.BOOLEAN);
 
     // Strings are not values so need to be handled like this
-    public static Operator STATEMENT_HAS_WORD(String word) {
-        return makeOperator("STATEMENT_HAS_WORD(\"" + word + "\")", ctx -> {
+    public static Operator STATEMENT_CONTAINS(String s) {
+        return makeOperator("STATEMENT_CONTAINS(\"" + s + "\")", ctx -> {
             Statement statement = ctx.arg(1).asStatement();
-            return new Value(ctx.getInput().textOfStatement(statement).contains(word));
+            return new Value(ctx.getInput().textOfStatement(statement).contains(s));
         }, ValueType.STATEMENT, ValueType.BOOLEAN);
     }
 

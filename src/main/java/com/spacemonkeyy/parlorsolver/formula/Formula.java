@@ -1,6 +1,5 @@
 package com.spacemonkeyy.parlorsolver.formula;
 
-import com.spacemonkeyy.parlorsolver.parsing.ParseContext;
 import com.spacemonkeyy.parlorsolver.solver.EvaluationContext;
 import com.spacemonkeyy.parlorsolver.value.Group;
 import com.spacemonkeyy.parlorsolver.value.Value;

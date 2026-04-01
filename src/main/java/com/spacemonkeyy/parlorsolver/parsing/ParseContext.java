@@ -83,8 +83,12 @@ public class ParseContext {
     }
 
     public Formula assumeQuantity(Formula formula, int count) {
+        return assumeQuantity(formula, Quantifier.exactly(count));
+    }
+
+    public Formula assumeQuantity(Formula formula, Quantifier quantifier) {
         addAssumption(Formula.function(Operators.TRIVIAL,
-            formula.clone().withQuantifier(Quantifier.exactly(count))
+            formula.clone().withQuantifier(quantifier)
         ));
         return formula;
     }
