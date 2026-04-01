@@ -1105,11 +1105,11 @@
     "input": {
       "blue": [
         "THE GEMS ARE IN A BOX WITH THE LONGEST WORD.",
-        "”LONGEST” IS THE LONGEST WORD ON A BOX."
+        "\"LONGEST\" IS THE LONGEST WORD ON A BOX."
       ],
       "white": [
         "THE GEMS ARE IN A BOX WITH THE SHORTEST WORD.",
-        "”A” IS THE SHORTEST WORD ON A BOX."
+        "\"A\" IS THE SHORTEST WORD ON A BOX."
       ],
       "black": [
         "THERE ARE WORDS ON THE BOX WITH THE GEMS.",

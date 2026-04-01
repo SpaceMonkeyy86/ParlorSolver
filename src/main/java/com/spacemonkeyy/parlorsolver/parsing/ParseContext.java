@@ -22,8 +22,8 @@ public class ParseContext {
     private final Map<String, List<Token>> bindings;
 
     // Current statement info
-    private BoxColor currentColor;
-    private int currentStatement;
+    private Statement currentStatement;
+    private Statement lastStatement;
     private List<Formula> assumptions;
 
     public ParseContext(PuzzleInput input) {
@@ -35,17 +35,21 @@ public class ParseContext {
         return input;
     }
 
-    public Box getCurrentBox() {
-        return new Box(currentColor);
-    }
-
     public Statement getCurrentStatement() {
-        return new Statement(new Box(currentColor), currentStatement);
+        return currentStatement;
     }
 
-    public void setCurrent(BoxColor color, int index) {
-        currentColor = color;
-        currentStatement = index;
+    public Box getCurrentBox() {
+        return currentStatement.box();
+    }
+
+    public Statement getLastStatement() {
+        return lastStatement;
+    }
+
+    public void setCurrent(Statement statement) {
+        lastStatement = currentStatement;
+        currentStatement = statement;
         assumptions = new ArrayList<>();
     }
 

@@ -2,6 +2,7 @@ package com.spacemonkeyy.parlorsolver.parsing;
 
 import com.spacemonkeyy.parlorsolver.formula.Formula;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
+import com.spacemonkeyy.parlorsolver.value.Box;
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
 import com.spacemonkeyy.parlorsolver.value.Statement;
 
@@ -17,12 +18,12 @@ public class Parser {
         for (BoxColor color : BoxColor.values()) {
             List<String> statements = input.byColor(color);
             for (int i = 1; i <= statements.size(); i++) {
-                context.setCurrent(color, i);
+                Statement statement = new Statement(new Box(color), i);
+                context.setCurrent(statement);
 
-                Statement statement = context.getCurrentStatement();
                 String text = context.getInput().textOfStatement(statement);
-
                 Formula formula = parseStatement(text, context);
+
                 if (formula != null) {
                     formula = context.includeAssumptions(formula);
                 }

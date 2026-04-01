@@ -115,6 +115,7 @@ public class ScrapePuzzles {
         List<String> result = new ArrayList<>();
         for (String statement : statements.split("<hr>")) {
             statement = statement.replaceAll("'(\\w+)'", "\"$1\"");
+            statement = statement.replaceAll("”", "\"");
             statement = statement.trim();
             statement = statement.toUpperCase();
 

@@ -74,7 +74,10 @@ public class Quantifier {
                 return "MIN " + min;
             }
             if (min == -1) {
-                return "MAX " + min;
+                if (max == 0) {
+                    return "NONE";
+                }
+                return "MAX " + max;
             }
             if (min == max) {
                 return "EXACTLY " + min;

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 public class Operators {
     // Basic operations
@@ -134,9 +135,10 @@ public class Operators {
 
     // Strings are not values so need to be handled like this
     public static Operator STATEMENT_CONTAINS(String s) {
+        Pattern pattern = Pattern.compile("\\b" + s + "\\b");
         return makeOperator("STATEMENT_CONTAINS(\"" + s + "\")", ctx -> {
-            Statement statement = ctx.arg(1).asStatement();
-            return new Value(ctx.getInput().textOfStatement(statement).contains(s));
+            String statement = ctx.getInput().textOfStatement(ctx.arg(1).asStatement());
+            return new Value(pattern.matcher(statement).find());
         }, ValueType.STATEMENT, ValueType.BOOLEAN);
     }
 

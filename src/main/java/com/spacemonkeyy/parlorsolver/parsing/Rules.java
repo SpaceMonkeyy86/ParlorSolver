@@ -94,6 +94,7 @@ public class Rules {
                 int count = ctx.get("number").evaluate(null).asNumber();
                 return ctx.get(identifier).withQuantifier(Quantifier.exactly(count));
             });
+            addAlias("EXACTLY :number :" + identifier);
             addAlias(":number OF :" + identifier);
             addAlias("ONLY :number :" + identifier);
             addAlias("ONLY :number OF :" + identifier);
@@ -132,6 +133,7 @@ public class Rules {
         });
         addAlias("BOTH :box AND :box");
 
+        addRule("EACH BOX", "box", ctx -> Rules.formulaAllBoxes());
         addRule("ALL :number BOXES", "box", ctx -> {
             ctx.addAssumption(function(Operators.EQUALS,
                 ctx.get("number"),
@@ -195,23 +197,10 @@ public class Rules {
         addVariant("THE ONLY :bool BOX", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
 
-        addRule("A BOX WITH THE WORD :word ON IT", "box", ctx -> {
-            return function(Operators.UNIQUE,
-                function(Operators.BOX_OF_STATEMENT,
-                    function(Operators.STATEMENT_CONTAINS(ctx.getToken("word").getSource()),
-                        formulaAllStatements(ctx)
-                    ).makeFilter()
-                )
-            ).withQuantifier(Quantifier.any());
-        });
-
-        addRule("THE BOX THAT CLAIMS TO BE :color", "box", ctx -> {
-            String word = ctx.get("color").evaluate(null).asColor().toString();
-            return ctx.assumeQuantity(function(Operators.BOX_OF_STATEMENT,
-                function(Operators.STATEMENT_CONTAINS("THIS BOX IS THE " + word + " BOX."),
-                    formulaAllStatements(ctx)
-                ).makeFilter()
-            ), 1);
+        addRule("THE BOX WITH THE GEMS", "box", ctx -> {
+            return ctx.assumeQuantity(function(Operators.BOX_HAS_GEMS,
+                formulaAllBoxes()
+            ).makeFilter(), 1);
         });
 
         // Statements
@@ -235,6 +224,16 @@ public class Rules {
                 ctx.get("number")
             ));
             return f;
+        });
+
+        addRule("THE ABOVE STATEMENT", "statement", ctx -> {
+            return constant(new Value(ctx.getLastStatement()));
+        });
+        addRule("THE TOP STATEMENT OF :box", "statement", ctx -> {
+            return function(Operators.STATEMENT_ON_BOX,
+                ctx.get("box"),
+                constant(new Value(1))
+            );
         });
 
         addRule("STATEMENTS", "statement", Rules::formulaAllStatements);
@@ -282,10 +281,13 @@ public class Rules {
         // After statements and boxes have parsed
 
         addRule("A BOX WITH :statement", "box", ctx -> {
-            return function(Operators.UNIQUE,
-                function(Operators.BOX_OF_STATEMENT, ctx.get("statement"))
-            ).withQuantifier(Quantifier.any());
+            return function(Operators.BOX_HAS_STATEMENT,
+                formulaAllBoxes(),
+                ctx.get("statement")
+            ).makeFilter().withQuantifier(Quantifier.any());
         });
+        addVariant("THE BOX WITH :statement", (f, ctx) ->
+            ctx.assumeQuantity(f, 1));
         addVariant("THE ONLY BOX WITH :statement", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
 
@@ -311,6 +313,7 @@ public class Rules {
         addRule("THE STATEMENTS ON :box", "statement", ctx -> {
             return function(Operators.STATEMENTS_ON_BOX, ctx.get("box"));
         });
+        addAlias("ALL THE STATEMENTS ON :box");
         addVariant("THE STATEMENT ON :box", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
         addVariant("BOTH STATEMENTS ON :box", (f, ctx) ->
@@ -324,6 +327,40 @@ public class Rules {
             return function(Operators.STATEMENT_ON_BOX,
                 ctx.get("box"),
                 constant(new Value(2))
+            );
+        });
+
+        // Word play
+
+        addRule("EVERY BOX WITH THE WORD :word", "box", ctx -> {
+            return formulaBoxesWithWord(ctx, ctx.getToken("word").getSource());
+        });
+        addVariant("A BOX WITH THE WORD :word ON IT", (Formula f) -> f.withQuantifier(Quantifier.any()));
+
+        addRule("THE BOX THAT CLAIMS TO BE :color", "box", ctx -> {
+            String word = ctx.get("color").evaluate(null).asColor().toString();
+            return ctx.assumeQuantity(formulaBoxesWithWord(ctx,
+                "THIS BOX IS THE " + word + " BOX") ,1);
+        });
+
+        addRule("A BOX WITH THE LONGEST WORD", "box", ctx -> {
+            return formulaBoxesWithWord(ctx, longestWord(ctx)).withQuantifier(Quantifier.any());
+        });
+        addRule("A BOX WITH THE SHORTEST WORD", "box", ctx -> {
+            return formulaBoxesWithWord(ctx, shortestWord(ctx)).withQuantifier(Quantifier.any());
+        });
+
+        addRule(":word IS THE LONGEST WORD ON A BOX.", ctx -> {
+            return constant(new Value(longestWord(ctx).equals(ctx.getToken("word").getSource())));
+        });
+        addRule(":word IS THE SHORTEST WORD ON A BOX.", ctx -> {
+            return constant(new Value(shortestWord(ctx).equals(ctx.getToken("word").getSource())));
+        });
+
+        addRule("THERE ARE WORDS ON :box.", ctx -> {
+            return function(Operators.TRIVIAL,
+                function(Operators.STATEMENTS_ON_BOX, ctx.get("box"))
+                    .withQuantifier(Quantifier.any())
             );
         });
 
@@ -459,6 +496,8 @@ public class Rules {
             );
         });
 
+        // Statements about statements
+
         addRule(":statement IS :bool.", ctx -> {
             boolean bool = ctx.get("bool").evaluate(null).asBoolean();
             return function(operatorStatementIs(bool), ctx.get("statement"));
@@ -485,6 +524,19 @@ public class Rules {
             return function(Operators.EQUALS,
                 function(Operators.STATEMENT_IS_TRUE, ctx.get("statement", 1)),
                 function(Operators.STATEMENT_IS_TRUE, ctx.get("statement", 2))
+            );
+        });
+
+        addRule(":statement ARE EITHER BOTH :bool OR BOTH :bool.", ctx -> {
+            boolean b1 = ctx.get("bool", 1).evaluate(null).asBoolean();
+            boolean b2 = ctx.get("bool", 2).evaluate(null).asBoolean();
+            return function(Operators.OR,
+                function(operatorStatementIs(b1),
+                    ctx.get("statement").withQuantifier(Quantifier.all())
+                ),
+                function(operatorStatementIs(b2),
+                    ctx.get("statement").withQuantifier(Quantifier.all())
+                )
             );
         });
 
@@ -668,5 +720,41 @@ public class Rules {
                 black
             )
         );
+    }
+
+    public static Formula formulaBoxesWithWord(ParseContext ctx, String word) {
+        return function(Operators.UNIQUE,
+            function(Operators.BOX_OF_STATEMENT,
+                function(Operators.STATEMENT_CONTAINS(word),
+                    formulaAllStatements(ctx)
+                ).makeFilter()
+            )
+        );
+    }
+
+    public static String longestWord(ParseContext ctx) {
+        String result = "";
+        for (String statement : ctx.getInput().allStatements()) {
+            for (Token token : Token.tokenize(statement)) {
+                String word = token.getSource();
+                if (Character.isLetter(word.charAt(0)) && word.length() > result.length()) {
+                    result = word;
+                }
+            }
+        }
+        return result;
+    }
+
+    public static String shortestWord(ParseContext ctx) {
+        String result = "definitely not the shortest word";
+        for (String statement : ctx.getInput().allStatements()) {
+            for (Token token : Token.tokenize(statement)) {
+                String word = token.getSource();
+                if (Character.isLetter(word.charAt(0)) && word.length() < result.length()) {
+                    result = word;
+                }
+            }
+        }
+        return result;
     }
 }
