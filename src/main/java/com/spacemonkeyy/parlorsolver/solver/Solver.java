@@ -74,6 +74,10 @@ public class Solver {
                 temp >>= 1;
             }
 
+            if (bitmap == 0b101001) {
+                int a = 0;
+            }
+
             EvaluationContext ctx = new EvaluationContext(input, variables, variableNames);
 
             boolean solved = true;

@@ -67,7 +67,8 @@ public class ParseRule {
         }
 
         Formula formula = action.apply(context);
-        Token token = new Token(identifier, formula);
+        String source = Token.stringify(tokens.subList(i, i + pattern.size()));
+        Token token = new Token(identifier, source, formula);
 
         // Substitute resulting token for matched tokens
         for (int j = 0; j < pattern.size(); j++) {
@@ -82,6 +83,9 @@ public class ParseRule {
         if (pattern.getIdentifier().isEmpty()) {
             return target.getIdentifier().isEmpty()
                 && Objects.equals(pattern.getSource(), target.getSource());
+        } else if (pattern.getIdentifier().equals("word")) {
+            // Matches any single word in the source string, even if already matched
+            return Token.tokenize(target.getSource()).size() == 1;
         } else {
             return Objects.equals(target.getIdentifier(), pattern.getIdentifier());
         }

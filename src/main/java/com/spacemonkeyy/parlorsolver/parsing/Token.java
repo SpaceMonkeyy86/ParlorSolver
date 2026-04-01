@@ -30,15 +30,9 @@ public class Token {
         formula = null;
     }
 
-    public Token(String identifier, String source) {
+    public Token(String identifier, String source, Formula formula) {
         this.identifier = identifier;
         this.source = source;
-        this.formula = null;
-    }
-
-    public Token(String identifier, Formula formula) {
-        this.identifier = identifier;
-        this.source = "";
         this.formula = formula;
     }
 
@@ -71,11 +65,10 @@ public class Token {
 
             String word = matcher.group(1);
             if (word.startsWith("\"")) {
-                tokens.add(new Token("word", word.substring(1, word.length() - 1)));
-            } else {
-                tokens.add(new Token(word));
+                word = word.substring(1, word.length() - 1);
             }
 
+            tokens.add(new Token(word));
             statement = matcher.group(2);
         }
 

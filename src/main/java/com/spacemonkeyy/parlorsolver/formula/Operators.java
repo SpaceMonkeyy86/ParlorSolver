@@ -35,6 +35,10 @@ public class Operators {
         return new Value(!ctx.arg(1).asBoolean());
     }, ValueType.BOOLEAN, ValueType.BOOLEAN);
 
+    public static Operator IMPLIES = makeOperator("IMPLIES", ctx -> {
+        return new Value(!ctx.arg(1).asBoolean() || ctx.arg(2).asBoolean());
+    }, ValueType.BOOLEAN, ValueType.BOOLEAN, ValueType.BOOLEAN);
+
     public static Operator EQUALS = makeOperator("EQUALS", ctx -> {
         return new Value(ctx.arg(1).equals(ctx.arg(2)));
     }, ValueType.ANY, ValueType.ANY, ValueType.BOOLEAN);

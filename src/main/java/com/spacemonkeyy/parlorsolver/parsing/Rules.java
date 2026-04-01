@@ -145,11 +145,12 @@ public class Rules {
             return formulaAllBoxes().withQuantifier(Quantifier.exactly(count));
         });
 
-        addRule("THE EMPTY BOXES", "box", ctx -> {
+        addRule("EMPTY BOXES", "box", ctx -> {
             return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT),
                 formulaAllBoxes()
             ).makeFilter();
         });
+        addAlias("THE EMPTY BOXES");
         addVariant("THE :number EMPTY BOXES", (f, ctx) -> {
             int count = ctx.get("number").evaluate(null).asNumber();
             return f.withQuantifier(Quantifier.exactly(count));
@@ -172,8 +173,8 @@ public class Rules {
         });
         addAlias("THE :bool BOXES");
         addVariant("A :bool BOX", (Formula f) -> f.withQuantifier(Quantifier.any()));
-        addVariant("THE :bool BOX", (f, ctx) ->
-            ctx.assumeQuantity(f, 1));
+        // Don't assume quantity here because of variation 109
+        addVariant("THE :bool BOX", (Formula f) -> f.withQuantifier(Quantifier.exactly(1)));
         addVariant("THE ONLY :bool BOX", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
 
@@ -219,6 +220,7 @@ public class Rules {
             return f;
         });
         addVariant("A STATEMENT", (Formula f) -> f.withQuantifier(Quantifier.any()));
+        addVariant("EVERY STATEMENT", (Formula f) -> f.withQuantifier(Quantifier.all()));
         addVariant("ONLY :number STATEMENT", (f, ctx) -> {
             ctx.addAssumption(function(Operators.EQUALS,
                 ctx.get("number"),
@@ -239,7 +241,7 @@ public class Rules {
         addRule(":statement WITH THE WORD :word", "statement", ctx -> {
             return function(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource()),
                 ctx.get("statement")
-            ).makeFilter();
+            ).makeFilter().withQuantifier(ctx.get("statement").getQuantifier());
         });
         addAlias(":statement CONTAINING THE LETTER :word");
 
@@ -269,6 +271,8 @@ public class Rules {
             return function(Operators.STATEMENTS_ON_BOX, ctx.get("box"));
         });
         addVariant("THE STATEMENT ON :box", (f, ctx) ->
+            ctx.assumeQuantity(f, 1));
+        addVariant(":box'S STATEMENT", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
 
         // Simple sentences
@@ -389,24 +393,37 @@ public class Rules {
                 function(Operators.BOX_HAS_GEMS, ctx.get("box"))
             );
         });
+        addRule(":box CONTAINS THE GEMS IF ITS STATEMENT IS :bool.", ctx -> {
+            ctx.assumeQuantity(function(Operators.STATEMENTS_ON_BOX, ctx.get("box")), 1);
+            return function(Operators.IMPLIES,
+                function(Operators.BOX_IS,
+                    ctx.get("box"),
+                    ctx.get("bool")
+                ),
+                function(Operators.BOX_HAS_GEMS, ctx.get("box"))
+            );
+        });
 
         addRule(":statement IS :bool.", ctx -> {
-            return function(Operators.EQUALS,
-                function(Operators.STATEMENT_IS_TRUE, ctx.get("statement")),
-                ctx.get("bool")
-            );
+            boolean bool = ctx.get("bool").evaluate(null).asBoolean();
+            return function(operatorStatementIs(bool), ctx.get("statement"));
+        });
+        addAlias(":statement ARE :bool.");
+        addVariant(":statement ARE ALWAYS :bool.", ctx -> {
+            ctx.get("statement").withQuantifier(Quantifier.all());
+        });
+        addVariant(":statement ARE BOTH :bool.", ctx -> {
+            ctx.get("statement").withQuantifier(Quantifier.all());
+            ctx.assumeQuantity(ctx.get("statement"), 2);
         });
 
-        addRule(":statement ARE :bool.", ctx -> {
-            return function(Operators.EQUALS,
-                function(Operators.STATEMENT_IS_TRUE, ctx.get("statement"))
-                    .withQuantifier(Quantifier.all()),
-                ctx.get("bool")
+        addRule(":statement IS BOTH :bool AND :bool.", ctx -> {
+            boolean b1 = ctx.get("bool", 1).evaluate(null).asBoolean();
+            boolean b2 = ctx.get("bool", 2).evaluate(null).asBoolean();
+            return function(Operators.AND,
+                function(operatorStatementIs(b1), ctx.get("statement")),
+                function(operatorStatementIs(b2), ctx.get("statement"))
             );
-        });
-        addAlias(":statement ARE ALWAYS :bool.");
-        addVariant(":statement ARE BOTH :bool.", ctx -> {
-            ctx.assumeQuantity(ctx.get("statement"), 2);
         });
 
         addRule(":statement IS AS :bool AS :statement.", ctx -> {

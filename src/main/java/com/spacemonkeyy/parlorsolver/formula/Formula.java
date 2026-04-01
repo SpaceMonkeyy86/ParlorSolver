@@ -1,5 +1,6 @@
 package com.spacemonkeyy.parlorsolver.formula;
 
+import com.spacemonkeyy.parlorsolver.parsing.ParseContext;
 import com.spacemonkeyy.parlorsolver.solver.EvaluationContext;
 import com.spacemonkeyy.parlorsolver.value.Group;
 import com.spacemonkeyy.parlorsolver.value.Value;
@@ -12,7 +13,7 @@ import java.util.List;
 // A node in the expression tree. Represents calling an operator
 // on a set of values to produce a new value. Can also represent
 // a constant value.
-public class Formula {
+public class Formula implements Cloneable {
     private final Operator operator;
     private final List<Formula> arguments;
     private final Value constant;
@@ -33,6 +34,10 @@ public class Formula {
         this.arguments = arguments;
         this.constant = constant;
         this.filter = filter;
+    }
+
+    public Quantifier getQuantifier() {
+        return quantifier;
     }
 
     // Indicates that this group represents a bound variable.
@@ -143,6 +148,15 @@ public class Formula {
             return ValueType.GROUP;
         } else {
             return operator.returnType();
+        }
+    }
+
+    @Override
+    public Formula clone() {
+        try {
+            return (Formula) super.clone();
+        } catch (CloneNotSupportedException _) {
+            throw new RuntimeException("Unreachable");
         }
     }
 
