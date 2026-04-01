@@ -144,17 +144,15 @@ public class Rules {
         });
 
         addRule("THE EMPTY BOXES", "box", ctx -> {
-            return function(Operators.FILTER(
-                Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT)),
+            return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT),
                 formulaAllBoxes()
-            );
+            ).makeFilter();
         });
         addRule("THE :number EMPTY BOXES", "box", ctx -> {
             int count = ctx.get("number").evaluate(null).asNumber();
-            return function(Operators.FILTER(
-                Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT)),
+            return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT),
                 formulaAllBoxes()
-            ).withQuantifier(Quantifier.exactly(count));
+            ).makeFilter().withQuantifier(Quantifier.exactly(count));
         });
 
         addRule("BOXES NEXT TO :box", "box", ctx -> {
@@ -170,45 +168,34 @@ public class Rules {
         addAlias("THE BOX NEXT TO :box");
 
         addRule(":bool BOXES", "box", ctx -> {
-            return function(
-                Operators.FILTER(
-                    Operator.apply(Operators.BOX_IS, 2, ctx.get("bool"))
-                ),
-                formulaAllBoxes()
-            );
+            return function(Operators.BOX_IS,
+                formulaAllBoxes(),
+                ctx.get("bool")
+            ).makeFilter();
         });
         addAlias("THE :bool BOXES");
         addRule("A :bool BOX", "box", ctx -> {
-            return function(
-                Operators.FILTER(
-                    Operator.apply(Operators.BOX_IS, 2, ctx.get("bool"))
-                ),
-                formulaAllBoxes()
-            ).withQuantifier(Quantifier.any());
+            return function(Operators.BOX_IS,
+                formulaAllBoxes(),
+                ctx.get("bool")
+            ).makeFilter().withQuantifier(Quantifier.any());
         });
         // TODO: Verify there is only one box
         addRule("THE :bool BOX", "box", ctx -> {
-            return function(
-                Operators.FILTER(
-                    Operator.apply(Operators.BOX_IS, 2, ctx.get("bool"))
-                ),
-                formulaAllBoxes()
-            ).withQuantifier(Quantifier.exactly(1));
+            return function(Operators.BOX_IS,
+                formulaAllBoxes(),
+                ctx.get("bool")
+            ).makeFilter().withQuantifier(Quantifier.exactly(1));
         });
         addAlias("THE ONLY :bool BOX");
 
         addRule("A BOX WITH THE WORD :word ON IT", "box", ctx -> {
-            return function(
-                Operators.FILTER(
-                    Operator.compose(
-                        Operators.STATEMENTS_ON_BOX,
-                        Operators.FILTER(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource())),
-                        Operators.GROUP_SIZE,
-                        Operator.apply(Operators.EQUALS, 2, constant(new Value(0))),
-                        Operators.NOT
-                    )
-                ),
-                formulaAllBoxes()
+            return function(Operators.UNIQUE,
+                function(Operators.BOX_OF_STATEMENT,
+                    function(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource()),
+                        formulaAllStatements(ctx)
+                    ).makeFilter()
+                )
             ).withQuantifier(Quantifier.any());
         });
 
@@ -237,44 +224,24 @@ public class Rules {
         });
 
         addRule(":bool STATEMENTS", "statement", ctx -> {
-            return function(
-                Operators.FILTER(
-                    Operator.compose(
-                        Operators.STATEMENT_IS_TRUE,
-                        Operator.apply(Operators.EQUALS, 2, ctx.get("bool"))
-                    )
-                ),
-                formulaAllStatements(ctx)
-            );
+            boolean bool = ctx.get("bool").evaluate(null).asBoolean();
+            return function(operatorStatementIs(bool), formulaAllStatements(ctx)).makeFilter();
         });
         addRule("A :bool STATEMENT", "statement", ctx -> {
-            return function(
-                Operators.FILTER(
-                    Operator.compose(
-                        Operators.STATEMENT_IS_TRUE,
-                        Operator.apply(Operators.EQUALS, 2, ctx.get("bool"))
-                    )
-                ),
-                formulaAllStatements(ctx)
-            ).withQuantifier(Quantifier.any());
+            boolean bool = ctx.get("bool").evaluate(null).asBoolean();
+            return function(operatorStatementIs(bool), formulaAllStatements(ctx)).makeFilter()
+                .withQuantifier(Quantifier.any());
         });
         addRule("THE ONLY :bool STATEMENT", "statement", ctx -> {
-            return function(
-                Operators.FILTER(
-                    Operator.compose(
-                        Operators.STATEMENT_IS_TRUE,
-                        Operator.apply(Operators.EQUALS, 2, ctx.get("bool"))
-                    )
-                ),
-                formulaAllStatements(ctx)
-            ).withQuantifier(Quantifier.exactly(1));
+            boolean bool = ctx.get("bool").evaluate(null).asBoolean();
+            return function(operatorStatementIs(bool), formulaAllStatements(ctx)).makeFilter()
+                .withQuantifier(Quantifier.exactly(1));
         });
 
         addRule(":statement WITH THE WORD :word", "statement", ctx -> {
-            return function(
-                Operators.FILTER(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource())),
+            return function(Operators.STATEMENT_HAS_WORD(ctx.getToken("word").getSource()),
                 ctx.get("statement")
-            );
+            ).makeFilter();
         });
         addAlias(":statement CONTAINING THE LETTER :word");
 
@@ -354,12 +321,7 @@ public class Rules {
                 ctx.get("bool")
             );
         });
-        addRule(":box ARE :bool.", ctx -> {
-            return function(Operators.BOX_IS,
-                ctx.get("box"),
-                ctx.get("bool")
-            );
-        });
+        addAlias(":box ARE :bool.");
         // TODO: Verify there are two boxes
         addAlias(":box ARE BOTH :bool.");
 
@@ -511,6 +473,14 @@ public class Rules {
     }
 
     // Helper functions
+
+    public static Operator operatorStatementIs(boolean bool) {
+        Operator operator = Operators.STATEMENT_IS_TRUE;
+        if (!bool) {
+            operator = Operator.compose(operator, Operators.NOT);
+        }
+        return operator;
+    }
 
     public static Formula formulaThisBox(ParseContext ctx) {
         return constant(new Value(ctx.getCurrentBox()));

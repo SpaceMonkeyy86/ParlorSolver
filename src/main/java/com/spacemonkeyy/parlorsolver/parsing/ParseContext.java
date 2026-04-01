@@ -19,9 +19,10 @@ public class ParseContext {
     // Intermediate tokens that were matched as part of the rule
     private final Map<String, List<Token>> bindings;
 
-    // Current box and statement index
+    // Current statement info
     private BoxColor currentColor;
     private int currentStatement;
+    private List<Formula> assumptions;
 
     public ParseContext(PuzzleInput input) {
         this.input = input;

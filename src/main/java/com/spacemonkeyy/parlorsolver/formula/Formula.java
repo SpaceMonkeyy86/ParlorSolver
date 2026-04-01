@@ -17,26 +17,36 @@ public class Formula {
     private final List<Formula> arguments;
     private final Value constant;
     private Quantifier quantifier;
+    private boolean filter;
 
     public static Formula constant(Value constant) {
-        return new Formula(null, null, constant);
+        return new Formula(null, null, constant, false);
     }
 
     public static Formula function(Operator operator, Formula... arguments) {
         List<Formula> args = Arrays.stream(arguments).toList();
-        return new Formula(operator, args, null);
+        return new Formula(operator, args, null, false);
     }
 
-    private Formula(Operator operator, List<Formula> arguments, Value constant) {
+    private Formula(Operator operator, List<Formula> arguments, Value constant, boolean filter) {
         this.operator = operator;
         this.arguments = arguments;
         this.constant = constant;
+        this.filter = filter;
     }
 
     // Indicates that this group represents a bound variable.
     // Quantifiers are used in parent formulas that are functions.
     public Formula withQuantifier(Quantifier quantifier) {
         this.quantifier = quantifier;
+        return this;
+    }
+
+    public Formula makeFilter() {
+        if (operator.returnType() != ValueType.BOOLEAN) {
+            throw new RuntimeException("Filter must have a boolean operator");
+        }
+        this.filter = true;
         return this;
     }
 
@@ -85,6 +95,22 @@ public class Formula {
             }
 
             if (operator.returnType() == ValueType.BOOLEAN) {
+                if (filter) {
+                    if (results.size() != group.values().size()) {
+                        throw new RuntimeException("Invalid use of groups in a filter");
+                    }
+
+                    List<Value> filtered = new ArrayList<>();
+
+                    for (int i = 0; i < group.values().size(); i++) {
+                        if (results.get(i).asBoolean()) {
+                            filtered.add(group.values().get(i));
+                        }
+                    }
+
+                    return new Value(new Group(filtered));
+                }
+
                 // If no quantifier was given, use the "all" quantifier
                 Quantifier quant = arguments.get(index).quantifier;
                 if (quant == null) {
@@ -126,7 +152,13 @@ public class Formula {
             builder.append("const ");
             builder.append(constant);
         } else {
-            builder.append(operator.name());
+            if (filter) {
+                builder.append("FILTER[");
+                builder.append(operator.name());
+                builder.append("]");
+            } else {
+                builder.append(operator.name());
+            }
             builder.append("(");
             for (int i = 0; i < arguments.size(); i++) {
                 if (arguments.get(i).quantifier != null) {

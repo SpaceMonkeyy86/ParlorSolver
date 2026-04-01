@@ -144,7 +144,6 @@ public class Operators {
     }, ValueType.BOX, ValueType.STATEMENT, ValueType.BOOLEAN);
 
     // Evaluation variables
-    // TODO: Try to have only STATEMENT_IS_TRUE and BOX_HAS_GEMS as primitives
 
     public static Operator STATEMENT_IS_TRUE = makeOperator("STATEMENT_IS_TRUE", ctx -> {
         Statement statement = ctx.arg(1).asStatement();
@@ -176,57 +175,6 @@ public class Operators {
         Box box = ctx.arg(1).asBox();
         return new Value(ctx.getVariable(box.getVariableName()));
     }, ValueType.BOX, ValueType.BOOLEAN);
-
-    // Higher-order operators
-
-    public static Operator FILTER(Operator predicate) {
-        if (predicate.returnType() != ValueType.BOOLEAN) {
-            throw new RuntimeException("Not a predicate");
-        }
-
-        Function<EvaluationContext, Value> func = ctx -> {
-            Group group = ctx.arg(1).asGroup();
-            List<Value> result = new ArrayList<>();
-
-            for (Value value : group.values()) {
-                if (ctx.call(predicate, List.of(value)).asBoolean()) {
-                    result.add(value);
-                }
-            }
-
-            return new Value(new Group(result));
-        };
-
-        return new Operator(
-            "FILTER(" + predicate.name() + ")",
-            func,
-            List.of(ValueType.GROUP),
-            ValueType.GROUP
-        );
-    }
-
-    public static Operator ALL(Operator predicate) {
-        if (predicate.returnType() != ValueType.BOOLEAN) {
-            throw new RuntimeException("Not a predicate");
-        }
-
-        Function<EvaluationContext, Value> func = ctx -> {
-            Group group = ctx.arg(1).asGroup();
-            for (Value value : group.values()) {
-                if (ctx.call(predicate, List.of(value)).asBoolean()) {
-                    return new Value(false);
-                }
-            }
-            return new Value(true);
-        };
-
-        return new Operator(
-            "ALL(" + predicate.name() + ")",
-            func,
-            List.of(ValueType.GROUP),
-            ValueType.BOOLEAN
-        );
-    }
 
     private static Operator makeOperator(String name, Function<EvaluationContext, Value> func, ValueType... signature) {
         List<ValueType> types = Arrays.stream(signature).toList();
