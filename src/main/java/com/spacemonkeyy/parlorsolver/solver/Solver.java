@@ -8,10 +8,7 @@ import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleSolution;
 import com.spacemonkeyy.parlorsolver.value.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Solver {
     public static PuzzleSolution solve(PuzzleInput input) {
@@ -70,8 +67,9 @@ public class Solver {
             ));
         }
 
-        BoxColor prize = null;
+        List<Integer> solutions = new ArrayList<>();
 
+        // Test every combination of variables against the system
         for (int bitmap = 0; bitmap < 1 << variableCount; bitmap++) {
             List<Boolean> variables = new ArrayList<>();
             int temp = bitmap;
@@ -95,36 +93,151 @@ public class Solver {
             }
 
             if (solved) {
-                BoxColor answer = findAnswer(ctx);
+                solutions.add(bitmap);
+            }
+        }
 
-                // Multiple variable assignments can be consistent
-                // as long as they all have the gems in the same box
-                if (prize != null) {
-                    if (prize != answer) {
-                        // Multiple possible answers; unsolvable
-                        return null;
-                    }
-                } else {
-                    prize = answer;
+        // If all solutions agree on the box with the gems, that is the answer
+        BoxColor prize = findAnswer(solutions);
+        if (prize != null) {
+            return new PuzzleSolution(prize, "");
+        }
+
+        // Fallback: if two boxes have equivalent statements,
+        // they must have equal truth value by symmetry.
+        // (Unless they refer to neighboring boxes, which is not handled.)
+        // Only variation 50 needs this.
+
+        // Look for two boxes with equivalent statements
+        BoxColor color1 = null;
+        BoxColor color2 = null;
+        for (BoxColor a : BoxColor.values()) {
+            for (BoxColor b : BoxColor.values()) {
+                if (a == b) {
+                    continue;
+                }
+
+                List<String> list1 = input.byColor(a);
+                List<String> list2 = input.byColor(b);
+
+                if (new HashSet<>(list1).containsAll(list2)
+                    && new HashSet<>(list2).containsAll(list1)) {
+                    color1 = a;
+                    color2 = b;
+                    break;
                 }
             }
         }
 
-        if (prize == null) {
+        if (color1 == null) {
             // No solution found
             return null;
         }
 
-        return new PuzzleSolution(prize, "");
-    }
-
-    private static BoxColor findAnswer(EvaluationContext ctx) {
-        for (BoxColor color : BoxColor.values()) {
-            Box box = new Box(color);
-            if (ctx.getVariable(box.getVariableName())) {
-                return color;
+        // Remove symmetrical solutions
+        for (int i = 0; i < solutions.size(); i++) {
+            for (int j = i + 1; j < solutions.size(); j++) {
+                if (swapColors(solutions.get(i), color1, color2, input) == solutions.get(j)) {
+                    solutions.remove(i);
+                    solutions.remove(j - 1);
+                    i--;
+                    break;
+                }
             }
         }
+
+        prize = findAnswer(solutions);
+        if (prize != null) {
+            return new PuzzleSolution(prize, "");
+        }
+
         return null;
+    }
+
+    private static BoxColor findAnswer(List<Integer> solutions) {
+        BoxColor prize = null;
+
+        for (int solution : solutions) {
+            // The location of the gems in this variable assignment
+            BoxColor answer = null;
+
+            for (BoxColor color : BoxColor.values()) {
+                if ((solution & 1) == 1) {
+                    answer = color;
+                    break;
+                }
+                solution >>= 1;
+            }
+
+            if (prize == null) {
+                prize = answer;
+            } else {
+                if (prize != answer) {
+                    return null;
+                }
+            }
+        }
+
+        return prize;
+    }
+
+    private static int swapColors(int bitmap, BoxColor color1, BoxColor color2, PuzzleInput input) {
+        int offset1 = offsetOfColor(color1, input);
+        int offset2 = offsetOfColor(color2, input);
+
+        int size = input.byColor(color1).size();
+
+        int mask1 = ((1 << size) - 1) << offset1;
+        int mask2 = ((1 << size) - 1) << offset2;
+
+        int component1 = (bitmap & mask1) >> offset1;
+        int component2 = (bitmap & mask2) >> offset2;
+
+        bitmap &= ~mask1;
+        bitmap &= ~mask2;
+
+        bitmap |= (component1 << offset2);
+        bitmap |= (component2 << offset1);
+
+        // Also swap location of gems
+
+        offset1 = indexOfColor(color1);
+        offset2 = indexOfColor(color2);
+
+        mask1 = 1 << offset1;
+        mask2 = 1 << offset2;
+
+        component1 = (bitmap & mask1) >> offset1;
+        component2 = (bitmap & mask2) >> offset2;
+
+        bitmap &= ~mask1;
+        bitmap &= ~mask2;
+
+        bitmap |= (component1 << offset2);
+        bitmap |= (component2 << offset1);
+
+        return bitmap;
+    }
+
+    private static int offsetOfColor(BoxColor color, PuzzleInput input) {
+        int offset = BoxColor.values().length;
+        for (BoxColor c : BoxColor.values()) {
+            if (c == color) {
+                return offset;
+            }
+            offset += input.byColor(c).size();
+        }
+        return -1;
+    }
+
+    private static int indexOfColor(BoxColor color) {
+        int index = 0;
+        for (BoxColor c : BoxColor.values()) {
+            if (c == color) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
     }
 }
