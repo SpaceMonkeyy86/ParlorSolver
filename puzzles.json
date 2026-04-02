@@ -1500,7 +1500,7 @@
     "id": 88,
     "input": {
       "blue": [
-        "ONLY ONE OF WHITE BOX\u0027S STATEMENTS IS TRUE.",
+        "ONLY ONE OF THE WHITE BOX\u0027S STATEMENTS IS TRUE.",
         "THE BLACK BOX CONTAINS THE GEMS.",
         "THE BLUE BOX IS EMPTY."
       ],

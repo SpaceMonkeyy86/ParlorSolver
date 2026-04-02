@@ -7,7 +7,9 @@ import com.spacemonkeyy.parlorsolver.formula.Quantifier;
 import com.spacemonkeyy.parlorsolver.value.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -121,6 +123,10 @@ public class Rules {
                 int count = ctx.get("number").evaluate(null).asNumber();
                 return ctx.get(identifier).withQuantifier(Quantifier.atLeast(count));
             });
+            addRule("MORE THAN :number :" + identifier, identifier, ctx -> {
+                int count = ctx.get("number").evaluate(null).asNumber();
+                return ctx.get(identifier).withQuantifier(Quantifier.atLeast(count + 1));
+            });
 
             addRule("BOTH OF :" + identifier, identifier, ctx -> {
                 return ctx.get(identifier).withQuantifier(Quantifier.exactly(2));
@@ -140,6 +146,7 @@ public class Rules {
         addRule("THE :color BOX", "box", ctx -> {
             return function(Operators.BOX_FOR_COLOR, ctx.get("color"));
         });
+        addAlias("A BOX THAT IS ACTUALLY :color");
 
         addRule("THE MIDDLE BOX", "box", ctx -> {
             // The order of the boxes is blue, white, black
@@ -185,13 +192,6 @@ public class Rules {
         });
         addVariant("ANOTHER BOX", (Formula f) -> f.withQuantifier(Quantifier.any()));
 
-        addRule(":box THAT IS ACTUALLY :color", "box", ctx -> {
-            return function(Operator.compose(Operators.COLOR_OF_BOX, Operators.EQUALS),
-                ctx.get("box"),
-                ctx.get("color")
-            ).makeFilter().withQuantifier(ctx.get("box").getQuantifier());
-        });
-
         addRule("EMPTY BOXES", "box", ctx -> {
             return function(Operator.compose(Operators.BOX_HAS_GEMS, Operators.NOT),
                 formulaAllBoxes()
@@ -211,6 +211,8 @@ public class Rules {
             ).makeFilter();
         });
         addVariant("A BOX NEXT TO :box", (Formula f) -> f.withQuantifier(Quantifier.any()));
+        addVariant("THE BOX NEXT TO :box", (f, ctx) ->
+            ctx.assumeQuantity(f, 1));
         addVariant("BOTH BOXES NEXT TO :box", (f, ctx) ->
             ctx.assumeQuantity(f, 2));
 
@@ -231,6 +233,7 @@ public class Rules {
         addAlias("THE :bool BOXES");
         addVariant("A :bool BOX", (Formula f) -> f.withQuantifier(Quantifier.any()));
         addVariant("A COMPLETELY :bool BOX", (Formula f) -> f.withQuantifier(Quantifier.any()));
+        addVariant("A BOX WITH ONLY :bool STATEMENTS", (Formula f) -> f.withQuantifier(Quantifier.any()));
         // Don't assume quantity here because of variation 109
         addVariant("THE :bool BOX", (Formula f) -> f.withQuantifier(Quantifier.exactly(1)));
         addVariant("THE ONLY :bool BOX", (f, ctx) ->
@@ -397,6 +400,7 @@ public class Rules {
         addVariant("THE ONLY BOX WITH :statement", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
         addVariant("NO BOX THAT DISPLAYS :statement", (Formula f) -> f.withQuantifier(Quantifier.none()));
+        addVariant("NO BOX THAT CONTAINS :statement", (Formula f) -> f.withQuantifier(Quantifier.none()));
 
         addRule("THE OTHER BOX WITH :statement", "box", ctx -> {
             // Implies this box also has the statement
@@ -444,6 +448,7 @@ public class Rules {
         });
         addAlias("ALL BOXES DISPLAYING THE WORD :word");
         addVariant("A BOX WITH THE WORD :word ON IT", (Formula f) -> f.withQuantifier(Quantifier.any()));
+        addVariant("A BOX MENTIONING THE WORD :word", (Formula f) -> f.withQuantifier(Quantifier.any()));
 
         addRule("THE BOX THAT CLAIMS TO BE :color", "box", ctx -> {
             String word = ctx.get("color").evaluate(null).asColor().toString();
@@ -504,6 +509,17 @@ public class Rules {
                 ),
                 ctx.get("statement")
             ).makeFilter().withQuantifier(ctx.get("statement").getQuantifier());
+        });
+
+        addRule("A STATEMENT WITH LESS THAN :number WORDS", "statement", ctx -> {
+            int x = ctx.get("number").evaluate(null).asNumber();
+            return function(
+                Operators.WORD_COUNT(
+                    "LESS_THAN_" + x + "_WORDS",
+                    count -> count < x
+                ),
+                formulaAllStatements(ctx)
+            ).makeFilter().withQuantifier(Quantifier.any());
         });
 
         addRule(":statement HAVE LESS THAN :number WORDS.", ctx -> {
@@ -780,6 +796,101 @@ public class Rules {
         });
         addAlias("THERE ARE THE SAME NUMBER OF TRUE AND FALSE STATEMENTS ON BOXES.");
 
+        addRule("THERE IS NO BOX THAT DISPLAYS A NUMBER THAT ALSO APPEARS ON ANOTHER BOX.", ctx -> {
+            List<Set<Integer>> sets = new ArrayList<>();
+
+            for (BoxColor color : BoxColor.values()) {
+                Set<Integer> set = new HashSet<>();
+                for (String statement : ctx.getInput().byColor(color)) {
+                    for (Token token : Token.tokenize(statement)) {
+                        try {
+                            set.add(Integer.parseInt(token.getSource()));
+                        } catch (NumberFormatException _) {}
+                    }
+                }
+                sets.add(set);
+            }
+
+            for (int i = 0; i < sets.size(); i++) {
+                for (int j = i + 1; j < sets.size(); j++) {
+                    Set<Integer> set = sets.get(i);
+                    sets.retainAll(sets.get(j));
+                    if (!set.isEmpty()) {
+                        return constant(new Value(true));
+                    }
+                }
+            }
+
+            return constant(new Value(false));
+        });
+
+        addRule("A BOX MENTIONING A SPECIFIC COLOR", "box", ctx -> {
+            List<Value> values = new ArrayList<>();
+            for (BoxColor color : BoxColor.values()) {
+                if (boxMentionsColor(ctx, color)) {
+                    values.add(new Value(new Box(color)));
+                }
+            }
+            return constant(new Value(new Group(values)));
+        });
+
+        addRule("THERE IS NO BOX THAT MENTIONS A SPECIFIC COLOR.", ctx -> {
+            for (BoxColor color : BoxColor.values()) {
+                if (boxMentionsColor(ctx, color)) {
+                    return constant(new Value(true));
+                }
+            }
+
+            return constant(new Value(false));
+        });
+
+        addRule("THERE IS NO BOX THAT IS BETWEEN 2 EMPTY BOXES.", ctx -> {
+            // This is equivalent to saying the white box is not between two empty boxes,
+            // i.e. the white box does not have the gems.
+            return function(Operators.NOT,
+                function(Operators.BOX_HAS_GEMS, constant(new Value(new Box(BoxColor.WHITE))))
+            );
+        });
+
+        addRule("A BOX WITH A STATEMENT THAT IS ALSO ON ANOTHER BOX", "box", ctx -> {
+            List<Statement> statements = new ArrayList<>();
+            for (BoxColor color : BoxColor.values()) {
+                for (int i = 1; i <= ctx.getInput().byColor(color).size(); i++) {
+                    statements.add(new Statement(new Box(color), i));
+                }
+            }
+
+            Set<Value> values = new HashSet<>();
+
+            for (int i = 0; i < statements.size(); i++) {
+                for (int j = i + 1; j < statements.size(); j++) {
+                    String a = ctx.getInput().textOfStatement(statements.get(i));
+                    String b = ctx.getInput().textOfStatement(statements.get(i));
+                    if (statements.get(i).box().equals(statements.get(j).box())) {
+                        continue;
+                    }
+                    if (a.equals(b)) {
+                        values.add(new Value(statements.get(i).box()));
+                        values.add(new Value(statements.get(j).box()));
+                    }
+                }
+            }
+
+            return constant(new Value(new Group(values.stream().toList())));
+        });
+
+        addRule("THEY ARE BOTH :bool.", ctx -> {
+            if (!ctx.getInput().textOfStatement(ctx.getLastStatement())
+                .equals("THERE ARE TWO STATEMENTS ON THIS BOX.")) {
+                throw new RuntimeException("Pronouns aren't fully supported");
+            }
+            // Both statements on this box are false, i.e. this box is false.
+            return function(Operators.BOX_IS,
+                formulaThisBox(ctx),
+                constant(new Value(false))
+            );
+        });
+
         sortRules();
     }
 
@@ -989,5 +1100,19 @@ public class Rules {
             }
         }
         return result;
+    }
+
+    public static boolean boxMentionsColor(ParseContext ctx, BoxColor color) {
+        for (String statement : ctx.getInput().byColor(color)) {
+            for (Token token : Token.tokenize(statement)) {
+                for (BoxColor c : BoxColor.values()) {
+                    if (token.getSource().equals(c.name())) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
