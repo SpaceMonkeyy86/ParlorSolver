@@ -320,8 +320,7 @@ public class Rules {
             return constant(new Value(new Group(values)));
         });
 
-        addRule("STATEMENTS", "statement", Rules::formulaAllStatements)
-            .setDelay(1);
+        addRule("STATEMENTS", "statement", Rules::formulaAllStatements);
         addAlias("ALL STATEMENTS");
         addAlias("STATEMENTS ON BOXES IN THIS ROOM");
         addVariant("ALL :number STATEMENTS", (f, ctx) -> {
@@ -919,39 +918,33 @@ public class Rules {
         addRule(pattern, "sentence", action);
     }
 
-    private static ParseRule addRule(String pattern, String identifier, ParseAction action) {
-        ParseRule rule = new ParseRule(pattern, identifier, action);
-        rules.add(rule);
+    private static void addRule(String pattern, String identifier, ParseAction action) {
+        rules.add(new ParseRule(pattern, identifier, action));
         lastIdentifier = identifier;
         lastAction = action;
-        return rule;
     }
 
-    private static ParseRule addAlias(String pattern) {
-        ParseRule rule = new ParseRule(pattern, lastIdentifier, lastAction);
-        rules.add(rule);
-        return rule;
+    private static void addAlias(String pattern) {
+        rules.add(new ParseRule(pattern, lastIdentifier, lastAction));
     }
 
-    private static ParseRule addVariant(String pattern, Function<Formula, Formula> func) {
-        return addVariant(pattern, (f, ctx) -> func.apply(f));
+    private static void addVariant(String pattern, Function<Formula, Formula> func) {
+        addVariant(pattern, (f, ctx) -> func.apply(f));
     }
 
-    private static ParseRule addVariant(String pattern, Consumer<ParseContext> func) {
-        return addVariant(pattern, (f, ctx) -> {
+    private static void addVariant(String pattern, Consumer<ParseContext> func) {
+        addVariant(pattern, (f, ctx) -> {
             func.accept(ctx);
             return f;
         });
     }
 
-    private static ParseRule addVariant(String pattern, BiFunction<Formula, ParseContext, Formula> func) {
+    private static void addVariant(String pattern, BiFunction<Formula, ParseContext, Formula> func) {
         ParseAction last = lastAction;
-        ParseRule rule = new ParseRule(pattern, lastIdentifier, ctx -> {
+        rules.add(new ParseRule(pattern, lastIdentifier, ctx -> {
             Formula formula = last.apply(ctx);
             return func.apply(formula, ctx);
-        });
-        rules.add(rule);
-        return rule;
+        }));
     }
 
     private static void sortRules() {
@@ -975,6 +968,15 @@ public class Rules {
 
         if (modified) {
             sortRules();
+        }
+
+        for (int i = 0; i < rules.size(); i++) {
+            // This rule specifically needs to be checked last
+            // because of how easily it can break other rules
+            if (Token.stringify(rules.get(i).getPattern()).equals("STATEMENTS")) {
+                rules.add(rules.remove(i));
+                break;
+            }
         }
     }
 
