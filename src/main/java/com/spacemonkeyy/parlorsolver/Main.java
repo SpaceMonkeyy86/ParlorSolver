@@ -15,7 +15,7 @@ public class Main {
 
         for (BoxColor color : BoxColor.values()) {
             map.put(color, new ArrayList<>());
-            System.out.printf("Enter statements on the %s box:\n", color.name().toLowerCase());
+            System.out.printf("Enter statements on the %s box:\n", color.name());
 
             while (true) {
                 String line = scanner.nextLine();
@@ -29,7 +29,12 @@ public class Main {
 
         PuzzleInput input = new PuzzleInput(
             map.get(BoxColor.BLUE), map.get(BoxColor.WHITE), map.get(BoxColor.BLACK));
+
         PuzzleSolution solution = Solver.solve(input);
-        System.out.println(solution);
+        if (solution == null) {
+            System.out.println("No solution found");
+        } else {
+            System.out.println("The gems are in the " + solution.prize().toString() + " box.");
+        }
     }
 }
