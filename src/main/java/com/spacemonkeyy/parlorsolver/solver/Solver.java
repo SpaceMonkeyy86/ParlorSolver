@@ -44,6 +44,7 @@ public class Solver {
         system.add(Rules.formulaAtLeastOneBox(Rules::formulaBoxIsFalse));
 
         Map<Statement, Formula> map = Parser.parse(input);
+
         for (Formula formula : map.values()) {
             if (formula == null) {
                 // Failed to parse
@@ -51,7 +52,12 @@ public class Solver {
             }
         }
 
-        for (Map.Entry<Statement, Formula> entry : map.entrySet()) {
+        List<Map.Entry<Statement, Formula>> sorted = map.entrySet()
+            .stream()
+            .sorted(Map.Entry.comparingByKey())
+            .toList();
+
+        for (Map.Entry<Statement, Formula> entry : sorted) {
             Statement statement = entry.getKey();
             Formula formula = entry.getValue();
 

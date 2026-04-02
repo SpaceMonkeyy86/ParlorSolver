@@ -136,9 +136,12 @@ public class Rules {
                 // Let the quantifier do its thing with no other manipulation
                 return function(Operators.TRIVIAL, ctx.get(identifier));
             });
+            addAlias("THERE IS :" + identifier + ".");
+            /*
             addVariant("THERE IS :" + identifier + ".", ctx -> {
                 ctx.assumeQuantity(ctx.get(identifier), 1);
             });
+             */
         }
 
         // Boxes
@@ -174,14 +177,10 @@ public class Rules {
             int count = ctx.get("number").evaluate(null).asNumber();
             return f.withQuantifier(Quantifier.exactly(count));
         });
-        addVariant("ONLY :number BOX", (f, ctx) -> {
-            ctx.addAssumption(function(Operators.EQUALS,
-                ctx.get("number"),
-                constant(new Value(1))
-            ));
-            return f.withQuantifier(Quantifier.exactly(1));
-        });
-        addAlias("ONLY :number BOX IN THIS ROOM");
+        addVariant("ONLY :number BOX", (Formula f) ->
+            f.withQuantifier(Quantifier.exactly(1)));
+        addVariant("ONLY :number BOX IN THIS ROOM", (Formula f) ->
+            f.withQuantifier(Quantifier.exactly(1)));
 
         addRule("THE OTHER BOXES", "box", Rules::formulaOtherBoxes);
         addVariant("THE OTHER :number BOXES", ctx -> {
@@ -324,6 +323,7 @@ public class Rules {
         addRule("STATEMENTS", "statement", Rules::formulaAllStatements)
             .setDelay(1);
         addAlias("ALL STATEMENTS");
+        addAlias("STATEMENTS ON BOXES IN THIS ROOM");
         addVariant("ALL :number STATEMENTS", (f, ctx) -> {
             ctx.addAssumption(function(Operators.EQUALS,
                 function(Operators.GROUP_SIZE, f),
@@ -340,8 +340,6 @@ public class Rules {
             ));
             return f.withQuantifier(Quantifier.exactly(1));
         });
-        addVariant("BOTH STATEMENTS", (f, ctx) ->
-            ctx.assumeQuantity(f, 2));
 
         addRule(":bool STATEMENT", "statement", ctx -> {
             boolean bool = ctx.get("bool").evaluate(null).asBoolean();
@@ -431,6 +429,18 @@ public class Rules {
             ctx.assumeQuantity(f, 1));
         addVariant(":box'S STATEMENT", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
+        addVariant("BOTH STATEMENTS ON :box", (f, ctx) ->
+            ctx.assumeQuantity(f, 2));
+        addVariant("BOTH STATEMENTS WRITTEN ON :box", (f, ctx) ->
+            ctx.assumeQuantity(f, 2));
+
+        // Fix "ONLY :number OF :box" getting parsed before ":box'S STATEMENTS"
+        addRule("ONLY :number OF :box'S STATEMENTS", "statement", ctx -> {
+            int count = ctx.get("number").evaluate(null).asNumber();
+            return function(Operators.STATEMENTS_ON_BOX,
+                ctx.get("box")
+            ).withQuantifier(Quantifier.exactly(count));
+        });
 
         addRule("THE SECOND STATEMENT ON :box", "statement", ctx -> {
             ctx.assumeQuantity(function(Operators.STATEMENTS_ON_BOX, ctx.get("box")),
@@ -749,14 +759,12 @@ public class Rules {
             );
         });
 
-        addRule(":statement APPEARS ON :box.", ctx -> {
-            return function(Operators.STATEMENTS_MATCH,
-                function(Operators.STATEMENTS_ON_BOX, ctx.get("box"))
-                    .withQuantifier(Quantifier.any()),
-                ctx.get("statement")
+        addRule(":statement IS ON :box.", ctx -> {
+            return function(Operators.EQUALS,
+                function(Operators.BOX_OF_STATEMENT, ctx.get("statement")),
+                ctx.get("box")
             );
         });
-        addAlias(":statement IS ON :box.");
 
         addRule(":statement HAVE IDENTICAL WORDING.", ctx -> {
             return function(Operators.STATEMENTS_MATCH_GROUP, ctx.get("statement"));
@@ -814,14 +822,14 @@ public class Rules {
             for (int i = 0; i < sets.size(); i++) {
                 for (int j = i + 1; j < sets.size(); j++) {
                     Set<Integer> set = sets.get(i);
-                    sets.retainAll(sets.get(j));
+                    set.retainAll(sets.get(j));
                     if (!set.isEmpty()) {
-                        return constant(new Value(true));
+                        return constant(new Value(false));
                     }
                 }
             }
 
-            return constant(new Value(false));
+            return constant(new Value(true));
         });
 
         addRule("A BOX MENTIONING A SPECIFIC COLOR", "box", ctx -> {
@@ -831,17 +839,18 @@ public class Rules {
                     values.add(new Value(new Box(color)));
                 }
             }
-            return constant(new Value(new Group(values)));
+            return constant(new Value(new Group(values)))
+                .withQuantifier(Quantifier.any());
         });
 
         addRule("THERE IS NO BOX THAT MENTIONS A SPECIFIC COLOR.", ctx -> {
             for (BoxColor color : BoxColor.values()) {
                 if (boxMentionsColor(ctx, color)) {
-                    return constant(new Value(true));
+                    return constant(new Value(false));
                 }
             }
 
-            return constant(new Value(false));
+            return constant(new Value(true));
         });
 
         addRule("THERE IS NO BOX THAT IS BETWEEN 2 EMPTY BOXES.", ctx -> {
@@ -865,7 +874,7 @@ public class Rules {
             for (int i = 0; i < statements.size(); i++) {
                 for (int j = i + 1; j < statements.size(); j++) {
                     String a = ctx.getInput().textOfStatement(statements.get(i));
-                    String b = ctx.getInput().textOfStatement(statements.get(i));
+                    String b = ctx.getInput().textOfStatement(statements.get(j));
                     if (statements.get(i).box().equals(statements.get(j).box())) {
                         continue;
                     }
@@ -876,7 +885,19 @@ public class Rules {
                 }
             }
 
-            return constant(new Value(new Group(values.stream().toList())));
+            return constant(new Value(new Group(values.stream().toList())))
+                .withQuantifier(Quantifier.any());
+        });
+
+        // Special case because it is not literally referring to "this statement"
+        // but instead a statement with the same text as this statement
+        addRule("THIS STATEMENT APPEARS ON ANOTHER BOX.", ctx -> {
+            return function(Operators.STATEMENTS_MATCH,
+                function(Operators.STATEMENTS_ON_BOX,
+                    formulaOtherBoxes(ctx)).withQuantifier(Quantifier.any()
+                ),
+                formulaThisStatement(ctx)
+            );
         });
 
         addRule("THEY ARE BOTH :bool.", ctx -> {
