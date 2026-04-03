@@ -75,6 +75,7 @@ public class Token {
         return tokens;
     }
 
+    // The reverse of tokenize()
     public static String stringify(List<Token> tokens) {
         StringBuilder builder = new StringBuilder();
         for (Token token : tokens) {

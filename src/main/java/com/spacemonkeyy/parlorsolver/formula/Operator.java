@@ -15,6 +15,9 @@ public record Operator(
     List<ValueType> parameterTypes,
     ValueType returnType
 ) {
+    // Takes the output of the first function and inputs it to the second.
+    // Useful for filters or quantified predicates where pulling a negation
+    // outside of the quantifier would erroneously change the meaning.
     public static Operator compose(Operator first, Operator second) {
         if (second.parameterTypes.size() != 1) {
             throw new RuntimeException("Operator arity mismatch");

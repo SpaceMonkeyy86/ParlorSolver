@@ -35,6 +35,11 @@ public class Parser {
         return result;
     }
 
+    // Parsing works by matching declarative parse rules against the tokenized statement.
+    // Each rule consumes a set of tokens and produces a new token with a formula.
+    // Formulas can then find that intermediate token by its identifier; for instance,
+    // a formula representing a box would have the identifier "box". Formulas are combined
+    // in a bottom-up approach until there is one token left with the fully parsed formula.
     private static Formula parseStatement(String statement, ParseContext context) {
         List<Token> tokens = Token.tokenize(statement);
         if (DEBUG) {

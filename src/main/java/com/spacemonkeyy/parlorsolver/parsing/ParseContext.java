@@ -5,7 +5,6 @@ import com.spacemonkeyy.parlorsolver.formula.Operators;
 import com.spacemonkeyy.parlorsolver.formula.Quantifier;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
 import com.spacemonkeyy.parlorsolver.value.Box;
-import com.spacemonkeyy.parlorsolver.value.BoxColor;
 import com.spacemonkeyy.parlorsolver.value.Statement;
 
 import java.util.ArrayList;
@@ -66,6 +65,8 @@ public class ParseContext {
         bindings.get(identifier).add(token);
     }
 
+    // Accessing existing tokens or formulas inside a rule
+
     public Token getToken(String identifier) {
         return bindings.get(identifier).getFirst();
     }
@@ -82,6 +83,10 @@ public class ParseContext {
         return getToken(identifier, index).getFormula();
     }
 
+    // Assumptions are additional constraints implied by certain phrases.
+    // For example, "BOTH STATEMENTS ON THIS BOX" implies that the box has
+    // exactly 2 statements, since the grammar wouldn't make sense otherwise.
+    // Assumptions are ANDed together with the main formula before evaluating.
     public void addAssumption(Formula assumption) {
         assumptions.add(assumption);
     }
@@ -97,6 +102,7 @@ public class ParseContext {
         return formula;
     }
 
+    // Combines the formula with its assumptions.
     public Formula includeAssumptions(Formula formula) {
         for (Formula assumption : assumptions) {
             formula = Formula.function(Operators.AND,

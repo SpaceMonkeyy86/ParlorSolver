@@ -1,7 +1,8 @@
 package com.spacemonkeyy.parlorsolver.value;
 
-// An element of the model's base set.
-// Can be a box color, a box, a statement, a number, or true/false.
+// A value used in the evaluation of a formula.
+// Can be a box color, a box, a statement, a number, a boolean, or multiple values.
+// In first-order logic, these are elements of the model set.
 public class Value {
     private final ValueType type;
     private final Object value;
@@ -38,13 +39,6 @@ public class Value {
 
     public ValueType getType() {
         return type;
-    }
-
-    public boolean typeCheck(ValueType type) {
-        if (type == ValueType.ANY) {
-            return true;
-        }
-        return this.type == type;
     }
 
     public boolean asBoolean() {

@@ -131,7 +131,7 @@ public class Operators {
         return new Value(true);
     }, ValueType.GROUP, ValueType.BOOLEAN);
 
-    // Strings are not values so need to be handled like this
+    // Strings are not values, so they need to be known when the operator is created.
     public static Operator STATEMENT_CONTAINS(String s, boolean isWord) {
         if (isWord) {
             s = "\\b" + s + "\\b";
@@ -143,7 +143,7 @@ public class Operators {
         }, ValueType.STATEMENT, ValueType.BOOLEAN);
     }
 
-    // Can handle any operation on word count (odd/even, more/less than number, etc.)
+    // Can handle any check on word count (odd/even, more/less than number, etc.)
     public static Operator WORD_COUNT(String name, Predicate<Integer> predicate) {
         return makeOperator(name, ctx -> {
             String statement = ctx.getInput().textOfStatement(ctx.arg(1).asStatement());
@@ -154,6 +154,7 @@ public class Operators {
 
     // Helpers
 
+    // Probably not strictly needed, but makes formulas easier to understand
     public static Operator BOX_HAS_STATEMENT = makeOperator("BOX_HAS_STATEMENT", ctx -> {
         return new Value(ctx.arg(2).asStatement().box().equals(ctx.arg(1).asBox()));
     }, ValueType.BOX, ValueType.STATEMENT, ValueType.BOOLEAN);

@@ -81,12 +81,14 @@ public class ParseRule {
 
     private boolean tokensMatch(Token pattern, Token target) {
         if (pattern.getIdentifier().isEmpty()) {
+            // Literal words in the pattern
             return target.getIdentifier().isEmpty()
                 && Objects.equals(pattern.getSource(), target.getSource());
         } else if (pattern.getIdentifier().equals("word")) {
-            // Matches any single word in the source string, even if already matched
+            // "word" matches any single word in the source string, even if already matched
             return Token.tokenize(target.getSource()).size() == 1;
         } else {
+            // Intermediate tokens with identifiers
             return Objects.equals(target.getIdentifier(), pattern.getIdentifier());
         }
     }

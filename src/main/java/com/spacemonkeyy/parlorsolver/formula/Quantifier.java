@@ -6,8 +6,13 @@ package com.spacemonkeyy.parlorsolver.formula;
 // "all" or "any", but can also be "none", a specific
 // number, or a specific range of numbers.
 public class Quantifier {
+    // Minimum number of elements that pass
     private final int min;
+
+    // Maximum number of elements that pass
     private final int max;
+
+    // Whether to check the number of elements that failed instead of passed
     private final boolean inverted;
 
     public static Quantifier all() {

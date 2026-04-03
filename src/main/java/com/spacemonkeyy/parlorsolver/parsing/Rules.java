@@ -132,16 +132,11 @@ public class Rules {
                 return ctx.get(identifier).withQuantifier(Quantifier.exactly(2));
             });
 
-            addRule("THERE ARE :" + identifier + ".", ctx -> {
+            addRule("THERE IS :" + identifier + ".", ctx -> {
                 // Let the quantifier do its thing with no other manipulation
                 return function(Operators.TRIVIAL, ctx.get(identifier));
             });
-            addAlias("THERE IS :" + identifier + ".");
-            /*
-            addVariant("THERE IS :" + identifier + ".", ctx -> {
-                ctx.assumeQuantity(ctx.get(identifier), 1);
-            });
-             */
+            addAlias("THERE ARE :" + identifier + ".");
         }
 
         // Boxes
@@ -900,14 +895,17 @@ public class Rules {
         });
 
         addRule("THEY ARE BOTH :bool.", ctx -> {
+            // This statement only appears once, it actually means
+            // "BOTH STATEMENTS ON THIS BOX ARE FALSE."
+
             if (!ctx.getInput().textOfStatement(ctx.getLastStatement())
                 .equals("THERE ARE TWO STATEMENTS ON THIS BOX.")) {
                 throw new RuntimeException("Pronouns aren't fully supported");
             }
-            // Both statements on this box are false, i.e. this box is false.
+
             return function(Operators.BOX_IS,
                 formulaThisBox(ctx),
-                constant(new Value(false))
+                ctx.get("bool")
             );
         });
 

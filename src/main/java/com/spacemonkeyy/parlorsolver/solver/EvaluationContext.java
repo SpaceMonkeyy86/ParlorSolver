@@ -28,13 +28,14 @@ public class EvaluationContext {
         return variables.get(variableNames.get(name));
     }
 
+    // Sets up arguments list for use in operators, and does type checking.
     public Value call(Operator op, List<Value> args) {
         if (args.size() != op.parameterTypes().size()) {
             throw new RuntimeException("Unexpected number of arguments");
         }
 
         for (int i = 0; i < args.size(); i++) {
-            if (!args.get(i).typeCheck(op.parameterTypes().get(i))) {
+            if (!args.get(i).getType().convertsTo(op.parameterTypes().get(i))) {
                 throw new RuntimeException("Wrong argument type");
             }
         }
@@ -42,7 +43,7 @@ public class EvaluationContext {
         this.args = args;
         Value result = op.func().apply(this);
 
-        if (!result.typeCheck(op.returnType())) {
+        if (!result.getType().convertsTo(op.returnType())) {
             throw new RuntimeException("Wrong return type");
         }
 
@@ -56,9 +57,5 @@ public class EvaluationContext {
 
     public List<Value> args() {
         return args;
-    }
-
-    public int argCount() {
-        return args.size();
     }
 }

@@ -182,6 +182,8 @@ public class Solver {
     }
 
     private static int swapColors(int bitmap, BoxColor color1, BoxColor color2, PuzzleInput input) {
+        // Swap truth values of statements on these boxes
+
         int offset1 = offsetOfColor(color1, input);
         int offset2 = offsetOfColor(color2, input);
 
