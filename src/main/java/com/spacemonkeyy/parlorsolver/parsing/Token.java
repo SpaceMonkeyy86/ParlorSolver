@@ -48,13 +48,18 @@ public class Token {
         return formula;
     }
 
+    public boolean isWord() {
+        if (formula == null) return true;
+        return !source.contains(" ");
+    }
+
     public static List<Token> tokenize(String statement) {
         // Generally, each word should be its own token.
         // The period is a separate token.
         // Possessives ('s) should be separate tokens from their root words.
         // Quotes surrounding words are removed.
 
-        Pattern pattern = Pattern.compile("^(\"\\w+\"|.\\w*) ?(.*)$");
+        Pattern pattern = Pattern.compile("^(\".+?\"|.\\w*) ?(.*)$");
         List<Token> tokens = new ArrayList<>();
 
         while (!statement.isEmpty()) {

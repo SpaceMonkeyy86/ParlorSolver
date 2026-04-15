@@ -9,7 +9,6 @@ import com.spacemonkeyy.parlorsolver.puzzle.PuzzleVariation;
 import com.spacemonkeyy.parlorsolver.solver.Solver;
 import com.spacemonkeyy.parlorsolver.value.Statement;
 import org.junit.jupiter.api.*;
-import org.junit.platform.commons.util.StringUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;

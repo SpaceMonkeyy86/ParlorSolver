@@ -56,7 +56,7 @@ public class ScrapePuzzles {
         page = page.replaceAll("<!--.*?-->", "");
         page = page.replaceAll("\\[\\[(.*?)]]", "$1");
         page = page.replaceAll("\\{\\{UpgradeSpoiler\\|[^|]+?\\|(.*?)}}", " $1");
-        page = page.replaceAll("\\{\\{ColorText.*?}}", "");
+        page = page.replaceAll("\\{\\{ColorText\\|\\w+\\|('.*?')}}", "$1");
 
         List<PuzzleVariation> puzzles = new ArrayList<>();
 
@@ -119,7 +119,7 @@ public class ScrapePuzzles {
 
         List<String> result = new ArrayList<>();
         for (String statement : statements.split("<hr>")) {
-            statement = statement.replaceAll("'(\\w+)'", "\"$1\"");
+            statement = statement.replaceAll("'(.+?)'", "\"$1\"");
             statement = statement.replaceAll("”", "\"");
             statement = statement.trim();
             statement = statement.toUpperCase();

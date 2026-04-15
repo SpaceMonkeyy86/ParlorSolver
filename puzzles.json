@@ -297,7 +297,7 @@
         "EVERY BOX CONTAINS GEMS."
       ],
       "black": [
-        "THE STATEMENT ON ONE OF THE OTHER TWO BOXES WOULD BE TRUE IF YOU REPLACED THE WORD  WITH THE WORD."
+        "THE STATEMENT ON ONE OF THE OTHER TWO BOXES WOULD BE TRUE IF YOU REPLACED THE WORD \"EVERY\" WITH THE WORD \"THIS\"."
       ]
     },
     "solution": {
@@ -315,7 +315,7 @@
         "THIS BOX CONTAINS GEMS."
       ],
       "black": [
-        "ALL STATEMENTS THAT CONTAIN THE WORD  ARE FALSE."
+        "ALL STATEMENTS THAT CONTAIN THE WORD \"GEMS\" ARE FALSE."
       ]
     },
     "solution": {
@@ -693,7 +693,7 @@
         "ONE OF THE OTHER BOXES CONTAINS GEMS."
       ],
       "black": [
-        "IF YOU REPLACE THE WORD  IN THE OTHER TWO STATEMENTS WITH   THEY WILL BOTH BE FALSE."
+        "IF YOU REPLACE THE WORD \"ONE\" IN THE OTHER TWO STATEMENTS WITH  \"BOTH\" THEY WILL BOTH BE FALSE."
       ]
     },
     "solution": {
@@ -855,7 +855,7 @@
         "THE TRUTH IS ON ANOTHER BOX."
       ],
       "black": [
-        "THE WORDS  ARE ON ANOTHER BOX."
+        "THE WORDS \"ANOTHER BOX\" ARE ON ANOTHER BOX."
       ]
     },
     "solution": {
@@ -940,10 +940,10 @@
     "id": 53,
     "input": {
       "blue": [
-        "A BOX THAT DISPLAYS THE WORD  IS FALSE."
+        "A BOX THAT DISPLAYS THE WORD \"TRUE\" IS FALSE."
       ],
       "white": [
-        "A BOX THAT DISPLAYS THE WORD  IS EMPTY."
+        "A BOX THAT DISPLAYS THE WORD \"GEMS\" IS EMPTY."
       ],
       "black": [
         "THE WHITE BOX IS TRUE AND DOES NOT CONTAIN GEMS."
@@ -958,10 +958,10 @@
     "id": 54,
     "input": {
       "blue": [
-        "THE LETTER  APPEARS TWICE ON THE BOX THAT CONTAINS THE GEMS."
+        "THE LETTER \"B\" APPEARS TWICE ON THE BOX THAT CONTAINS THE GEMS."
       ],
       "white": [
-        "ALL STATEMENTS THAT CONTAIN MORE THAN ONE  ARE TRUE."
+        "ALL STATEMENTS THAT CONTAIN MORE THAN ONE \"B\" ARE TRUE."
       ],
       "black": [
         "THE BLUE BOX CONTAINS GEMS."
@@ -1092,7 +1092,7 @@
         "THE BLACK BOX CONTAINS THE GEMS."
       ],
       "white": [
-        "EVERY STATEMENT WITH THE WORD  IS FALSE."
+        "EVERY STATEMENT WITH THE WORD \"BLUE\" IS FALSE."
       ],
       "black": [
         "BOTH STATEMENTS ON THE BLUE BOX ARE TRUE.",
@@ -1360,7 +1360,7 @@
         "THE GEMS ARE NOT IN THIS BOX."
       ],
       "white": [
-        "EXACTLY TWO STATEMENTS WITH THE WORD  ARE FALSE.",
+        "EXACTLY TWO STATEMENTS WITH THE WORD \"TRUE\" ARE FALSE.",
         "THE GEMS ARE NOT IN THIS BOX."
       ],
       "black": [

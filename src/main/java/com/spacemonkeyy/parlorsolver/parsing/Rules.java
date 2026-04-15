@@ -33,6 +33,7 @@ public class Rules {
             // False; there is only ever one wind-up key in the room.
             return constant(new Value(false));
         });
+        addAlias("THERE IS A THIRD WIND-UP KEY IN THIS ROOM.");
 
         addRule("THE GEMS ARE ON THE DESK.", ctx -> {
             // False; the gems are always in a box.
@@ -161,6 +162,7 @@ public class Rules {
         addAlias("BOTH :box AND :box");
 
         addRule("EACH BOX", "box", ctx -> Rules.formulaAllBoxes());
+        addAlias("EVERY BOX");
         addAlias("BOXES IN THIS ROOM");
         addVariant("ALL :number BOXES", ctx -> {
             ctx.addAssumption(function(Operators.EQUALS,
@@ -274,12 +276,10 @@ public class Rules {
             }
         });
 
-        addRule("THE OTHER :number STATEMENTS", "statement", ctx -> {
-            Formula f = formulaOtherStatements(ctx);
-            ctx.addAssumption(function(Operators.EQUALS,
-                function(Operators.GROUP_SIZE, f),
-                ctx.get("number")
-            ));
+        addRule("THE OTHER STATEMENTS", "statement", Rules::formulaOtherStatements);
+        addVariant("THE OTHER :number STATEMENTS", (f, ctx) -> {
+            int count = ctx.get("number").evaluate(null).asNumber();
+            ctx.assumeQuantity(f, count);
             return f;
         });
 
@@ -293,6 +293,7 @@ public class Rules {
                 constant(new Value(1))
             );
         });
+        addAlias("THE TOP STATEMENT ON :box");
 
         addRule("TOP STATEMENT", "statement", ctx -> {
             List<Value> values = new ArrayList<>();
@@ -359,6 +360,7 @@ public class Rules {
         });
         addAlias(":statement CONTAINING THE WORD :word");
         addAlias(":statement DISPLAYING THE WORD :word");
+        addAlias(":statement THAT CONTAIN THE WORD :word");
 
         addRule(":statement CONTAINING THE LETTER :word", "statement", ctx -> {
             return function(Operators.STATEMENT_CONTAINS(ctx.getToken("word").getSource(), false),
@@ -451,6 +453,7 @@ public class Rules {
             return formulaBoxesWithWord(ctx, ctx.getToken("word").getSource());
         });
         addAlias("ALL BOXES DISPLAYING THE WORD :word");
+        addVariant("A BOX THAT DISPLAYS THE WORD :word", (Formula f) -> f.withQuantifier(Quantifier.any()));
         addVariant("A BOX WITH THE WORD :word ON IT", (Formula f) -> f.withQuantifier(Quantifier.any()));
         addVariant("A BOX MENTIONING THE WORD :word", (Formula f) -> f.withQuantifier(Quantifier.any()));
 
@@ -483,6 +486,15 @@ public class Rules {
 
         addRule(":statement CONTAIN WORDS.", ctx -> {
             return function(Operators.TRIVIAL, ctx.get("statement"));
+        });
+
+        addRule("THE WORDS :word ARE ON :box.", ctx -> {
+            return function(Operators.STATEMENT_CONTAINS(
+                ctx.getToken("word").getSource(), true),
+                function(Operators.STATEMENTS_ON_BOX,
+                    ctx.get("box")
+                ).withQuantifier(Quantifier.any())
+            );
         });
 
         addRule("A BOX WITH THE MOST WORDS", "box", ctx -> {
@@ -601,6 +613,14 @@ public class Rules {
         addVariant(":box ARE BOTH :bool.", (f, ctx) ->
             ctx.assumeQuantity(f, 2));
 
+        addRule("THE TRUTH IS ON :box.", ctx -> {
+            // Equivalent to saying that box is true
+            return function(Operators.BOX_IS,
+                ctx.get("box"),
+                constant(new Value(true))
+            );
+        });
+
         addRule(":box HAS :statement.", ctx -> {
             // Multiple quantifiers at once
             return function(Operators.BOX_HAS_STATEMENT,
@@ -683,6 +703,18 @@ public class Rules {
             );
         });
         addAlias(":box IS :bool AND IT CONTAINS GEMS.");
+
+        addRule(":box IS :bool AND DOES NOT CONTAIN GEMS.", ctx -> {
+            return function(Operators.AND,
+                function(Operators.BOX_IS,
+                    ctx.get("box"),
+                    ctx.get("bool")
+                ),
+                function(Operators.NOT,
+                    function(Operators.BOX_HAS_GEMS, ctx.get("box"))
+                )
+            );
+        });
 
         addRule(":box CONTAINS THE GEMS IF ITS STATEMENT IS :bool.", ctx -> {
             ctx.assumeQuantity(function(Operators.STATEMENTS_ON_BOX, ctx.get("box")), 1);

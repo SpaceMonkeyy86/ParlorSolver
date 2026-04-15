@@ -86,7 +86,7 @@ public class ParseRule {
                 && Objects.equals(pattern.getSource(), target.getSource());
         } else if (pattern.getIdentifier().equals("word")) {
             // "word" matches any single word in the source string, even if already matched
-            return Token.tokenize(target.getSource()).size() == 1;
+            return target.isWord();
         } else {
             // Intermediate tokens with identifiers
             return Objects.equals(target.getIdentifier(), pattern.getIdentifier());
