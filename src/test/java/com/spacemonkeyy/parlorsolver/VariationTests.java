@@ -9,6 +9,7 @@ import com.spacemonkeyy.parlorsolver.puzzle.PuzzleVariation;
 import com.spacemonkeyy.parlorsolver.solver.Solver;
 import com.spacemonkeyy.parlorsolver.value.Statement;
 import org.junit.jupiter.api.*;
+import org.junit.platform.commons.util.StringUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,6 +23,28 @@ public class VariationTests {
     void testSanity() {
         // Makes sure JUnit is set up correctly
         System.out.println("sanity check");
+    }
+
+    @Test
+    void testNoMissedVariations() throws IOException {
+        // Make sure we aren't accidentally skipping any while scraping
+        String raw = Files.readString(ScrapePuzzles.wikiPagePath);
+        String pattern = "{{ParlorTableRow";
+
+        int index = 0;
+        int count = 0;
+        while (true) {
+            index = raw.indexOf(pattern, index);
+            if (index == -1) break;
+            index += pattern.length();
+            count++;
+        }
+
+        String json = Files.readString(ScrapePuzzles.outputPath);
+        Gson gson = new GsonBuilder().create();
+        PuzzleVariation[] variations = gson.fromJson(json, PuzzleVariation[].class);
+
+        Assertions.assertEquals(count, variations.length);
     }
 
     @TestFactory

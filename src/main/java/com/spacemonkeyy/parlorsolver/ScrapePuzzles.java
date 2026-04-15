@@ -28,7 +28,7 @@ Takes the contents of the page https://blueprince.wiki.gg/wiki/Parlor_Game/List_
 parsing each listed puzzle into a PuzzleVariation object and exporting the list to puzzles.json.
  */
 public class ScrapePuzzles {
-    private static final Path wikiPagePath = Paths.get("puzzles-wiki-page.txt");
+    public static final Path wikiPagePath = Paths.get("puzzles-wiki-page.txt");
     public static final Path outputPath = Paths.get("puzzles.json");
     private static final Map<String, String> corrections = new HashMap<>();
 
@@ -53,9 +53,10 @@ public class ScrapePuzzles {
         }
 
         page = page.replaceAll("\n", "");
-        page = page.replaceAll("<!--(.*?)-->", "");
+        page = page.replaceAll("<!--.*?-->", "");
         page = page.replaceAll("\\[\\[(.*?)]]", "$1");
         page = page.replaceAll("\\{\\{UpgradeSpoiler\\|[^|]+?\\|(.*?)}}", " $1");
+        page = page.replaceAll("\\{\\{ColorText.*?}}", "");
 
         List<PuzzleVariation> puzzles = new ArrayList<>();
 
