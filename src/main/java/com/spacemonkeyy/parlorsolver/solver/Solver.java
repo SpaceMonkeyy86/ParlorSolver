@@ -5,7 +5,6 @@ import com.spacemonkeyy.parlorsolver.formula.Operators;
 import com.spacemonkeyy.parlorsolver.parsing.Parser;
 import com.spacemonkeyy.parlorsolver.parsing.Rules;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
-import com.spacemonkeyy.parlorsolver.puzzle.PuzzleSolution;
 import com.spacemonkeyy.parlorsolver.value.*;
 
 import java.util.*;
@@ -110,6 +109,11 @@ public class Solver {
             return prize;
         }
 
+        prize = gemHintFallback(input, solutions);
+        if (prize != null) {
+            return prize;
+        }
+
         return null;
     }
 
@@ -141,7 +145,7 @@ public class Solver {
     }
 
     private static BoxColor symmetryFallback(PuzzleInput input, List<Integer> solutions) {
-        // Fallback: if two boxes have equivalent statements,
+        // If two boxes have equivalent statements,
         // they must have equal truth value by symmetry.
         // (Unless they refer to neighboring boxes, which is not handled.)
         // Only variation 50 needs this.
@@ -247,5 +251,63 @@ public class Solver {
             index++;
         }
         return -1;
+    }
+
+    private static BoxColor gemHintFallback(PuzzleInput input, List<Integer> solutions) {
+        // If only one statement suggests where the gems could be, that rules out
+        // some solutions by symmetry. If it says that the gems are in
+        // a specific box, the gems must be in that box no matter what, since
+        // otherwise it would be impossible to choose between the other two boxes.
+        // Only variation 39 needs this.
+
+        Statement gemHinter = null;
+        for (BoxColor color : BoxColor.values()) {
+            for (int i = 1; i <= input.byColor(color).size(); i++) {
+                Statement statement = new Statement(new Box(color), i);
+                String text = input.textOfStatement(statement);
+
+                // It would probably be smarter to look for usage of
+                // BOX_HAS_GEMS in the corresponding formula, but this works too
+                if (text.contains("GEMS") || text.contains("EMPTY")) {
+                    if (gemHinter != null) {
+                        return null;
+                    }
+                    gemHinter = statement;
+                }
+            }
+        }
+
+        // Puzzle would be unsolvable otherwise
+        assert gemHinter != null;
+
+        // We need to choose if this box is true or false. If one
+        // option leads to a single solution and the other doesn't,
+        // we choose that option.
+
+        int index = offsetOfColor(gemHinter.box().color(), input) + gemHinter.index() - 1;
+
+        List<Integer> trueSolutions = new ArrayList<>();
+        List<Integer> falseSolutions = new ArrayList<>();
+
+        for (int solution : solutions) {
+            if (((solution >> index) & 1) != 0) {
+                trueSolutions.add(solution);
+            } else {
+                falseSolutions.add(solution);
+            }
+        }
+
+        BoxColor trueAnswer = findAnswer(trueSolutions);
+        BoxColor falseAnswer = findAnswer(falseSolutions);
+
+        if (trueAnswer != null && falseAnswer == null) {
+            return trueAnswer;
+        }
+
+        if (falseAnswer != null && trueAnswer == null) {
+            return falseAnswer;
+        }
+
+        return null;
     }
 }
