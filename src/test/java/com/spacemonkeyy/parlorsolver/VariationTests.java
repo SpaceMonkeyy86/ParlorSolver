@@ -7,6 +7,7 @@ import com.spacemonkeyy.parlorsolver.parsing.Parser;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleSolution;
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleVariation;
 import com.spacemonkeyy.parlorsolver.solver.Solver;
+import com.spacemonkeyy.parlorsolver.value.BoxColor;
 import com.spacemonkeyy.parlorsolver.value.Statement;
 import org.junit.jupiter.api.*;
 
@@ -82,11 +83,11 @@ public class VariationTests {
             }
 
             tests.add(DynamicTest.dynamicTest("Correct Solution", () -> {
-                PuzzleSolution solution = Solver.solve(variation.input());
+                BoxColor solution = Solver.solve(variation.input());
 
                 Assertions.assertNotNull(solution);
                 System.out.println(solution);
-                Assertions.assertEquals(variation.solution().prize(), solution.prize());
+                Assertions.assertEquals(variation.solution().prize(), solution);
                 System.out.println(variation.solution().description());
             }));
 

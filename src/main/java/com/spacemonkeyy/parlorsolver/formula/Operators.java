@@ -1,5 +1,7 @@
 package com.spacemonkeyy.parlorsolver.formula;
 
+import com.spacemonkeyy.parlorsolver.parsing.ParseContext;
+import com.spacemonkeyy.parlorsolver.parsing.Parser;
 import com.spacemonkeyy.parlorsolver.solver.EvaluationContext;
 import com.spacemonkeyy.parlorsolver.value.*;
 
@@ -8,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Operators {
@@ -149,6 +152,44 @@ public class Operators {
             String statement = ctx.getInput().textOfStatement(ctx.arg(1).asStatement());
             int wordCount = statement.split(" ").length;
             return new Value(predicate.test(wordCount));
+        }, ValueType.STATEMENT, ValueType.BOOLEAN);
+    }
+
+    // Same as word count, but only counts a specific word or letter
+    public static Operator COUNT_OCCURRENCES(String s, boolean isWord, Predicate<Integer> predicate) {
+        if (isWord) {
+            s = "\\b" + s + "\\b";
+        }
+        Pattern pattern = Pattern.compile(s);
+        return makeOperator("STATEMENT_CONTAINS(\"" + s + "\")", ctx -> {
+            String statement = ctx.getInput().textOfStatement(ctx.arg(1).asStatement());
+            Matcher matcher = pattern.matcher(statement);
+
+            int count = 0;
+            int start = 0;
+            while (matcher.find(start)) {
+                count++;
+                start = matcher.end();
+            }
+
+            return new Value(predicate.test(count));
+        }, ValueType.STATEMENT, ValueType.BOOLEAN);
+    }
+
+    // Replace a word in a statement, then evaluate it
+    public static Operator REPLACE_WORD(String word, String replacement) {
+        return makeOperator("REPLACE_WORD(\"" + word + "\" -> \"" + replacement + "\")", ctx -> {
+            Statement statement = ctx.arg(1).asStatement();
+
+            String text = ctx.getInput().textOfStatement(statement);
+            text = text.replaceAll("\\b" + word + "\\b", replacement);
+
+            ParseContext parseCtx = new ParseContext(ctx.getInput());
+            parseCtx.setCurrent(statement);
+            Formula formula = Parser.parseStatement(text, parseCtx);
+            assert formula != null;
+
+            return formula.evaluate(ctx);
         }, ValueType.STATEMENT, ValueType.BOOLEAN);
     }
 

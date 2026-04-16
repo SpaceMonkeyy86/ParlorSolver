@@ -30,11 +30,11 @@ public class Main {
         PuzzleInput input = new PuzzleInput(
             map.get(BoxColor.BLUE), map.get(BoxColor.WHITE), map.get(BoxColor.BLACK));
 
-        PuzzleSolution solution = Solver.solve(input);
+        BoxColor solution = Solver.solve(input);
         if (solution == null) {
             System.out.println("No solution found");
         } else {
-            System.out.println("The gems are in the " + solution.prize().toString() + " box.");
+            System.out.println("The gems are in the " + solution + " box.");
         }
     }
 }

@@ -121,6 +121,7 @@ public class ScrapePuzzles {
         for (String statement : statements.split("<hr>")) {
             statement = statement.replaceAll("'(.+?)'", "\"$1\"");
             statement = statement.replaceAll("”", "\"");
+            statement = statement.replaceAll(" +", " ");
             statement = statement.trim();
             statement = statement.toUpperCase();
 

@@ -261,6 +261,8 @@ public class Rules {
         });
         addVariant("THE BOX WITH THE GEMS", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
+        addVariant("THE BOX THAT CONTAINS THE GEMS", (f, ctx) ->
+            ctx.assumeQuantity(f, 1));
 
         // Statements
 
@@ -421,6 +423,7 @@ public class Rules {
         });
         addAlias("ALL THE STATEMENTS ON :box");
         addAlias(":box'S STATEMENTS");
+        addVariant("THE STATEMENT ON ONE OF :box", (Formula f) -> f.withQuantifier(Quantifier.any()));
         addVariant("THE STATEMENT ON :box", (f, ctx) ->
             ctx.assumeQuantity(f, 1));
         addVariant(":box'S STATEMENT", (f, ctx) ->
@@ -497,6 +500,23 @@ public class Rules {
             );
         });
 
+        addRule("ALL STATEMENTS THAT CONTAIN MORE THAN ONE :word", "statement", ctx -> {
+            String word = ctx.getToken("word").getSource();
+            boolean isWord = word.length() > 1;
+            return function(Operators.COUNT_OCCURRENCES(word, isWord, x -> x > 1),
+                formulaAllStatements(ctx)
+            ).makeFilter();
+        });
+
+        addRule("THE LETTER :word APPEARS TWICE ON :box.", ctx -> {
+            // Does not support checking multiple statements on the same box
+            String letter = ctx.getToken("word").getSource();
+            return function(
+                Operators.COUNT_OCCURRENCES(letter, false, x -> x == 2),
+                ctx.assumeQuantity(function(Operators.STATEMENTS_ON_BOX, ctx.get("box")), 1)
+            );
+        });
+
         addRule("A BOX WITH THE MOST WORDS", "box", ctx -> {
             List<Value> values = new ArrayList<>();
             int maxWordCount = 0;
@@ -569,6 +589,23 @@ public class Rules {
                 ),
                 ctx.get("statement")
             );
+        });
+
+        addRule(":statement WOULD BE :bool IF YOU REPLACED THE WORD :word WITH THE WORD :word.", ctx -> {
+            String word = ctx.getToken("word", 1).getSource();
+            String replacement = ctx.getToken("word", 2).getSource();
+
+            Operator operator = Operators.REPLACE_WORD(word, replacement);
+            boolean bool = ctx.get("bool").evaluate(null).asBoolean();
+            if (!bool) {
+                operator = Operator.compose(operator, Operators.NOT);
+            }
+
+            return function(operator, ctx.get("statement"));
+        });
+        addVariant("IF YOU REPLACE THE WORD :word IN :statement WITH :word THEY WILL BOTH BE :bool.", ctx -> {
+            ctx.assumeQuantity(ctx.get("statement"), 2);
+            ctx.get("statement").withQuantifier(Quantifier.all());
         });
 
         // Simple sentences

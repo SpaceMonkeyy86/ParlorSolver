@@ -11,7 +11,7 @@ import com.spacemonkeyy.parlorsolver.value.*;
 import java.util.*;
 
 public class Solver {
-    public static PuzzleSolution solve(PuzzleInput input) {
+    public static BoxColor solve(PuzzleInput input) {
         Map<String, Integer> variableNames = new HashMap<>();
         int variableCount = 0;
 
@@ -100,9 +100,47 @@ public class Solver {
         // If all solutions agree on the box with the gems, that is the answer
         BoxColor prize = findAnswer(solutions);
         if (prize != null) {
-            return new PuzzleSolution(prize, "");
+            return prize;
         }
 
+        // Fallback strategies to eliminate extra solutions
+
+        prize = symmetryFallback(input, solutions);
+        if (prize != null) {
+            return prize;
+        }
+
+        return null;
+    }
+
+    private static BoxColor findAnswer(List<Integer> solutions) {
+        BoxColor prize = null;
+
+        for (int solution : solutions) {
+            // The location of the gems in this variable assignment
+            BoxColor answer = null;
+
+            for (BoxColor color : BoxColor.values()) {
+                if ((solution & 1) == 1) {
+                    answer = color;
+                    break;
+                }
+                solution >>= 1;
+            }
+
+            if (prize == null) {
+                prize = answer;
+            } else {
+                if (prize != answer) {
+                    return null;
+                }
+            }
+        }
+
+        return prize;
+    }
+
+    private static BoxColor symmetryFallback(PuzzleInput input, List<Integer> solutions) {
         // Fallback: if two boxes have equivalent statements,
         // they must have equal truth value by symmetry.
         // (Unless they refer to neighboring boxes, which is not handled.)
@@ -146,39 +184,7 @@ public class Solver {
             }
         }
 
-        prize = findAnswer(solutions);
-        if (prize != null) {
-            return new PuzzleSolution(prize, "");
-        }
-
-        return null;
-    }
-
-    private static BoxColor findAnswer(List<Integer> solutions) {
-        BoxColor prize = null;
-
-        for (int solution : solutions) {
-            // The location of the gems in this variable assignment
-            BoxColor answer = null;
-
-            for (BoxColor color : BoxColor.values()) {
-                if ((solution & 1) == 1) {
-                    answer = color;
-                    break;
-                }
-                solution >>= 1;
-            }
-
-            if (prize == null) {
-                prize = answer;
-            } else {
-                if (prize != answer) {
-                    return null;
-                }
-            }
-        }
-
-        return prize;
+        return findAnswer(solutions);
     }
 
     private static int swapColors(int bitmap, BoxColor color1, BoxColor color2, PuzzleInput input) {
