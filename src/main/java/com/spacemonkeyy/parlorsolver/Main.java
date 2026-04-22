@@ -1,7 +1,6 @@
 package com.spacemonkeyy.parlorsolver;
 
 import com.spacemonkeyy.parlorsolver.puzzle.PuzzleInput;
-import com.spacemonkeyy.parlorsolver.puzzle.PuzzleSolution;
 import com.spacemonkeyy.parlorsolver.solver.Solver;
 import com.spacemonkeyy.parlorsolver.value.BoxColor;
 
@@ -19,9 +18,12 @@ public class Main {
 
             while (true) {
                 String line = scanner.nextLine();
-                line = line.toUpperCase();
                 if (line.isEmpty()) {
                     break;
+                }
+                line = line.toUpperCase();
+                if (!line.endsWith(".")) {
+                    line += ".";
                 }
                 map.get(color).add(line);
             }
